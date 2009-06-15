@@ -1,0 +1,33 @@
+#analytics 
+{
+	padding:20px;
+}
+#analytics_view
+{
+	text-align:center;
+}
+#analytics_view p
+{
+	margin-top:0px;
+	font-weight:normal;
+	font-size:21px;
+	margin-bottom:20px;
+	color:#999;
+}
+
+#no_analytics_view
+{
+	text-align:center;
+	margin-top:50px;
+}
+
+#no_analytics_view .header
+{
+	color:#fff;
+	font-size:50px;
+}
+#no_analytics_view .text
+{
+	color:#fff;
+	font-size:35px;
+}

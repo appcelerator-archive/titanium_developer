@@ -1,0 +1,575 @@
+/********************************
+ * 
+ *  BEGIN LAYOUT CSS
+ *
+ ********************************/
+
+/*****************************
+ * MAIN BODY
+ *****************************/
+body
+{
+	margin:0;
+	padding:0;
+	overflow:hidden;
+	font-family: Arial;
+	/* no selection on window */
+	-webkit-user-select: none;
+}
+
+/*****************************
+ * CUSTOM SCROLL
+ *****************************/
+body.mac ::-webkit-scrollbar 
+{
+    width: 13px;
+    height: 13px;
+}
+
+
+body.mac ::-webkit-scrollbar-thumb:vertical 
+{
+    height: 56px;
+    -webkit-border-image: url(../../images/scroll_thumb.png) 8 0 8 0 stretch stretch;
+    border-width: 8 0 8 0;
+}
+
+body.mac ::-webkit-scrollbar-thumb:horizontal 
+{
+    width: 56px;
+    -webkit-border-image: url(../../images/scroll_thumb_horizontal.png) 0 8 0 8;
+    border-width: 0 8 0 8;
+}
+
+body.mac ::-webkit-scrollbar-corner 
+{
+ 	display:none;
+}
+
+/*********************************
+ * SET HEADER COLOR (linux/win32)
+ *********************************/
+body.win32 #tiui_header, body.linux #tiui_header
+{
+	background-color:#969696;
+} 
+
+/*****************************
+ * HEADER
+ *****************************/
+#tiui_header
+{
+	height:52px;
+	line-height:52px;
+	color:#000;
+	font-size:12px;
+	position:relative;
+}
+
+/*****************************
+ * PERSPECTIVE BUTTON BAR
+ *****************************/
+#tiui_perspective_bar
+{
+	position:absolute;
+	left:20px;
+	top:10px;
+	width:94px;
+	height:40px;
+}
+
+/*****************************
+ * ACTION BUTTON BAR
+ *****************************/
+#tiui_action_button_bar
+{
+	position:absolute;
+	left:147px;
+	top:3px;
+	width:400px;
+	height:40px;
+}
+#tiui_action_button_bar .action_button
+{
+	margin-right:17px;
+	float:left;
+	text-align:center;
+	cursor:pointer;
+}
+
+/*****************************
+ * MESSAGE AREA
+ *****************************/
+#tiui_message_area
+{
+	position:absolute;
+	right:20px;
+	cursor:pointer;
+}
+
+/*****************************
+ * CONTENT PARTS
+ *****************************/
+
+#tiui_content_body
+{
+	background-color:#fff;
+	position:fixed;
+	top:74px;
+	left:0;
+	right:0;
+	bottom:30;
+}
+#tiui_content_left
+{
+	width:20%;
+	float:left;
+	height:100%;
+	background-color:#d6dde5;
+}
+#tiui_content_left_body
+{
+	height:100%;
+	overflow:auto;
+	border-right:1px solid #404040;
+}
+#tiui_content_right
+{
+	width:80%;
+	float:left;
+	overflow:auto;
+	height:100%;
+}
+/*****************************
+ * FOOTER
+ *****************************/
+#tiui_footer
+{
+	position:fixed;
+	bottom:0;
+	height:30px;
+	width:100%;
+	border-top:1px solid #404040;
+	z-index:2;
+}
+body.win32 #tiui_footer, body.linux #tiui_footer
+{
+	background-color:#969696;
+}
+/*****************************
+ * BOTTOM DRAWER BUTTONS
+ *****************************/
+#tiui_drawer_button_hide
+{
+	position:fixed;
+	left:10px;
+	bottom:4px;
+}
+
+#tiui_drawer_button_show
+{
+	position:fixed;
+	left:10px;
+	bottom:4px;
+	display:none;
+}
+
+/*****************************
+ * BOTTOM LOGOUT BUTTONS/TEXT
+ *****************************/
+#tiui_statusbar
+{
+	position:fixed;
+	bottom:4px;
+	-webkit-border-top-left-radius: 3px;
+	-webkit-border-bottom-left-radius:3px;
+	-webkit-border-top-right-radius: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	right:30px;
+	clear:both;
+	font-size:11px;
+	text-shadow: 0px 1px 1px #aaa;
+	width:116px;
+	background-color:#151515;
+	height:20px;
+	border-bottom:1px solid #ccc;
+	text-align:center;
+}
+#tiui_statusbar img
+{
+	margin-left:5px;
+	position:relative;
+	top:2px;
+}
+/********************************
+ * 
+ *  BEGIN COMPONENT CSS
+ *
+ ********************************/
+
+
+/********************************
+ * Grey Push Button
+ ********************************/
+.tiui-button.grey
+{
+	background:url(../images/grey_button.png) repeat-x ;
+	height:19px;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	border:1px solid #7f7f7f;
+	text-align:center;
+	font-size:12px;
+	line-height:20px;
+	padding-left:5px;
+	padding-right:5px;
+	cursor:pointer;
+	color:#222;
+}
+.tiui-button.grey.active
+{
+	background:url(../images/grey_button_pressed.png) repeat-x;
+	height:19px;
+	border:1px solid #7f7f7f;
+		
+}
+
+.tiui-button.grey.disabled
+{
+	opacity:0.5;
+}
+
+/********************************
+ * Grey Button Tab
+ ********************************/
+.tiui-button-tab.left
+{
+	-webkit-border-top-left-radius: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	
+}
+.tiui-button-tab.right
+{
+	-webkit-border-top-right-radius: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	border-right:1px solid #424241;
+	
+}
+.tiui-button-tab
+{
+	background:url(../images/grey_button.png) repeat-x;
+	height:19px;
+	width:30px;
+	border-top:1px solid #424141;
+	border-bottom:1px solid #424141;
+	border-left:1px solid #424141;
+	line-height:19px;
+	text-align:center;
+	float:left;
+	cursor:pointer;
+}
+.tiui-button-tab.active
+{
+	background:url(../images/grey_button_active.png) repeat-x;
+	color:white;
+}
+.tiui-button-tab.pressed
+{
+	background:url(../images/grey_button_pressed.png) repeat-x;
+	height:19px;	
+}
+
+.tiui-button-tab-container
+{
+	-webkit-border-bottom-left-radius: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	height:21px;
+	border-bottom:1px solid #cacaca;
+}
+.tiui-button-tab-title
+{
+	text-align:center;
+	height:12px;
+	clear:both;
+	font-size:11px;
+	text-shadow: 0px 1px 1px #aaa;
+	line-height:16px
+}
+/********************************
+ * Secondary Tab Bar
+ ********************************/
+.tiui-secondary-tabbar
+{
+	height:21px;
+	background:url(../images/secondary_tab_bg.png) repeat-x;
+	border-bottom:1px solid #404040;
+}
+.tiui-secondary-tabbar .tab
+{
+	height:21px;
+	background:url(../images/secondary_tab.png) repeat-x;
+	text-align:center;
+	width:120px;
+	font-size:11px;
+	color:#000;
+	line-height:22px;
+	float:left;
+	border-left:1px solid #656565;
+	position:relative;
+	z-index:2;
+	cursor:pointer;
+}
+.tiui-secondary-tabbar .tab:hover, .tiui-secondary-tabbar .tab.active
+{
+	background:url(../images/secondary_tab_active.png) repeat-x;	
+}
+.tiui-secondary-tabbar .tab.right
+{
+	border-right:1px solid #656565;
+}
+/********************************
+ * Content Tab Bar - Black
+ ********************************/
+.tiui-content-tabbar
+{
+	position:relative;
+}
+.tiui-content-tabbar.black
+{
+	height:30px;
+	background:url(../images/content_tab_black_bg.png) repeat-x;
+	line-height:30px;
+	z-index:2;
+}
+.tiui-content-tabbar .search
+{
+	position:absolute;
+	display:none;
+	top:2px;
+	left:10px;
+}
+.tiui-content-tabbar.black .tab
+{
+	background:url(../images/content_tab_black.png) repeat-x;
+	height:20px;
+	border:1px solid #000;
+	border-right:none;
+	float:left;
+	width:100px;
+	color:white;
+	font-size:11px;
+	line-height:20px;
+	position:relative;
+	top:4px;
+	text-align:center;
+	cursor:pointer;
+
+}
+.tiui-content-tabbar.black .tab.active, .tiui-content-tabbar.black .tab:hover
+{
+	background:url(../images/content_tab_black_active.png) repeat-x;
+}
+.tiui-content-tabbar.black .tab.right
+{
+	border-right:1px solid #161616;
+	-webkit-border-top-right-radius: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	
+}
+
+.tiui-content-tabbar.black .tab.left
+{
+	border-left:1px solid #161616;
+	-webkit-border-top-left-radius: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	
+}
+
+/********************************
+ * ITunes-like Message Area
+ ********************************/
+.tiui-message-area-container
+{
+	border:1px solid #56584c;
+	-webkit-border-top-right-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	height:40px;
+	border-bottom:1px solid #d5d5d5;
+	border-left:1px solid #959985;
+	border-right:1px solid #959985;
+	
+}
+body.win32 .tiui-message-area-container, body.linux .tiui-message-area-container
+{
+	position:relative;
+	top:4px;
+}
+
+.tiui-message-area
+{
+	background:url(../images/message_area_gradient.png) repeat-x;
+	-webkit-border-top-right-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	border:1px solid #cbd0b5;
+	color:#4c4c45;
+	font-size:12px;
+	text-align:center;
+	line-height:40px;
+	border-top:1px solid #b6baa3;
+	height:40px;
+}
+
+/********************************
+ * TREE STYLES
+ ********************************/
+.tiui-left
+{
+	
+}
+.tiui-tree .body
+{
+/*	border-right:1px solid #404040;*/
+	height:100%;
+}
+.tiui-tree .parent
+{
+	color:#505d6d;
+	text-shadow: 1px 1px 1px #fff;
+	font-size:11px;
+	margin-top:0px;
+	font-weight:bold;
+	padding-left:10px;
+	line-height:20px;
+	height:20px;
+}
+.tiui-tree .child
+{
+	font-size:11px;
+	color:#111;
+	font-weight:normal;
+	line-height:18px;
+	text-shadow:none;
+	cursor:pointer;
+	overflow:hidden;
+
+}
+.tiui-tree .child div
+{
+	margin-left:20px;
+	width:150px;
+	overflow:hidden;
+}
+.tiui-tree .active
+{
+	background:url(../images/tree_active.png) repeat-x;
+	height:18px;
+	color:white;
+}
+
+/********************************
+ * LARGE BLUE BUTTON STYLES
+ ********************************/
+.black_button.active
+{
+/*	background-color:#9aa5b9;*/
+}
+.black_button .title
+{
+	color:#202737;
+	font-size:13px;
+	font-weight:bold;
+	text-shadow: 1px 1px 1px #c8d1e0;
+}
+.black_button .desc
+{
+	color:#555e6f;
+	text-shadow: 1px 1px 1px #c9d2e3;
+	font-size:11px;
+	font-weight:bold;
+}
+.black_button .image
+{
+	position:absolute;
+	left:10px;
+	top:20px;
+}
+.black_button .text
+{
+	position:absolute;
+	left:60px;
+	top:15px;
+}
+
+.black_button
+{
+	background-color:#111;
+	-webkit-border-top-left-radius: 10px;
+	-webkit-border-bottom-left-radius: 10px;
+	-webkit-border-top-right-radius: 10px;
+	-webkit-border-bottom-right-radius: 10px;
+	width:310px;
+	height:70px;
+	margin:auto;
+	margin-bottom:30px;
+	position:relative;
+	border-bottom:1px solid #ccc
+}
+.black_button_container
+{
+	-webkit-border-top-left-radius: 10px;
+	-webkit-border-bottom-left-radius: 10px;
+	-webkit-border-top-right-radius: 10px;
+	-webkit-border-bottom-right-radius: 10px;
+	margin:auto;
+	height:72px;
+	width:312px;
+	margin-bottom:30px;
+	border:1px solid #111;
+	cursor:pointer;
+}
+
+.tiui_invalid_field
+{
+	background-color:#fbebb8 !important;
+}
+
+/********************************
+ * INPUT ELEMENTS
+ ********************************/
+input
+{
+	border-top:1px solid #9c9d98;
+	border-left:1px solid #c8c7c7;
+	border-right:1px solid #cfcfcf;
+	border-bottom:1px solid #e2e2e2;
+	outline:none;
+	padding-left:5px;
+	padding-right:5px;
+	padding-top:5px;
+	padding-bottom:2px;
+}
+
+select
+{
+	outline:none;
+	padding-left:5px;
+	padding-right:5px;
+	padding-top:7px;
+	padding-bottom:4px;
+	
+}
+
+#tiui_progress_bar
+{
+	width:330px;
+	height:7px;
+	position:absolute;
+	top:27px;
+	left:35px;
+}

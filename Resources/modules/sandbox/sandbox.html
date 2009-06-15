@@ -1,0 +1,34 @@
+<table id="sandbox"  width="100%">
+	<tr>
+		<td width="270px" valign="top" align="left">
+			<div style="color:#999">
+				Select code snippet (optional)
+				<select id="api_selector" style="width:220px;margin-top:10px"></select>
+				<img src="modules/sandbox/images/refresh.png" id="api_refresh"/>
+			</div>
+			<div style="margin-top:10px;color:#999">
+				Select JS Libaries (optional)
+				<select multiple="true" id="sandbox_js" style="width:220px;margin-top:10px">
+					<option value="jquery">JQuery</option>
+					<option value="entourage">Entourage</option>
+					<option value="mootools">Mootools</option>
+					<option value="prototype">Prototype</option>
+					<option value="scriptaculous">Scriptaculous</option>
+					<option value="dojo">Dojo</option>
+					<option value="yui">Yahoo YUI</option>
+					<option value="swf">SWF Object</option>
+				</select>
+
+		</td>
+
+		<td valign="top">
+			<div style="color:#999">Write some code</div>
+			<textarea id="text_editor"></textarea>
+			<div id="launch_sandbox_button"
+				style="width:120px;margin-top:10px;margin-right:10px;float:left">Launch</div>
+
+			<div id="clear_sandbox_button"  
+				style="width:120px;margin-top:10px;float:left">Clear</div>
+		</td>
+	</tr>
+</table>

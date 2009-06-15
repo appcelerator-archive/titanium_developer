@@ -1,0 +1,131 @@
+<div id="project_edit">
+	<table width="100%">
+		<tr>
+			<td width="10%" valign="middle	">
+				<img src="modules/project_edit/images/desktop.png" id ="desktop_icon"/>
+				<img src="modules/project_edit/images/mobile.png" id="mobile_icon"/>
+			</td>
+			<td width="88%" valign="middle">
+				<div>
+					<p id="edit_project_dir" style="position:relative;top:2px"></p>
+				</div>
+			</td>
+		</tr>
+	</table>
+	<div class="frame" style="height:350px">
+		
+		<!-- PROJECT NAME -->
+		<div class="label">Name:</div>
+		<div class="input">
+			<input type="text" class="edit_project required" id="edit_project_name" />
+		</div>
+
+		<div style="clear:both;height:10px"></div>
+
+		<!-- PROJECT APPID -->
+		<div class="label">Application ID:</div>
+		<div class="input">
+			<input type="text" id="edit_project_appid" class="edit_project required"/>
+		</div>
+
+		<div style="clear:both;height:10px"></div>
+
+		<!-- PROJECT VERSION -->
+		<div class="label">Version:</div>
+		<div class="input">
+			<input type="text" id="edit_project_version" class="edit_project required"/>
+		</div>
+
+		<div style="clear:both;height:10px"></div>
+
+		<!-- PROJECT DESCRIPTION -->
+		<div class="label">Description:</div>
+		<div class="input">
+			<input type="text" id="edit_project_desc" class="edit_project required"/>
+		</div>
+
+		<div style="clear:both;height:10px"></div>
+
+		<!-- PROJECT PUBLISHER -->
+		<div class="label">Publisher:</div>
+		<div class="input">
+			<input type="text" id="edit_project_publisher" class="edit_project required"/>
+		</div>
+
+		<div style="clear:both;height:10px"></div>
+
+		<!-- PROJECT PUBLISHER URL -->
+		<div class="label">Publisher URL:</div>
+		<div class="input">
+			<input type="text" id="edit_project_url" class="edit_project required"/>
+		</div>
+
+		<div style="clear:both;height:10px"></div>
+
+		<!-- PROJECT APPLICATION ICON -->
+		<div class="label">Application Icon:</div>
+		<div class="input">
+			<input type="text" id="edit_project_icon" style="float:left" class="edit_project required"/>
+			<div style="float:left;margin-left:5px;position:relative;top:5px;cursor:pointer" 
+				id="edit_project_icon_button">
+				<img src="images/folder_go.png"/>
+			</div>
+		</div>
+
+		<div style="clear:both;height:10px"></div>
+
+		<!-- PROJECT RUNTIME -->
+		<div class="label">Titanium SDK:</div>
+		<div class="input">
+			<select id="edit_project_runtime">
+			</select>
+		</div>
+
+		<div style="clear:both;height:10px"></div>
+
+		<!-- PROJECT COPYRIGHT -->
+		<div class="label">Copyright:</div>
+		<div class="input">
+			<input type="text" id="edit_project_copyright" class="edit_project required"/>
+		</div>
+
+		<div style="clear:both;height:10px"></div>
+
+		<!-- PROJECT LANGUAGE MODULES -->
+		<div id="project_edit_lang_modules">
+			<div class="label">Language Modules:</div>
+			<div class="input">
+				<!-- RUBY -->
+				<div class="checkbox" id="language_ruby">
+					<img src="images/greencheck.png" id="language_ruby_checked" 
+						style="position:relative;top:5px;left:5px;display:none"/>
+					<img src="images/x_pink.png" id="language_ruby_unchecked" 
+						style="position:relative;top:5px;left:5px;display:none"/>
+				</div>
+				<div class="label" style="margin-left:5px;margin-right:10px;width:30px">Ruby</div>
+
+				<!-- PYTHON -->
+				<div class="checkbox" id="language_python">
+					<img src="images/greencheck.png" id="language_python_checked" 
+						style="position:relative;top:5px;left:5px;display:none"/>
+					<img src="images/x_pink.png" id="language_python_unchecked" 
+						style="position:relative;top:5px;left:5px;display:none"/>
+
+				</div>
+				<div class="label" style="width:30px;margin-left:5px">Python</div>
+				<div style="float:left;margin-left:18px;font-size:11px;color:#ddd;position:relative;top:6px">
+					(check module if using in your project)
+				</div>
+			</div>
+			<div style="clear:both;height:10px"></div>
+		</div>
+		
+
+		<!-- SAVE BUTTON -->
+		<div align="center" id="project_edit_save_button" style="width:120px;margin-top:10px;margin-left:120px;float:left">Save Changes</div> 
+		<div align="center" id="project_edit_delete_button" style="width:120px;margin-top:10px;margin-left:10px;float:left">
+			<img src="images/x_pink.png" style="position:relative;top:0px;left:-5px"/> Delete Project</div> 
+
+	</div>
+
+</div>	

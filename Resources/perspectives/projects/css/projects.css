@@ -1,0 +1,142 @@
+#projects
+{
+	padding:20px;
+	color:#999;
+}
+#projects p
+{
+	margin-top:0px;
+	font-weight:normal;
+	font-size:25px;
+	margin-bottom:20px;
+	color:#999;
+}
+
+#projects .label
+{
+	width:150px;
+}
+#projects .overview
+{
+	color:#fff;
+	font-size:15px;
+	margin-top:10px;
+	margin-bottom:30px;
+}
+#projects .option
+{
+	border-bottom:1px solid #777;
+	width:320px;
+	-webkit-border-top-left-radius: 10px;
+	-webkit-border-bottom-left-radius: 10px;
+	-webkit-border-top-right-radius: 10px;
+	-webkit-border-bottom-right-radius: 10px;
+	position:relative;
+	height:80px;
+	cursor:pointer;
+	background-color:#444;
+	text-align:left;
+	margin-bottom:30px;
+}
+#projects .option .image
+{
+	position:absolute;
+	top:25px;
+	left:15px;
+}
+#projects .option .text
+{
+	position:absolute;
+	top:15px;
+	left:80px;
+}
+#projects .option .text .title
+{
+	color:#FFF;
+	font-size:18px;
+}
+#projects .option .text .desc
+{
+	color:#999;
+	font-size:13px;
+	margin-top:1px;
+}
+
+/*************************
+* LOGIN / SIGNUP STYLES
+**************************/
+#login_signup
+{
+	padding:40px;
+	padding-top:20px;
+	padding-bottom:5px;
+	font-family:'Arial';
+}
+#login_signup p
+{
+	margin-top:0px;
+	font-weight:normal;
+	font-size:25px;
+	margin-bottom:20px;
+	color:#fff;
+	
+}
+#login_signup .frame.left
+{
+	-webkit-border-top-right-radius: 0px;
+	-webkit-border-bottom-right-radius: 0px;
+	text-align:left;
+	height:400px;
+	width:302px;
+	color:white;
+	font-size:14px;
+	background-color:#000;
+	margin-right:-35px
+	
+}
+#login_signup .frame.right
+{
+	-webkit-border-top-left-radius: 0px;
+	-webkit-border-bottom-left-radius: 0px;
+	text-align:left;
+	height:100px; 
+	background-color:#393939; 
+	position:relative;
+	top:-30px; 
+	margin-left:-10px;
+}
+#login_signup .tab
+{
+	-webkit-border-top-right-radius: 10px;
+	-webkit-border-top-left-radius: 10px;
+	height:20px;
+	text-align:center;
+	background-color:transparent;
+	color:#fff;
+	font-weight:bold;
+	font-size:14px;
+	float:left;
+	margin-right:0px;
+	padding:5px;
+	width:100px;
+	position:relative;
+/*	left:170px;
+*/	top:-20px;
+	left:29px;
+	cursor:pointer;	
+	text-decoration:underline;
+}
+#login_signup .tab.active
+{
+	background-color:#393939;
+	text-decoration:none;
+}
+#login_signup .text
+{
+	font-size:16px;
+	color:white;
+	margin-top:10px;
+	margin-bottom:30px;
+	
+}
+

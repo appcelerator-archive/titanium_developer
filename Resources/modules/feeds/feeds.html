@@ -1,0 +1,33 @@
+<div id="feeds">
+	<div id="twitter_console">
+		<div id="twitter_fields" style="display:none;margin:20px">
+			<div class="label">Twitter Username:</div>
+			<input type="text" class="send_tweet required" id="twitter_username"/>
+		
+			<div style="clear:both;margin-bottom:10px"></div>
+
+			<div class="label">Twitter Password:</div>
+			<input type="text" class="send_tweet required"  id="twitter_password"/>
+		
+			<div style="clear:both;margin-bottom:10px"></div>
+		
+			<div class="label" style="position:relative;top:-1px">
+				Tweet:
+				<div id="tweet_count" 
+					style="color:#999;font-size:50px;font-style:italic;margin-top:10px">140</div>
+			</div>
+			<textarea id="tweet" class="send_tweet required"  rows="5"></textarea>
+		
+			<div style="clear:both;margin-bottom:10px"></div>
+			
+			<div id="send_tweet_button" class="disabled"  
+				style="width:80px;margin-right:10px;margin-left:120px;float:left">Send</div>
+
+			<div id="hide_tweet_button"  
+				style="width:80px;float:left">Cancel</div>
+			
+		</div>
+	</div>
+	<div id="twitter_content"></div>
+	<div id="friend_feed_content" style="display:none"></div>
+</div>

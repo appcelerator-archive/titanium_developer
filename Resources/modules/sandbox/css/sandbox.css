@@ -1,0 +1,26 @@
+#sandbox
+{
+	padding:20px;
+	font-size:13px;
+}
+
+#sandbox textarea
+{
+	background-color: #111 !important;
+	color: yellow;
+	font-family: Monaco, Consolas, monospace;
+	font-size: 16px;
+}
+#sandbox select
+{
+	background-color:#111 !important;
+	color:#fff;
+	font-size:12px;
+	border:1px solid #444;
+	height:27px;
+}
+#sandbox .markitupeditor
+{
+	border: 1px solid #444 !important;
+	
+}

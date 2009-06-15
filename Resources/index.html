@@ -1,0 +1,79 @@
+<html>
+<head>
+	
+<!-- JS -->
+<script type="text/javascript" src="js/entourage-jquery-3.0.js"></script>
+<script type="text/javascript" src="tiui/js/tiui-jquery.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/project.js"></script>
+<script type="text/javascript" src="js/app.js"></script>
+
+<!-- markItUp! -->
+<script type="text/javascript" src="markitup/jquery.markitup.pack.js"></script>
+<!-- markItUp! toolbar settings -->
+<script type="text/javascript" src="markitup/sets/default/set.js"></script>
+<!-- markItUp! skin -->
+<link rel="stylesheet" type="text/css" href="markitup/skins/markitup/style.css" />
+<!--  markItUp! toolbar skin -->
+<link rel="stylesheet" type="text/css" href="markitup/sets/default/style.css" />
+
+
+<!-- CSS -->
+<link rel="stylesheet" href="tiui/css/tiui.css" type="text/css" />
+<link rel="stylesheet" href="css/index.css" type="text/css" />
+
+</head>
+<body>
+	<!-- HEADER -->
+	<div id="tiui_header">
+		<div id="tiui_perspective_bar"></div>
+		<div id="tiui_message_area"></div>
+		<div id="tiui_action_button_bar">
+			<div class="action_button" id="new_project_button">
+				<div><img src="images/new_project.png"/></div>
+				<span class="tiui-button-tab-title">New Project</span>
+			</div>
+			<div class="action_button import_project_button">
+				<div><img src="images/import_project.png"/></div>
+				<span class="tiui-button-tab-title">Import Project</span>
+			</div>
+			<div class="action_button" id="feedback_button">
+				<div style="position:relative;top:2px;margin-bottom:2px"><img src="images/info.png"/></div>
+				<span class="tiui-button-tab-title">Feedback</span>
+			</div>
+		</div>
+	</div>
+	
+	<!-- SECONDARY TAB BAR -->
+	<div id="tiui_tabbar"></div>
+
+	<!-- BLACK CONTENT SUB MENU -->
+	<div id="tiui_content_submenu" style="display:none"></div>
+	
+	<!-- BODY -->
+	<div id="tiui_content_body">
+		<div id="tiui_content_left">
+			<div id="tiui_content_left_body"></div>
+		</div>
+		<div id="tiui_content_right"></div>
+	</div> 
+
+	<!-- FOOTER -->
+	<div id="tiui_footer">
+		<div id="tiui_drawer_button_hide"></div>
+		<div id="tiui_drawer_button_show"></div>
+		<div id="tiui_statusbar">
+			<img id="tiui_cloud_on" src="images/cloud_on.png" title="our cloud is available"/>
+			<img id="tiui_cloud_off"  src="images/cloud_off.png" 
+				style="display:none" title="our cloud is down"/>
+			<img id="tiui_signal_on"  src="images/signal_on.png" title="you are connected to a network"/>
+			<img id="tiui_signal_off" src="images/signal_off.png" style="display:none"
+				title="you are not connected to a network"/>
+			<img id="tiui_shield_on"  src="images/shield_on.png" style="display:none;cursor:pointer"
+				title="you are authenticated.  click this icon to logout."/>			
+			<img id="tiui_shield_off"  src="images/shield_off.png"
+				title="you are not authenticated.  make sure you are on-line."/>			
+		</div>
+	</div>
+</body>
+</html>

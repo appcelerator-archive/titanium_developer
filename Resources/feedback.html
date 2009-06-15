@@ -1,0 +1,90 @@
+<html>
+	<head>
+	<style>
+	body
+	{
+		background-color:#1c1c1c;
+	}
+	</style>
+	<title>Feedback</title>
+	<link rel="stylesheet" href="tiui/css/tiui.css" type="text/css" />
+	<link rel="stylesheet" href="css/index.css" type="text/css" />
+	<script type="text/javascript" src="js/entourage-jquery-3.0.js"></script>
+	<script type="text/javascript" src="tiui/js/tiui-jquery.js"></script>
+
+ 	
+	</head>
+	<body style="padding:20px">
+		<div class="frame" style="height:205px;width:350px">
+			<div class="label" style="float:none;width:300px;font-size:13px">
+				Tell us what you think of Titanium.
+			</div>
+			<div class="input" style="float:none;clear:both;margin-top:10px">
+				<textarea class="feedback required" 
+					id="feedback" style="outline:none;height:150px;padding:5px;font-size:15px"></textarea>
+			</div>
+			<div style="text-align:center;margin-top:15px">
+				<div id="feedback_button" style="width:120px;float:left">Submit Feedback</div>
+				<div id="cancel_button" style="width:120px;float:left;margin-left:10px">Cancel</div>
+
+			</div>
+
+		</div>
+		
+		<script>
+			var TiDev = null;
+			function init(tidev)
+			{
+				TiDev = tidev;
+			}
+			TiUI.validator('feedback',function(valid)
+			{
+				if (valid) 
+					$('#feedback_button').removeClass('disabled');
+				else
+					$('#feedback_button').addClass('disabled');
+			});
+			TiUI.GreyButton({id:'cancel_button'});
+			$('#cancel_button').click(function()
+			{
+				Titanium.UI.currentWindow.close();
+			});
+		
+			TiUI.GreyButton({id:'feedback_button'});
+			$('#feedback_button').click(function()
+			{
+				if ($(this).hasClass('disabled'))return;
+	
+				TiDev.messageArea.expand();
+				TiDev.messageArea.setMessage('Submitting feedback...');
+	
+				TiDev.invokeCloudService(TiDev.feedbackURL,{'data':$('feedback').val()},'POST', function(data)
+				{
+					if (data.success == true)
+					{
+						TiDev.messageArea.setMessage('Feedback submitted');
+						setTimeout(function()
+						{
+							TiDev.messageArea.collapse();
+							TiDev.messageArea.showDefaultMessage();
+						},1000);						
+					}
+					else
+					{
+						TiDev.messageArea.setMessage('Error: ' + data.message);
+						setTimeout(function()
+						{
+							TiDev.messageArea.collapse();
+							TiDev.messageArea.showDefaultMessage();
+						},3000);
+						
+					}
+				});
+				TiDev.track('feedback');
+				
+			});
+			
+		</script>
+		
+	</body>
+</html>

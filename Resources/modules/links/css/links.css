@@ -1,0 +1,71 @@
+#links 
+{
+	padding:20px;
+}
+#links p
+{
+	margin-top:0px;
+	font-weight:normal;
+	font-size:21px;
+	margin-bottom:20px;
+	color:#999;
+}
+
+#links .row
+{
+	height:40px;
+	font-size:12px;
+	color:#333;
+	position:relative;
+	margin-bottom:5px;
+	-webkit-border-top-left-radius: 10px;
+	-webkit-border-bottom-left-radius: 10px;
+	-webkit-border-top-right-radius: 10px;
+	-webkit-border-bottom-right-radius: 10px;
+	
+}
+#links .row .platform
+{
+	position:absolute;
+	top:10px;
+	left:10px;
+}
+#links .row .label
+{
+	position:absolute;
+	top:14px;
+	left:50px;
+}
+#links .row .link
+{
+	position:absolute;
+	top:14px;
+	right:10px;
+	
+}
+#links a
+{
+	color:#aaa;
+	font-size:12px;
+}
+#links .even
+{
+	background-color:#111;
+}
+
+#no_links_view
+{
+	text-align:center;
+	margin-top:50px;
+}
+
+#no_links_view .header
+{
+	color:#fff;
+	font-size:50px;
+}
+#no_links_view .text
+{
+	color:#fff;
+	font-size:35px;
+}

@@ -1,0 +1,736 @@
+<div id="packaging">
+	<div style="margin-top:10px">
+		
+		
+		<!-- DESKTOP PACKAGING OPTIONS -->
+		<div id="desktop_packaging" style="display:none">
+
+			<table width="100%">
+				<tr>
+					<td width="340px" valign="top">
+						
+						<!-- HELP -->
+						<div class="option active" id="desktop_help">
+							<div class="image">		
+								<img src="modules/packaging/images/desktop_help.png"/>
+							</div>
+							<div class="text">
+								<span class="title">Learn</span>
+								<div class="desc">Learn more about desktop packaging</div>
+							</div>
+						</div>
+						
+						<!-- PACKAGE FOR DISTRIBUTION -->
+						<div class="option" id="desktop_package">
+							<div class="image">
+								<img src="modules/packaging/images/desktop_package.png"/>
+							</div>
+							<div class="text">
+								<span class="title">Package</span>
+								<div class="desc" id="desktop_package_desc">
+									Create installation distributions for Mac, Windows and Linux
+								</div>
+							</div>
+						</div>
+						<!-- RUN LOCALLY -->
+						<div class="option" id="desktop_launch">
+							<div class="image">
+								<img src="modules/packaging/images/desktop_launch.png"/>
+							</div>
+							<div class="text">
+								<span class="title">Launch</span>
+								<div class="desc">Run your project locally in debug mode</div>
+							</div>
+						</div>
+						
+					</td>
+					
+					<td valign="top">
+						
+						<div class="detail" id="desktop_package_detail" style="display:block;height:410px;width:360px">
+							<!-- DEBUG OUTPUT -->
+							<div id="desktop_launch_detail" style="display:none;">
+								<div id="desktop_launch_viewer" class="debug_console"></div>
+
+								<!-- LAUNCH BUTTON -->
+								<div id="launch_app_button" 
+									style="width:120px;margin-top:20px;float:left">
+									Launch App
+								</div> 
+
+								<!-- CLEAR BUTTON -->
+								<!-- <div id="launch_clear_button" 
+									style="width:120px;margin-top:20px;float:left;margin-left:10px">
+									Clear Console
+								</div>  -->
+								<!-- KILL -->
+								<div id="launch_kill_button" style="width:120px;margin-top:20px;float:left;margin-left:10px">
+									Kill App
+								</div> 
+
+							</div>
+
+							<!-- DESKTOP LEARN MORE -->
+							<div id="desktop_packaging_overview" style="display:block;overflow:auto">
+								<div class="help_header" style="margin-top:-2px">Overview</div>
+
+								<div class="help_text">
+									Titanium desktop apps are packaged in the cloud.  This enables us 
+									to create distributions for each of our supported
+									operating systems (Mac, Windows, and Linux).  To package your 
+									app, we need four pieces of information.  
+								</div>
+								<div class="help_header">Platforms</div>
+								<div class="help_text">
+									The operating systems you want your app to run on. 
+								</div>
+								<div class="help_header">Installer Type</div>
+								<div class="help_text">
+									Titanium allows you to bundle all of your files plus the Titanium
+									Runtime with your application installer, or you can choose to have the
+									Titanium Runtime downloaded from the network at install time.  The latter
+									results in a smaller download, plus the runtime is only downloaded if 
+									it's not already installed on the user's computer. 
+								</div>
+								<div class="help_header">Publish Privacy</div>
+								<div class="help_text">
+									This setting determines if your app is available to be downloaded in the
+									"Apps" section of Titanium Developer.  
+								</div>
+								<div class="help_header">Release to Users</div>
+								<div class="help_text">
+									This setting determines if your existing users will receive the updates
+									to your app.  
+								</div>
+
+
+							</div>
+							
+							<!-- DESKTOP PACKAGE -->							
+							<div id="desktop_packaging_options" style="display:none">
+								<div class="detail_header">Select Packaging Options</div>
+								<!-- COL 1 -->
+								<div style="float:left;width:130px;margin-right:35px;height:260px">
+
+									<!-- SELECT PLATFORMS -->
+									<div align="center" class="option_header">Platforms</div>
+									<div class="optiongroup operating_system top divider" id="mac_packaging">
+										Mac
+									</div>
+									<div class="optiongroup operating_system  divider" id="win_packaging">
+										Windows
+									</div>
+									<div class="optiongroup operating_system  bottom" id="linux_packaging">
+										Linux
+									</div>
+
+									<!-- SELECT PRIVACY -->
+									<div style="margin-top:20px"></div>
+									<div align="center" class="option_header">Publish Privacy</div>
+									<div class="optiongroup top divider" id="public_packaging">
+										Public
+									</div>
+									<div class="optiongroup bottom active_option" id="private_packaging">
+										Private
+									</div>
+
+								</div>
+
+								<!-- COL 2 -->
+								<div style="float:left;width:130px;height:260px">
+
+									<!-- SELECT INSTALL TYPE -->
+									<div align="center" class="option_header">Installer Type</div>
+									<div class="optiongroup top active_option divider" id="network_packaging">
+										Network
+									</div>
+									<div class="optiongroup  bottom" id="bundled_packaging">
+										Bundled
+									</div>
+
+									<!-- RELEASE TO EXISTING USERS -->
+									<div style="margin-top:54px"></div>
+									<div align="center" class="option_header">Release to Users</div>
+									<div class="optiongroup top divider" id="release_yes_packaging">
+										Yes
+									</div>
+									<div class="optiongroup bottom active_option" id="release_no_packaging">
+										No
+									</div>
+
+								</div>
+								<div style="clear:both"></div>
+								<div id="desktop_packaging_divider"></div>
+								<div id="desktop_package_button"  
+									align="center" style="width:120px;margin-top:20px">
+									Package Project
+								</div>
+
+							</div>
+						</div>
+						
+					</td>
+				</tr>
+			</table>
+			
+		</div>
+		
+		
+		<!-- MOBILE PACKAGING OPTIONS -->
+		<div id="mobile_packaging" style="display:none">
+			
+			<table width="100%">
+				<tr>
+					<td width="340px" valign="top">
+
+						<!-- MOBILE HELP -->
+						<div class="option active" id="mobile_help" >
+							<div class="image">
+								<img src="modules/packaging/images/mobile_help.png"/>
+							</div>
+							<div class="text">
+								<span class="title">Learn</span>
+								<div class="desc">
+									Learn more about Titanium Mobile
+								</div>
+							</div>
+						</div>
+
+						<!-- RUN IPHONE EMULATOR -->
+						<div class="option" id="mobile_emulator_iphone">
+							<div class="image">
+								<img src="images/iphone_emu.png"/>
+							</div>
+							<div class="text">
+								<span class="title">Run iPhone Emulator</span>
+								<div class="desc">
+									Launch the iPhone emulator and test your app
+								</div>
+							</div>
+						</div>
+						<!-- RUN ANDROID EMULATOR -->
+						<div class="option" id="mobile_emulator_android">
+							<div class="image">
+								<img src="images/android_emu.png"/>
+							</div>
+							<div class="text">
+								<span class="title">Run Android Emulator</span>
+								<div class="desc" >
+									Launch the Android emulator and test your app
+								</div>
+
+							</div>
+						</div>
+						<!-- RUN ON DEVICE -->
+						<div class="option" id="mobile_device" >
+							<div class="image">
+								<img src="images/run_on_device.png"/>
+							</div>
+							<div class="text">
+								<span class="title">Run on Device</span>
+								<div class="desc">Install and run your app on device</div>
+							</div>
+						</div>
+						<!-- PACKAGE FOR DISTRIBUTION -->
+						<div class="option" id="mobile_package">
+							<div class="image">		
+								<img src="modules/packaging/images/mobile_appstore.png"/>
+							</div>
+							<div class="text">
+								<span class="title">Distribution</span>
+								<div class="desc">Package your app for distribution</div>
+							</div>
+						</div>
+						
+					</td>
+					
+					<td valign="top">
+						
+						<!-- MOBILE PACKAGING DETAIL -->
+						<div class="detail" id="mobile_package_detail" style="display:block;height:428px">
+							<!-- MOBILE HELP -->
+							<div id="mobile_help_detail" style="display:block">
+								<div class="help_header" style="margin-top:-4px">Resources</div>
+								<div class="help_text">
+									We have several resources that will help you to start building, testing
+									and distributing mobile apps for iPhone and Android.  
+								</div>
+								<div class="help_header">Sign Up</div>
+								<div class="help_text">
+									If you want to either test iPhone apps on your device and/or disitribute
+									them via the Apple App Store, you will need to sign-up for 
+									<a href="http://developer.apple.com/iphone/program/" target="ti:systembrowser">Apple's iPhone Developer Program</a>.
+								</div>
+								<div class="help_header">Screencasts</div>
+								<div class="help_text">
+									Here are some screencasts to help you get started with mobile development.
+									<div style="margin-top:10px">
+										<a href="#" target="ti:systembrowser">Getting Started with iPhone</a>
+									</div>
+									<div style="margin-top:10px">
+										<a href="#" target="ti:systembrowser">Getting Started with Titanium Developer</a>
+									</div>
+
+								</div>
+								<div class="help_header">Documentation</div>
+								<div class="help_text">
+									Check out our Mobile API <a href="#" target="ti:systembrowser">documentation</a>.
+								</div>
+
+							</div>
+							
+							<!-- PACKAGE FOR DISTRIBUTION DETAIL -->
+							<div id ="mobile_distribution_detail" style="display:none">
+								<div class="help_header" style="margin-top:0">Packaging your App for Distribution</div>
+
+								<div class="help_text">
+									Titanium Mobile allows you to package your project for distribution
+									to the Apple App Store and to the Android Marketplace.
+								</div>
+								<!-- TABS -->
+								<div class="help_header tab active packaging" id="tab_iphone_package">iPhone</div>
+								<div class="help_header tab packaging" id="tab_android_package">Android</div>
+								<div style="clear:both;border-top:2px solid #333; 
+								      position:relative;top:-5px;height:1px"></div>
+								
+								<!-- TAB CONTENT -->
+								<div id="mobile_packaging_content" style="margin-top:5px">
+									<div id="mobile_packaging_content_iphone">
+
+										<!-- PROJECT HAS IPHONE -->
+										<div class="project_has_iphone_true" style="display:none">
+											<div class="help_text">
+												<div style="margin-bottom:20px">
+												Before packaging your app for distribution on the 
+												Apple App Store, 
+												you must complete the following steps.
+												We cannot verify all steps, so once you've completed them all, 
+												click "Package".  At that point, you will need to take the package
+												and submit it to Apple via the iPhone Developer website.
+												</div>
+												
+												<!-- SIGNUP FOR DEVELOPER PROGRAM -->
+												<div class="checkbox mobile_prereq" id="package_iphone_signup">
+													<span>Sign-up for iPhone Developer Program</span>
+													<a href="http://developer.apple.com/iphone/program/" 
+														target="ti:systembrowser">Sign Up</a>
+												</div>
+
+												<!-- REGISTER PHONE WITH APPLE -->
+												<div class="checkbox mobile_prereq register_phone">
+													<span>Register your iPhone with Apple</span>
+													<a href="http://developer.apple.com/iphone/manage/devices/index.action" 
+													target="ti:systembrowser">Register</a>
+												</div>
+												
+												
+												<!-- GET WWDR INTERMEDIATE CERTIFICATE -->
+												<div class="checkbox mobile_prereq">
+													<span>Obtain WWDR Intermediate Certificate from Apple</span>
+													<span class="found wwdr" style="display:none">
+														<img src="images/greencheck.png"/>
+														Detected
+													</span>
+													<a 
+											href="http://developer.apple.com/iphone/manage/certificates/team/index.action" 
+													target="ti:systembrowser"  class="not_found wwdr">Get Certificate</a>
+												</div>
+
+												<!-- GET LATEST VERSION OF ITUNES -->
+												<div class="checkbox mobile_prereq">
+													<span>Download version 8.2 of iTunes (iPhone SDK 3.0 only)</span>
+													<span class="found itunes" style="display:none">
+														<img src="images/greencheck.png"/>
+														Detected
+													</span>
+													<a href="http://www.apple.com/itunes/download/" 
+													target="ti:systembrowser" class="not_found itunes">Get iTunes</a>
+												</div>
+
+												<!-- GET DISTRIBUTION CERTIFICATE -->
+												<div class="checkbox mobile_prereq not_found dist_cert">
+													<span>Obtain Distribution Certificate from Apple</span>
+													<a 
+												href="http://developer.apple.com/iphone/manage/distribution/index.action" 
+													target="ti:systembrowser" class="not_found dist_cert">Get Certificate</a>
+												</div>
+												
+												<!-- GET DISTRIBUTION PROVISIONING PROFILE -->
+												<div class="checkbox mobile_prereq not_found dist_profile">
+													<span>Obtain Distribution Provisioning Profile from Apple</span>
+													<a 
+											href="http://developer.apple.com/iphone/manage/distribution/index.action" 
+													target="ti:systembrowser" class="not_found dist_profile" 
+													>Get Profile</a>
+												</div>
+
+												<!-- UPLOAD PROFILE TO DEVELOPER -->
+												<div class="checkbox mobile_prereq not_found dist_profile" 
+													style="display:none">
+													<span>Upload Distribution Provisioning Profile</span>
+														<a id="upload_dist_profile_link" href="#">Upload</a>
+													</span>
+												</div>
+
+												<div style="clear:both;height:10px" ></div>
+												<!-- SHOW LIST OF SDKS -->
+												<div class="found dist_cert_multiple" 
+													style="display:none">
+													<span class="help_text">
+														Select SDK Version:
+														<select id="iphone_distribution_sdk" 
+														 class="iphone_dist required"
+														style="font-size:11px;background-color:#fff;color:#111; 
+															width:240px;margin-left:5px;position:relative;left:54px"> 
+														</select>
+													</span>
+												</div>
+
+												<div style="clear:both;height:10px" ></div>
+
+												<!-- SHOW LIST OF DIST CERTS -->
+												<div class="found dist_cert_multiple" 
+													style="display:none">
+													<span class="help_text">
+														Select Distribution Certificate:
+														<select id="iphone_dist_cert_select" 
+															class="iphone_dist required"
+														style="font-size:11px;background-color:#fff;color:#111; 
+															width:240px;margin-left:5px"> 
+														</select>
+													</span>
+												</div>
+
+
+												<!-- DISTRIBUTION LOCATION -->
+												<div style="margin-top:10px">
+													<span class="help_text">
+														Select Distribution Location:
+														<input id="iphone_dist_location" type="text" 
+															class="iphone_dist required" style="width:240px;
+																position:relative;left:15px;font-size:11px"/>
+														<img src="images/folder_go.png" id="add_dist_location_link" 
+															title="add new profile" style="position:relative;top:3px;
+																left:15px"/>
+														
+													</span>
+												</div>
+
+												<!-- SHOW LIST OF PROFILES -->
+												<div class="found dist_profile" 
+													style="display:none;margin-top:10px">
+													<span class="help_text">
+														Select Provisioning Profile:
+														<select id="iphone_dist_profile_select" 
+															class="iphone_dist required"
+														style="font-size:11px;background-color:#fff;color:#111; 
+															width:240px;margin-left:5px;position:relative;left:15px"> 
+														</select>
+													</span>
+													<img src="images/folder_go.png" id="add_dist_profile_link" 
+														title="add new profile" style="position:relative;top:3px; 
+															left:15px"/>
+													<div style="margin-top:5px">
+														<img src="images/information.png" 
+															style="position:relative;top:4px"/>
+														<span style="font-size:11px;">
+															Note: the appid in your provisioning profile
+															must match your project's appid
+														</span>
+													</div>
+												</div>
+												
+												<div id="iphone_package_button" 
+													style="width:120px;margin-top:20px;" class="disabled">
+													Package
+												</div> 
+											</div>
+										</div>
+
+										<!-- PROJECT DOES NOT HAVE IPHONE -->
+										<div class="project_has_iphone_false help_text" style="display:none">
+											This project is not configured to run for iPhone.
+										</div>
+										
+									</div>
+									
+									<!-- ANRDOID TAB CONTENT -->
+									<div id="mobile_packaging_content_android" style="display:none">
+										<!-- PROJECT HAS ANDROID -->
+										<div class="project_has_android_true" style="display:none">
+											<div class="help_text">
+												To package your Android app, we need a few pieces of information:
+											</div>
+											<div style="margin-top:10px">
+												<div class="label" style="width:140px">Key Store Location:</div>
+												<div class="input">
+													<input type="text" class="android_package required"
+														id="android_key_store"/>
+												</div>
+												<div style="clear:both;height:10px"></div>
+												
+												<div class="label " style="width:140px">Key Store Password:</div>
+												<div class="input">
+													<input type="password" class="android_package required" 
+														id="android_key_store_password"/>
+												</div>
+												<div style="clear:both;height:10px"></div>
+												
+												<div class="label" style="width:140px">Alias:</div>
+												<div class="input">
+													<input type="text" class="android_package required"
+														id="android_alias"/>
+												</div>
+												<div style="clear:both;height:10px"></div>
+												
+											</div>
+											<div id="android_package_button" 
+												style="width:120px;margin-top:10px;">
+												Package
+											</div> 
+										</div>
+										<!-- PROJECT DOES NOT HAVE ANDROID -->
+										<div class="project_has_android_false help_text" style="display:none">
+											This project is not configured to run for Android.	
+										</div>
+									
+									</div>
+								</div>
+							</div>
+
+
+							<!-- RUN ON DEVICE DETAIL -->
+							<div id ="mobile_device_detail" style="display:none">
+								<div class="help_header" style="margin-top:0">Running your App on a Device</div>
+
+								<div class="help_text">
+									If your phone is connected to your computer via USB, you can
+									install and run your app on your Android and/or your iPhone Device.
+								</div>
+								<!-- TABS -->
+								<div class="help_header tab active device" id="tab_iphone_dev">iPhone</div>
+								<div class="help_header tab device" id="tab_android_dev">Android</div>
+								<div style="clear:both;border-top:2px solid #333; 
+								      position:relative;top:-5px;height:1px"></div>
+								
+								<!-- TAB CONTENT -->
+								<div id="mobile_device_content" style="margin-top:5px">
+									<div id="mobile_device_content_iphone">
+
+										<!-- PROJECT HAS IPHONE -->
+										<div class="project_has_iphone_true" style="display:none">
+											<div class="help_text">
+												<div style="margin-bottom:20px">
+												Before installing an app on your iPhone, 
+												you must complete the following steps.
+												We cannot verify all steps, so once you've completed them all, 
+												click "Install".
+												</div>
+												
+												<!-- SIGNUP FOR DEVELOPER PROGRAM -->
+												<div class="checkbox mobile_prereq" id="dev_iphone_signup">
+													<span>Sign-up for iPhone Developer Program</span>
+													<a href="http://developer.apple.com/iphone/program/" 
+														target="ti:systembrowser">Sign Up</a>
+												</div>
+
+												<!-- REGISTER PHONE WITH APPLE -->
+												<div class="checkbox mobile_prereq register_phone">
+													<span>Register your iPhone with Apple</span>
+													<a href="http://developer.apple.com/iphone/manage/devices/index.action" 
+													target="ti:systembrowser">Register</a>
+												</div>
+												
+												
+												<!-- GET WWDR INTERMEDIATE CERTIFICATE -->
+												<div class="checkbox mobile_prereq">
+													<span>Obtain WWDR Intermediate Certificate from Apple</span>
+													<span class="found wwdr" style="display:none">
+														<img src="images/greencheck.png"/>
+														Detected
+													</span>
+													<a href="http://developer.apple.com/iphone/manage/certificates/team/index.action" 
+													target="ti:systembrowser"  class="not_found wwdr">Get Certificate</a>
+												</div>
+
+												<!-- GET LATEST VERSION OF ITUNES -->
+												<div class="checkbox mobile_prereq">
+													<span>Download version 8.2 of iTunes (iPhone SDK 3.0 only)</span>
+													<span class="found itunes" style="display:none">
+														<img src="images/greencheck.png"/>
+														Detected
+													</span>
+													<a href="http://www.apple.com/itunes/download/" 
+													target="ti:systembrowser" class="not_found itunes">Get iTunes</a>
+												</div>
+												
+												<!-- GET DEVELOPER CERTIFICATE -->
+												<div class="checkbox mobile_prereq not_found dev_cert">
+													<span>Obtain Development Certificate from Apple</span>
+													<a 
+											href="http://developer.apple.com/iphone/manage/certificates/team/index.action" 
+													target="ti:systembrowser" 
+													class="not_found dev_cert">Get Certificate</a>
+												</div>
+
+												<!-- GET DEVELOPMENT PROVISIONING PROFILE -->
+												<div class="checkbox mobile_prereq not_found dev_profile">
+													<span>Obtain Development Provisioning Profile from Apple</span>
+													<a 
+										href="http://developer.apple.com/iphone/manage/provisioningprofiles/index.action" 
+													target="ti:systembrowser" class="not_found dev_profile" 
+													>Get Profile</a>
+												</div>
+
+												<!-- UPLOAD PROFILE TO DEVELOPER -->
+												<div class="checkbox mobile_prereq not_found dev_profile" style="display:none">
+													<span>Upload Development Provisioning Profile</span>
+														<a id="upload_dev_profile_link" href="#">Upload</a>
+													</span>
+												</div>
+
+												<div style="clear:both;height:10px" ></div>
+												<!-- SHOW LIST OF SDKS -->
+												<div class="found dev_cert_multiple" 
+													style="display:none">
+													<span class="help_text">
+														Select SDK Version:
+														<select id="iphone_device_sdk" 
+														style="font-size:11px;background-color:#fff;color:#111; 
+															width:240px;margin-left:5px;position:relative;left:64px"> 
+														</select>
+													</span>
+												</div>
+												<div style="clear:both;height:10px" ></div>
+
+												<!-- SHOW LIST OF DEV CERTS -->
+												<div class="found dev_cert_multiple" 
+													style="display:none">
+													<span class="help_text">
+														Select Development Certificate:
+														<select id="iphone_dev_cert_select" 
+														style="font-size:11px;background-color:#fff;color:#111; 
+															width:240px;margin-left:5px"> 
+														</select>
+													</span>
+												</div>
+									
+												<!-- SHOW LIST OF PROFILES -->
+												<div class="found dev_profile" 
+													style="display:none;margin-top:10px">
+													<span class="help_text">
+														Select Provisioning Profile:
+														<select id="iphone_dev_profile_select" 
+														style="font-size:11px;background-color:#fff;color:#111; 
+															width:240px;margin-left:5px;position:relative;left:25px"> 
+														</select>
+													</span>
+													<img src="images/folder_go.png" id="add_dev_profile_link" 
+														title="add new profile" style="position:relative;top:3px
+															;left:25px"/>
+													<div style="margin-top:5px">
+														<img src="images/information.png" 
+															style="position:relative;top:4px"/>
+														<span style="font-size:11px;">
+															Note: the appid in your provisioning profile
+															must match your project's appid
+														</span>
+													</div>
+												</div>
+
+
+												<div id="iphone_install_on_device_button" 
+													style="width:120px;margin-top:20px;" class="disabled">
+													Install Now
+												</div> 
+											</div>
+										</div>
+
+										<!-- PROJECT DOES NOT HAVE IPHONE -->
+										<div class="project_has_iphone_false help_text" style="display:none">
+											This project is not configured to run for iPhone.
+										</div>
+										
+									</div>
+									
+									<!-- ANRDOID TAB CONTENT -->
+									<div id="mobile_device_content_android" style="display:none">
+										<!-- PROJECT HAS ANDROID -->
+										<div class="project_has_android_true" style="display:none">
+											<div class="help_text">
+												Click the button below to install your app on 
+												your connected Android device.
+											</div>
+
+											<div id="android_install_on_device_button" 
+												style="width:120px;margin-top:10px;">
+												Install Now
+											</div> 
+										</div>
+										<!-- PROJECT DOES NOT HAVE ANDROID -->
+										<div class="project_has_android_false help_text" style="display:none">
+											This project is not configured to run for Android.	
+										</div>
+									
+									</div>
+								</div>
+							</div>
+
+							<!-- DEBUG OUTPUT FOR IPHONE EMULATOR -->
+							<div id="mobile_iphone_emulator_container" style="display:none;">
+								<div id="mobile_iphone_emulator_viewer" class="debug_console"></div>
+
+								<!--EMULATOR SDK VERSION -->
+								<div style="float:left;margin-top:20px">
+									<span class="help_text" style="position:relative;top:-3px">Select SDK Verison:</span>
+									<select style="width:50px" id="iphone_emulator_sdk"></select>
+								</div>
+								
+								<!-- START BUTTON -->
+								<div id="iphone_launch_button" 
+									style="width:120px;margin-top:20px;float:left;margin-left:10px">
+									Launch App
+								</div> 
+
+								<!-- CLEAR BUTTON -->
+								<!-- <div id="iphone_clear_button" 
+									style="width:120px;margin-top:20px;float:left;margin-left:10px">
+									Clear Console
+								</div>  -->
+								<!-- KILL -->
+								<div id="iphone_kill_button" 
+									style="width:120px;margin-top:20px;float:left;margin-left:10px">
+									Stop Emulator
+								</div> 
+							</div>
+
+							<!-- DEBUG OUTPUT  FOR ANDROID EMULATOR -->
+							<div id="mobile_android_emulator_container" style="display:none;">
+								<div id="mobile_android_emulator_viewer" class="debug_console"></div>
+
+								<!-- START BUTTON -->
+								<div id="android_launch_button" style="width:120px;margin-top:20px;float:left">
+									Launch App
+								</div> 
+
+								<!-- CLEAR BUTTON -->
+								<!-- <div id="android_clear_button" 
+									style="width:120px;margin-top:20px;float:left;margin-left:10px">
+									Clear Console
+								</div>  -->
+								<!-- KILL -->
+								<div id="android_kill_button" 
+									style="width:120px;margin-top:20px;float:left;margin-left:10px">
+									Stop Emulator
+								</div> 
+							</div>
+
+						</div>
+						
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	
+</div>

@@ -1,0 +1,44 @@
+#feeds
+{
+	padding:20px;
+}
+#feeds a
+{
+	color:#809eb3;
+	font-size:12px;
+}
+#feeds #twitter_console
+{
+	background-color:#000;
+	height:0;
+	opacity:1.0;
+	-webkit-border-bottom-right-radius: 6px;
+	-webkit-border-bottom-left-radius: 6px;
+	width:400px;
+	position:absolute;
+	z-index:2;
+	top:0px;
+	left:50%;
+	margin-left:-200px;
+	padding-bottom:0px;
+}
+#feeds .tiui_invalid_field
+{
+	background-color:#EAC117 !important;
+}
+#feeds input,textarea
+{
+	width:225px;
+	background-color:#555;
+	outline:none;
+	color:white;
+	padding:5px;
+}
+#feeds textarea
+{
+	height:auto !important;
+}
+#feeds .label
+{
+	font-size:12px;
+}

@@ -58,7 +58,7 @@
 				TiDev.messageArea.expand();
 				TiDev.messageArea.setMessage('Submitting feedback...');
 	
-				TiDev.invokeCloudService(TiDev.feedbackURL,{'data':$('feedback').val()},'POST', function(data)
+				TiDev.invokeCloudService(TiDev.feedbackURL,{'data':$('#feedback').val()},'POST', function(data)
 				{
 					if (data.success == true)
 					{
@@ -67,6 +67,7 @@
 						{
 							TiDev.messageArea.collapse();
 							TiDev.messageArea.showDefaultMessage();
+							Titanium.UI.currentWindow.close();
 						},1000);						
 					}
 					else

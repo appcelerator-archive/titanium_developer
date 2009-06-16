@@ -51,7 +51,7 @@ Links.setPageData = function()
 		appPage = dbRows.fieldByName('page_url');
 		lastUpdatedDate = dbRows.fieldByName('date')
 		var platform = dbRows.fieldByName('platform');
-		var url = dbRows.fieldByName('page_url');
+		var url = dbRows.fieldByName('url');
 		var label = dbRows.fieldByName('label');
 
 		linksArray.push({url:url,label:label,platform:platform})

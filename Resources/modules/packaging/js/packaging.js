@@ -610,31 +610,29 @@ PackageProject.setupMobileView = function()
 		TiUI.GreyButton({id:'iphone_package_button'});
 		$('#iphone_package_button').click(function()
 		{
+			if ($(this).hasClass('disabled')) return true;
+			
 			TiDev.setConsoleMessage('Creating distribution package...',4000);
 			
-			if ($(this).hasClass('disabled')==false)
+			var uuid = PackageProject.getIPhoneAttribute('dist_uuid');
+			var certName = PackageProject.getIPhoneAttribute('dist_name');
+			var location = $('#iphone_dist_location').val();
+			var sdk = $('#iphone_distribution_sdk').val();
+			TiDev.track('iphone-distribute',{sdk:sdk});
+			
+			var x = TiDev.launchPython(Titanium.Filesystem.getFile(PackageProject.iPhoneEmulatorPath).toString(),['distribute','"'+sdk+'"', '"'+ PackageProject.currentProject.dir+ '"',PackageProject.currentProject.appid, '"' + PackageProject.currentProject.name+ '"', uuid,'"'+certName+'"','"'+location+'"']);
+			var buffer = '';
+			x.onread = function(e)
 			{
-				var uuid = PackageProject.getIPhoneAttribute('dist_uuid');
-				var certName = PackageProject.getIPhoneAttribute('dist_name');
-				var location = $('#iphone_dist_location').val();
-				var sdk = $('#iphone_distribution_sdk').val();
-				TiDev.track('iphone-distribute',{sdk:sdk});
-				
-				var x = TiDev.launchPython(Titanium.Filesystem.getFile(PackageProject.iPhoneEmulatorPath).toString(),['distribute','"'+sdk+'"', '"'+ PackageProject.currentProject.dir+ '"',PackageProject.currentProject.appid, '"' + PackageProject.currentProject.name+ '"', uuid,'"'+certName+'"','"'+location+'"']);
-				var buffer = '';
-				x.onread = function(e)
+				buffer += e;
+			}
+			x.onexit = function(e)
+			{
+				if (e != 0)
 				{
-					buffer += e;
-				}
-				x.onexit = function(e)
-				{
-					if (e != 0)
-					{
-						alert('Packaging Error\n\n' + buffer);
-					}
+					alert('Packaging Error\n\n' + buffer);
 				}
 			}
-			
 		});
 		
 		// create button for installing on device
@@ -827,16 +825,69 @@ PackageProject.setupMobileView = function()
 			
 		});
 
-		// package button
+		// keystore location
+		$('#android_key_store_location').click(function()
+		{
+			var props = {multiple:false,directories:false,files:true};
+			Titanium.UI.currentWindow.openFileChooserDialog(function(f)
+			{
+				if (f.length)
+				{
+					// set file and revalidate
+					$('#android_key_store').val(f[0]);
+					androidPackageValidator();
+				}
+			},
+			props);						
+		});
+
+		// distribution location
+		$('#android_location_folder').click(function()
+		{
+			var props = {multiple:false,directories:true,files:false};
+			Titanium.UI.currentWindow.openFolderChooserDialog(function(f)
+			{
+				if (f.length)
+				{
+					// set file and revalidate
+					$('#android_location').val(f[0]);
+					androidPackageValidator();
+				}
+			},
+			props);						
+		});
+		
 		TiUI.GreyButton({id:'android_package_button'});
 		$('#android_package_button').click(function()
 		{
+			if ($(this).hasClass('disabled')) return true;
+			TiDev.setConsoleMessage('Creating Android distribution...');
+			var location = $('#android_location').val();
+			var keystore = $('#android_key_store').val();
+			var password = $('#android_key_store_password').val();
+			var alias = $('#android_alias').val();
+			var args = ["distribute", '"'+ PackageProject.currentProject.name+ '"','"' +TiDev.androidSDKDir+ '"', '"' + PackageProject.currentProject.dir + '"', '"'+PackageProject.currentProject.appid+'"','"'+keystore+'"','"'+password+'"','"'+alias+'"', '"'+location+'"'];
+		 	var  x = TiDev.launchPython(Titanium.Filesystem.getFile(PackageProject.AndroidEmulatorPath).toString(),args);
+			var buffer = '';
+			x.onread = function(e)
+			{
+				buffer += e;
+			};
+			x.onexit = function(e)
+			{
+				TiDev.messageArea.showDefaultMessage();
+				if (e != 0)
+				{
+					alert('Distribution Error\n\n' + buffer);
+				}
+			};
+				
 			TiDev.track('android-distribute');
 			
 		});
 
 		// packaging validation
-		TiUI.validator('android_package',function(valid)
+		var androidPackageValidator = TiUI.validator('android_package',function(valid)
 		{
 			if (valid) 
 				$('#android_package_button').removeClass('disabled');
@@ -902,7 +953,6 @@ PackageProject.setupMobileView = function()
 				// reset state
 				PackageProject.isAndroidEmulatorRunning  = false;
 
-				$('#android_launch_button').removeClass('disabled');
 				$(this).addClass('disabled')
 
 			}
@@ -914,7 +964,6 @@ PackageProject.setupMobileView = function()
 			
 			TiDev.track('android-simulator');
 			
-			$(this).addClass('disabled');
 			$('#android_kill_button').removeClass('disabled');
 			
 			$('#mobile_android_emulator_viewer').empty();
@@ -995,7 +1044,6 @@ PackageProject.setupMobileView = function()
 				{
 					PackageProject.currentAndroidEmulatorPID = null;
 					PackageProject.isAndroidEmulatorRunning = false;
-					$('#android_launch_button').removeClass('disabled');
 					$('#android_kill_button').addClass('disabled');
 					
 				};
@@ -1069,7 +1117,7 @@ PackageProject.setupMobileView = function()
 		$('#mobile_distribution_detail').css('display','block');	
 		$('#mobile_help_detail').css('display','none');
 		
-		$('#mobile_package_detail').css('height','440px');
+		$('#mobile_package_detail').css('height','450px');
 		$('#mobile_package_detail').css('marginLeft','-280px');
 		$('#mobile_package_detail').css('width','auto');
 		
@@ -1086,16 +1134,32 @@ PackageProject.setupMobileView = function()
 //
 PackageProject.checkIPhoneDevPrereqs = function()
 {
-	if (PackageProject.iPhoneDevPrereqs['itunes'] == true &&
-		PackageProject.iPhoneDevPrereqs['wwdr'] == true &&
-		PackageProject.iPhoneDevPrereqs['iphone_dev'] == true &&
-		PackageProject.iPhoneDevPrereqs['iphone_dev_profile'] == true)
+	if ($('#iphone_device_sdk').val() == '3.0')
 	{
-		$('#iphone_install_on_device_button').removeClass('disabled');
+		if (PackageProject.iPhoneDevPrereqs['itunes'] == true &&
+			PackageProject.iPhoneDevPrereqs['wwdr'] == true &&
+			PackageProject.iPhoneDevPrereqs['iphone_dev'] == true &&
+			PackageProject.iPhoneDevPrereqs['iphone_dev_profile'] == true)
+		{
+			$('#iphone_install_on_device_button').removeClass('disabled');
+		}
+		else
+		{
+			$('#iphone_install_on_device_button').addClass('disabled');
+		}
 	}
 	else
 	{
-		$('#iphone_install_on_device_button').addClass('disabled');
+		if (PackageProject.iPhoneDevPrereqs['wwdr'] == true &&
+			PackageProject.iPhoneDevPrereqs['iphone_dev'] == true &&
+			PackageProject.iPhoneDevPrereqs['iphone_dev_profile'] == true)
+		{
+			$('#iphone_install_on_device_button').removeClass('disabled');
+		}
+		else
+		{
+			$('#iphone_install_on_device_button').addClass('disabled');
+		}
 	}
 	PackageProject.iPhoneDistValidator();
 };
@@ -1678,7 +1742,11 @@ PackageProject.writeTiManifest = function(project)
 		// write out optional modules
 		for (var c=0;c<Titanium.Project.optionalModules.length;c++)
 		{
+			if (timanifest.appid != 'com.appcelerator.titanium.developer' && Titanium.Project.optionalModules[c].name.indexOf('sdk')!=-1)
+				continue;
+
 			var add = true;
+			
 			if (Titanium.Project.optionalModules[c].name == 'ruby')
 			{
 				if (project['languageModules'].ruby != 'on')
@@ -1794,6 +1862,13 @@ PackageProject.publishDesktopApp = function(destDir,project)
 	TiDev.messageArea.expand();				
 	
 	var url = Titanium.App.getStreamURL(PackageProject.publishURL);
+	var data = {};
+	data.sid = Projects.userSID;
+	data.token = Projects.userToken;
+	data.uid = Projects.userUID;
+	data.uidt = Projects.userUIDT;
+
+	url = TiDev.makeURL(url,data);
 	var xhr = Titanium.Network.createHTTPClient();
 	var ticket = null;
 	xhr.onreadystatechange = function()
@@ -1802,10 +1877,9 @@ PackageProject.publishDesktopApp = function(destDir,project)
 		if (this.readyState == 4)
 		{
 			destDir.deleteDirectory(true);
-
 			if (this.status == 200)
 			{
-				var json = swiss.evalJSON(this.responseText);;
+				var json = swiss.evalJSON(this.responseText);
 				if (json.success == false)
 				{
 					TiDev.setConsoleMessage('Packaging failed. Error: ' + json.message, 5000);
@@ -1819,13 +1893,14 @@ PackageProject.publishDesktopApp = function(destDir,project)
 			}
 			else
 			{
+				
 				TiDev.setConsoleMessage('Packaging failed. HTTP status: ' + this.status, 5000);
 				$('#desktop_package_button').removeClass('disabled');
 			}
 		}
 	};
 	xhr.open("POST",url);
-	xhr.sendDir(destDir);    
+	xhr.sendDir(destDir);  
 };
 
 PackageProject.pollPackagingRequest = function(ticket,guid)

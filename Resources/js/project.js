@@ -113,6 +113,9 @@ Titanium.Project =
 		// write out optional modules
 		for (var c=0;c<this.optionalModules.length;c++)
 		{
+			if (project.appid != 'com.appcelerator.titanium.developer' && this.optionalModules[c].name.indexOf('sdk')!=-1)
+				continue;
+				
 			// check for optional ruby language module
 			if (this.optionalModules[c].name == 'ruby')
 			{

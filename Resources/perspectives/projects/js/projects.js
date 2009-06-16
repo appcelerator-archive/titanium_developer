@@ -944,7 +944,7 @@ Projects.handleNewProjectClick = function()
 
 	// see if we have a mobile sdk
 	var sdks = Titanium.Project.getMobileSDKVersions();
-	if (TiDev.permissions['mobilesdk'] =='disabled' || sdks.length == 0)
+	if (TiDev.permissions['mobilesdk'] !='enabled' || sdks.length == 0)
 	{
 		$('#new_project_type').attr('disabled','true');
 		$('#new_project_type').css('backgroundColor','#5a5a5a');
@@ -990,7 +990,8 @@ Projects.handleNewProjectClick = function()
 	{
 		if ($(this).val() == 'mobile')
 		{
-			var sdk = Titanium.Project.getMobileSDKVersions($('#new_project_runtime').val());
+			var sdkVers = Titanium.Project.getMobileSDKVersions();
+			var sdk = Titanium.Project.getMobileSDKVersions(sdkVers[0]);
 
 			// set scripts for current sdk version
 			iPhonePrereqPath = Titanium.Filesystem.getFile(sdk.getPath(),'iphone/prereq.py');
@@ -1036,12 +1037,16 @@ Projects.handleNewProjectClick = function()
 						{
 							alert('XCode is not installed.  It is required for iPhone.');
 							TiDev.setConsoleMessage('Checking for Android prerequisites...');
+							checkAndroid();
+							
 						}
 						// no 3.0 SDK
 						else if (e == 2)
 						{
 							alert('You must have iPhone SDK 2.2.1 or 3.0.');
 							TiDev.setConsoleMessage('Checking for Android prerequisites...');
+							checkAndroid();
+							
 						}
 					};
 					
@@ -1112,6 +1117,7 @@ Projects.handleNewProjectClick = function()
 		{
 			$('#mobile_platforms').css('display','none');
 			$('#desktop_language_modules').css('display','block');
+			
 		}
 	})
 	// create main buttons
@@ -1122,6 +1128,7 @@ Projects.handleNewProjectClick = function()
 	// create handler
 	$('#create_project_button').click(function()
 	{
+		if($(this).hasClass('disabled')) return;
 		if ($('#new_project_type').val() == 'mobile')
 		{
 			if (Projects.hasIPhone == false && Projects.hasAndroid == false)
@@ -1234,7 +1241,7 @@ Projects.handleNewProjectClick = function()
 			{
 				html += '<option value="'+ versions[i] +'">'+ versions[i] +'</option>';
 			}
-			$('#edit_project_runtime').html(html);
+			$('#new_project_runtime').html(html);
 			
 		}
 		else

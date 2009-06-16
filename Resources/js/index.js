@@ -456,19 +456,21 @@ TiDev.init = function()
 Titanium.UpdateManager.onupdate = function(details)
 {
 	TiDev.messageArea.setCollapsedWidth('390px');
-	TiDev.messageArea.setDefaultMessage('New Titanium Developer available (version ' + details.version + '). <span id="sdk_download_link" style="text-decoration:underline">Click to download</span>');
-	TiDev.messageArea.showDefaultMessage();
-
-	$('#sdk_download_link').click(function()
+	TiDev.messageArea.setDefaultMessage('New Titanium Developer available (version ' + details.version + '). <span id="sdk_download_link" style="text-decoration:underline">Click to download</span>',
+	function()
 	{
-		TiDev.messageArea.setMessage('Installing new '+msg+' Titanium Developer...');
-
-		// call this method to cause the app to restart and install
-		Titanium.UpdateManager.installAppUpdate(details, function()
+		$('#sdk_download_link').click(function()
 		{
-			TiDev.showDefaultSystemMessage();
+			TiDev.messageArea.setMessage('Installing new Titanium Developer...');
+
+			// call this method to cause the app to restart and install
+			Titanium.UpdateManager.installAppUpdate(details, function()
+			{
+				TiDev.showDefaultSystemMessage();
+			});
 		});
 	});
+	TiDev.messageArea.showDefaultMessage();
 };
 
 //
@@ -499,37 +501,41 @@ Titanium.UpdateManager.startMonitor(['sdk','mobilesdk'],function(details)
 TiDev.showSDKAvailableMessage = function(type,msg, details)
 {
 	TiDev.messageArea.setCollapsedWidth('390px');
-	TiDev.messageArea.setDefaultMessage('New ' + msg + ' SDK available (version ' + details.version + '). <span id="sdk_download_link" style="text-decoration:underline">Click to download</span>');
-	TiDev.messageArea.showDefaultMessage();
-	
-	$('#sdk_download_link').click(function()
+	TiDev.messageArea.setDefaultMessage('New ' + msg + ' SDK available (version ' + details.version + '). <span id="sdk_download_link" style="text-decoration:underline">Click to download</span>',
+	function()
 	{
-		if (type == Titanium.API.SDK)
+		$('#sdk_download_link').click(function()
 		{
-			var children = details.children;
-			if (children)
+			if (type == Titanium.API.SDK)
 			{
-				var ar = [Titanium.API.createDependency(type,details.name,details.version)];
-				for (var i=0;i<children.length;i++)
+				var children = details.children;
+				if (children)
 				{
-					var t = Titanium.API.componentGUIDToComponentType(children[i].guid);
-					ar.push(Titanium.API.createDependency(t,children[i].name,children[i].version));
+					var ar = [Titanium.API.createDependency(type,details.name,details.version)];
+					for (var i=0;i<children.length;i++)
+					{
+						var t = Titanium.API.componentGUIDToComponentType(children[i].guid);
+						ar.push(Titanium.API.createDependency(t,children[i].name,children[i].version));
+					}
+					Titanium.UpdateManager.install(ar,function()
+					{
+						TiDev.showDefaultSystemMessage();
+					});
 				}
-				Titanium.UpdateManager.install(ar,function()
+			}
+			else
+			{	
+				Titanium.UpdateManager.install([Titanium.API.createDependency(type,details.name,details.version)], function()
 				{
 					TiDev.showDefaultSystemMessage();
 				});
 			}
-		}
-		else
-		{	
-			Titanium.UpdateManager.install([Titanium.API.createDependency(type,details.name,details.version)], function()
-			{
-				TiDev.showDefaultSystemMessage();
-			});
-		}
-		TiDev.messageArea.setMessage('Installing new '+msg+' SDK...');
-	})
+			TiDev.messageArea.setMessage('Installing new '+msg+' SDK...');
+		});
+			
+	});
+	TiDev.messageArea.showDefaultMessage();
+	
 };
 
 //
@@ -720,7 +726,7 @@ TiDev.invokeCloudService = function(name,data,type,sCallback,fCallback)
 	var data = (data)?data:{};
 	
 	// set timeout low if the online event hasn't fired and we are logging (should only happen once)
-	var timeout = (name == 'sso-login' && TiDev.onlineListenerFired==false)?800:10000;
+	var timeout = (name == 'sso-login' && !Titanium.Network.online && TiDev.onlineListenerFired==false)?800:10000;
 	
 	// xhr auth (for packaging services)
 	function xhrAuth(data)
@@ -742,6 +748,11 @@ TiDev.invokeCloudService = function(name,data,type,sCallback,fCallback)
 	// function to run service request once authenticated
 	function runIt()
 	{
+		data.sid = Projects.userSID;
+		data.token = Projects.userToken;
+		data.uid = Projects.userUID;
+		data.uidt = Projects.userUIDT;
+		
 		$.ajax({
 			url:url,
 			type:type,
@@ -765,7 +776,7 @@ TiDev.invokeCloudService = function(name,data,type,sCallback,fCallback)
 					xhrAuth(data);
 				}
 			},
-			error:function(resp)
+			error:function(resp,ex)
 			{
 				// toggle cloud state
 				$('#tiui_cloud_on').css('display','none');
@@ -820,7 +831,7 @@ TiDev.invokeCloudService = function(name,data,type,sCallback,fCallback)
 			{
 				// we are logged in, so run request
 				if (resp.success == true)
-				{				
+				{		
 					// record tokens
 					Projects.userSID = resp.sid;
 					Projects.userToken = resp.token;
@@ -1031,9 +1042,9 @@ TiDev.launchPython = function(script, args)
 	var process = null;
 	if (Titanium.platform == "win32") {
 		var scriptArgs = [];
-		scriptArgs.push(script);
+		scriptArgs.push('"'+script+'"');
 		for (var i = 0; i < args.length; i++) {
-			scriptArgs.push(args[i]);
+			scriptArgs.push('"'+args[i]+'"');
 		}
 		process = Titanium.Process.launch("python.exe", scriptArgs);
 	}

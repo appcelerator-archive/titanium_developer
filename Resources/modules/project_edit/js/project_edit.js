@@ -29,44 +29,6 @@ EditProject.setFormData = function(p)
 	TiUI.GreyButton({id:'project_edit_save_button'});
 	TiUI.GreyButton({id:'project_edit_delete_button'});
 	
-	$('#project_edit_delete_button').click(function()
-	{
-		if (confirm('Are you sure you want to delete this project?')==true)
-		{
-			// remove db data
-			TiDev.db.execute('DELETE FROM PROJECTS WHERE ID = ?', EditProject.currentProject.id);
-			TiDev.db.execute('DELETE FROM IPHONE_ATTRIBUTES WHERE ID = ?', EditProject.currentProject.id);
-			TiDev.db.execute('DELETE FROM PROJECTPACKAGES WHERE GUID = ?', EditProject.currentProject.guid);
-			TiDev.db.execute('DELETE FROM PROJECTMODULES WHERE GUID = ?', EditProject.currentProject.guid);
-			TiDev.db.execute('DELETE FROM PROJECTDOWNLOADS WHERE GUID = ?', EditProject.currentProject.guid);
-
-			// remove files
-			var f = Titanium.Filesystem.getFile(EditProject.currentProject.dir);
-			f.deleteDirectory(true);
-
-			// remove from cache
-			var a = [];
-			for (var i=0;i<Projects.projectList.length;i++)
-			{
-				if (Projects.projectList[i].id != EditProject.currentProject.id)
-				{
-					// set new selected index to first row
-					if (i==0)
-					{
-						Projects.selectedProjectIdx = Projects.projectList[i].id;
-					}
-					a.push(Projects.projectList[i]);
-				}
-			}
-			Projects.projectList = a;
-
-			// resetView
-			Projects.setupView();
-			
-			TiDev.track('project-delete');
-			
-		}
-	});
 
 	$('#edit_project_date').html(p.date);
 
@@ -172,6 +134,54 @@ EditProject.setupView = function()
 	EditProject.setFormData(Projects.getProject())
 
 
+	$('#project_edit_delete_button').click(function()
+	{
+		if (confirm('Are you sure you want to delete this project?')==true)
+		{
+			try
+			{
+				
+				// remove db data
+				TiDev.db.execute('DELETE FROM PROJECTS WHERE ID = ?', EditProject.currentProject.id);
+				TiDev.db.execute('DELETE FROM PROJECTMODULES WHERE GUID = ?', EditProject.currentProject.guid);
+
+				// remove files
+				var f = Titanium.Filesystem.getFile(EditProject.currentProject.dir);
+				f.deleteDirectory(true);
+
+				// remove from cache
+				var a = [];
+				for (var i=0;i<Projects.projectList.length;i++)
+				{
+					if (Projects.projectList[i].id != EditProject.currentProject.id)
+					{
+						// set new selected index to first row
+						if (i==0)
+						{
+							Projects.selectedProjectIdx = Projects.projectList[i].id;
+						}
+						a.push(Projects.projectList[i]);
+					}
+				}
+				Projects.projectList = a;
+
+				// resetView
+				Projects.setupView();
+
+				TiDev.track('project-delete');
+
+				TiDev.db.execute('DELETE FROM PROJECTPACKAGES WHERE GUID = ?', EditProject.currentProject.guid);
+				TiDev.db.execute('DELETE FROM PROJECTDOWNLOADS WHERE GUID = ?', EditProject.currentProject.guid);
+				TiDev.db.execute('DELETE FROM IPHONE_ATTRIBUTES WHERE ID = ?', EditProject.currentProject.id);
+
+			}
+			catch(e)
+			{
+			}
+			
+		}
+	});
+
 	//
 	// Icon button listener
 	//
@@ -235,9 +245,9 @@ EditProject.setupView = function()
 		var url = EditProject.currentProject.url = $('#edit_project_url').val();
 		var image = EditProject.currentProject.image = $('#edit_project_icon').val();
 		var runtime = EditProject.currentProject.runtime = $('#edit_project_runtime').val();
-		var appid = EditProject.currentProject.runtime = $('#edit_project_appid').val();
+		var appid = EditProject.currentProject.appid = $('#edit_project_appid').val();
 		var version = EditProject.currentProject.version = $('#edit_project_version').val();
-		var copyright = EditProject.currentProject.version = $('#edit_project_copyright').val();
+		var copyright = EditProject.currentProject.copyright = $('#edit_project_copyright').val();
 		
 		var message = 'Your changes have been saved';
 		var delay = 2000;
@@ -319,6 +329,7 @@ EditProject.setupView = function()
 				Projects.projectList[i].url = url;
 				Projects.projectList[i].image = image;
 				Projects.projectList[i].runtime = runtime;
+				Projects.projectList[i].appid = appid;
 				Projects.projectList[i].version = version;
 				Projects.projectList[i].copyright = copyright;
 				

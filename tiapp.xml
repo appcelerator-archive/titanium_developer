@@ -2,9 +2,9 @@
 <ti:app xmlns:ti='http://ti.appcelerator.org'>
 <id>com.appcelerator.titanium.developer</id>
 <name>Titanium Developer</name>
-<version>0.4</version>
+<version>0.4.2</version>
 <publisher>Appcelerator</publisher>
-<url>http://appcelerator.com</url>
+<url>http://www.appcelerator.com</url>
 <icon>titanium_beta.png</icon>
 <dmg_background>dmg_background.png</dmg_background>
 <copyright>2009 by Appcelerator</copyright>

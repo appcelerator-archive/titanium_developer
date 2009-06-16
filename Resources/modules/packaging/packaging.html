@@ -263,18 +263,13 @@
 								</div>
 								<div class="help_header">Screencasts</div>
 								<div class="help_text">
-									Here are some screencasts to help you get started with mobile development.
-									<div style="margin-top:10px">
-										<a href="#" target="ti:systembrowser">Getting Started with iPhone</a>
-									</div>
-									<div style="margin-top:10px">
-										<a href="#" target="ti:systembrowser">Getting Started with Titanium Developer</a>
-									</div>
-
+									We have a screencast or two to help you get started with mobile development. 
+										<a href="http://www.appcelerator.com/community/screencasts/" target="ti:systembrowser">Click here to view</a>.
 								</div>
 								<div class="help_header">Documentation</div>
 								<div class="help_text">
-									Check out our Mobile API <a href="#" target="ti:systembrowser">documentation</a>.
+									Check out our Mobile API 
+									<a href="http://codestrong.com/timobile/" target="ti:systembrowser">documentation</a>.
 								</div>
 
 							</div>
@@ -381,7 +376,8 @@
 														<select id="iphone_distribution_sdk" 
 														 class="iphone_dist required"
 														style="font-size:11px;background-color:#fff;color:#111; 
-															width:240px;margin-left:5px;position:relative;left:54px"> 
+															width:240px;margin-left:5px;position:relative;left:54px">
+															<option>loading...</option> 
 														</select>
 													</span>
 												</div>
@@ -462,21 +458,34 @@
 												To package your Android app, we need a few pieces of information:
 											</div>
 											<div style="margin-top:10px">
-												<div class="label" style="width:140px">Key Store Location:</div>
+												<div class="label" style="width:165px">Select Distribution Location:</div>
+												<div class="input">
+													<input type="text" class="android_package required"
+														id="android_location"/>
+													<img src="images/folder_go.png" 
+														id="android_location_folder"
+														style="position:relative;top:3px;margin-left:5px;cursor:pointer"/>
+												</div>
+												<div style="clear:both;height:10px"></div>
+
+												<div class="label" style="width:165px">Key Store Location:</div>
 												<div class="input">
 													<input type="text" class="android_package required"
 														id="android_key_store"/>
+													<img src="images/folder_go.png" 
+														id="android_key_store_location"
+														style="position:relative;top:3px;margin-left:5px;cursor:pointer"/>
 												</div>
 												<div style="clear:both;height:10px"></div>
 												
-												<div class="label " style="width:140px">Key Store Password:</div>
+												<div class="label " style="width:165px">Key Store Password:</div>
 												<div class="input">
 													<input type="password" class="android_package required" 
 														id="android_key_store_password"/>
 												</div>
 												<div style="clear:both;height:10px"></div>
 												
-												<div class="label" style="width:140px">Alias:</div>
+												<div class="label" style="width:165px">Alias:</div>
 												<div class="input">
 													<input type="text" class="android_package required"
 														id="android_alias"/>
@@ -598,6 +607,7 @@
 														<select id="iphone_device_sdk" 
 														style="font-size:11px;background-color:#fff;color:#111; 
 															width:240px;margin-left:5px;position:relative;left:64px"> 
+															<option>loading...</option>
 														</select>
 													</span>
 												</div>
@@ -683,7 +693,9 @@
 								<!--EMULATOR SDK VERSION -->
 								<div style="float:left;margin-top:20px">
 									<span class="help_text" style="position:relative;top:-3px">Select SDK Verison:</span>
-									<select style="width:50px" id="iphone_emulator_sdk"></select>
+									<select style="width:50px" id="iphone_emulator_sdk"> 			
+										<option>loading...</option>
+									</select>
 								</div>
 								
 								<!-- START BUTTON -->

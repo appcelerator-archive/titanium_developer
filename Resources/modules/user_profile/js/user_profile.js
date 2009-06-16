@@ -1,12 +1,5 @@
 UserProfile = {};
-// UserProfile.defaultValues = {
-// 	'org':' required for certificate generation',
-// 	'city':'required for certificate generation',
-// 	'state':'required for certificate generation',
-// 	'email':'required',
-// 	'password':'required',
-// 	'country':'required for certificate generation'
-// };
+UserProfile.updateURL = 'user-profile-update';
 UserProfile.defaultValues = {
 	'email':'required',
 	'password':'required'
@@ -45,6 +38,20 @@ UserProfile.updateRow = function()
 	UserProfile.user['state']  = $('#user_profile_state').val();
 	UserProfile.user['country']  = $('#user_profile_country').val();
 	UserProfile.user['twitter']  = $('#user_profile_twitter').val();
+	
+	// update cloud
+	var obj = {};
+	obj.un=UserProfile.user['email'];
+	obj.pw=UserProfile.user['password'];
+	obj.firstname=UserProfile.user['fname'];
+	obj.lastname=UserProfile.user['lname'];
+	obj.organization=UserProfile.user['organization'];
+	obj.city=UserProfile.user['city'];
+	obj.state=UserProfile.user['state'];
+	obj.country=UserProfile.user['country'];
+	obj.twitter=UserProfile.user['twitter'];
+	
+	TiDev.invokeCloudService(UserProfile.updateURL,obj,'POST');
 
 };
 
@@ -77,6 +84,8 @@ UserProfile.setupView = function()
 	// save profile
 	$('#save_profile_button').click(function()
 	{
+		if ($(this).hasClass('disabled')) return;
+		
 		var message = 'Your changes have been saved';
 		var delay = 2000;
 		TiDev.track('profile-edit');

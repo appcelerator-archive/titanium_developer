@@ -667,6 +667,7 @@ TiUI.MessageArea = function()
 	this.currentMessage = 0;
 	this.defaultMessage = null;
 	this.collapsedWidth = '60px';
+	this.callback = null;
 	var self = this;
 
 	$('#tiui_message_area').addClass('tiui-message-area-container');
@@ -683,8 +684,16 @@ TiUI.MessageArea = function()
 	//
 	// Set default message
 	//
-	this.setDefaultMessage = function(msg)
+	this.setDefaultMessage = function(msg, cb)
 	{
+		if (cb)
+		{
+			this.callback = cb;
+		}
+		else
+		{
+			this.callback = null;
+		}
 		this.defaultMessage = msg;
 	};
 	
@@ -694,6 +703,12 @@ TiUI.MessageArea = function()
 	this.showDefaultMessage = function()
 	{
 		$('#message_area_message').html(this.defaultMessage);
+
+		// call callback in case they need to wire listeners
+		if (this.callback != null)
+		{
+			this.callback();
+		}
 		this.collapse();
 	};
 	

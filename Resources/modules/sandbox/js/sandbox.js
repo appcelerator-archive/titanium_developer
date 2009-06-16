@@ -132,12 +132,11 @@ Sandbox.setupView = function()
 		
 		// add name to root dir for launch
 		options.dir = rootdir + '/' + options.name;
-	
 		//set desktop packaging path
-		var runtime = PackageProject.currentProject.runtime;
 		var sdk = Titanium.Project.getSDKVersions(Projects.currentRuntimeVersion);
 		PackageProject.desktopPackage = Titanium.Filesystem.getFile(sdk.getPath(),'tibuild.py');
 		var dest = Titanium.Filesystem.getFile(options.dir,'dist',Titanium.platform);
+		
 		if (dest.exists()==false)
 		{
 			dest.createDirectory(true);
@@ -152,15 +151,8 @@ Sandbox.setupView = function()
 	
 		var p = null;
 		// launch desktop app
-		if (Titanium.platform == "win32") 
-		{
-			p = Titanium.Process.launch("python.exe", [PackageProject.desktopPackage.toString(), "-d",dest.toString(),"-t", "bundle","-a",assets.toString(),appdir.toString(),"-n","-r","-v","-s",basePath.toString()]);
-		}
-		else 
-		{
-			p = Titanium.Process.launch(PackageProject.desktopPackage.toString(), ["-d",dest.toString(),"-t", "bundle","-a",assets.toString(),appdir.toString(),"-n","-r","-v","-s",basePath.toString()]);
-		}
-		
+		p = TiDev.launchPython(PackageProject.desktopPackage.toString(), ["-d",dest.toString(),"-t", "bundle","-a",assets.toString(),appdir.toString(),"-n","-r","-v","-s",basePath.toString()]);
+	
 	 	TiDev.track('sandbox-launch');
 	 });
 	

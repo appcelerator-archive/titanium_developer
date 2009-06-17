@@ -1468,8 +1468,8 @@ Projects.createProject = function(options, createProjectFiles)
 					else
 					{
 						result['success'] = true;
-						options.image = 'app_icon.png';
-						record.image = 'app_icon.png';
+						options.image = 'appicon.png';
+						record.image = 'appicon.png';
 						Titanium.Project.createMobileResources(options);
 						setMessage();
 						createDBRecord();

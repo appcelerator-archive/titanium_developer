@@ -1720,7 +1720,6 @@ PackageProject.writeTiManifest = function(project)
 		timanifest.image = image.name();
 	}
 
-alert(timanifest.image)	
 	// OS options
 	timanifest.platforms = [];
 	var winTrue = false; linuxTrue = false; macTrue = false;

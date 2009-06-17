@@ -1044,7 +1044,11 @@ TiDev.launchPython = function(script, args)
 		var scriptArgs = [];
 		scriptArgs.push('"'+script+'"');
 		for (var i = 0; i < args.length; i++) {
-			scriptArgs.push('"'+args[i]+'"');
+			var arg = args[i];
+			if (args[i].substring(0,1) != '"') {
+				arg = '"' + arg + '"';
+			}
+			scriptArgs.push(arg);
 		}
 		process = Titanium.Process.launch("python.exe", scriptArgs);
 	}

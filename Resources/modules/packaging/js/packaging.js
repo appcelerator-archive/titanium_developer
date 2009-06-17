@@ -1694,9 +1694,33 @@ PackageProject.writeTiManifest = function(project)
 	timanifest.publisher = project.publisher;
 	timanifest.url = project.url;
 	timanifest.desc = project.description;
-	timanifest.image = project.image;
 	timanifest.release = releaseUpdates;
 	
+	if (project.image)
+	{
+		// look for image in two places - either full path or in resources dir
+		var image = TFS.getFile(project.image);
+		if (!image.exists())
+		{
+			image = TFS.getFile(resources,project.image);
+		}
+		// use default if not exists
+		if (!image.exists())
+		{
+			var path = Titanium.App.appURLToPath('app://images');
+			image = TFS.getFile(path,'default_app_logo.png')
+		}
+		
+		var image_dest = TFS.getFile(resources,image.name());
+		if (image.toString() != image_dest.toString())
+		{
+			image.copy(image_dest);
+		}
+		imageName = image.name();
+		timanifest.image = image.name();
+	}
+
+alert(timanifest.image)	
 	// OS options
 	timanifest.platforms = [];
 	var winTrue = false; linuxTrue = false; macTrue = false;

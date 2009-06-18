@@ -1061,6 +1061,7 @@ Projects.handleNewProjectClick = function()
 						TiDev.setConsoleMessage('Success!  Android SDK was found.');
 						$('#android_sdk_true').css('display','block');
 						$('#android_sdk_false').css('display','none');							
+						Projects.hasAndroid = true;
 						
 						setTimeout(function()
 						{

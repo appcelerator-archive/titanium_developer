@@ -16,7 +16,7 @@ Projects.selectInitialTab = false;
 Projects.dbInitialized = false;
 
 // default runtime version
-Projects.currentRuntimeVersion = "0.4.0";
+Projects.currentRuntimeVersion = Titanium.version;
 
 // used to increment new project IDs
 Projects.highestId = 0;

@@ -151,7 +151,7 @@ Sandbox.setupView = function()
 	
 		var p = null;
 		// launch desktop app
-		p = TiDev.launchPython(PackageProject.desktopPackage.toString(), ["-d",dest.toString(),"-t", "bundle","-a",assets.toString(),appdir.toString(),"-n","-r","-v","-s",basePath.toString()]);
+		p = TiDev.launchPython(PackageProject.desktopPackage.toString(), ["-d",dest.toString(),"-t", "network","-a",assets.toString(),appdir.toString(),"-n","-r","-v","-s",basePath.toString()]);
 	
 	 	TiDev.track('sandbox-launch');
 	 });

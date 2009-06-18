@@ -44,7 +44,6 @@ EditProject.setFormData = function(p)
 	$('#edit_project_publisher').val(p.publisher);	
 	$('#edit_project_url').val(p.url);
 	$('#edit_project_icon').val(p.image);
-	$('#edit_project_runtime').val(p.runtime);
 	$('#edit_project_appid').val(p.appid);
 	$('#edit_project_version').val(p.version);
 	$('#edit_project_copyright').val(p.copyright);
@@ -115,6 +114,8 @@ EditProject.setFormData = function(p)
 		}
 
 	}
+	
+	$('#edit_project_runtime').val(p.runtime);
 	
 	TiUI.validator('edit_project',function(valid)
 	{

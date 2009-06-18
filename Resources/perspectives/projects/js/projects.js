@@ -925,6 +925,7 @@ Projects.getAndroidSDKLoc = function()
 	{
 		TiDev.db.execute('CREATE TABLE SDKLOCATION (LOCATION TEXT)');
 	}
+	return null;
 };
 //
 // Project click handler
@@ -1055,6 +1056,21 @@ Projects.handleNewProjectClick = function()
 				// helper function for checking android prereqs
 				function checkAndroid()
 				{
+					if (Projects.getAndroidSDKLoc() != null)
+					{
+						TiDev.setConsoleMessage('Success!  Android SDK was found.');
+						$('#android_sdk_true').css('display','block');
+						$('#android_sdk_false').css('display','none');							
+						
+						setTimeout(function()
+						{
+							TiDev.resetConsole();
+						},2000);
+						alert('it worked')
+						return;
+					
+					}
+					
 					var androidCheck = TiDev.launchPython(Titanium.Filesystem.getFile(androidPrereqPath).toString(),['project']);
 					androidCheck.onread = function(e)
 					{

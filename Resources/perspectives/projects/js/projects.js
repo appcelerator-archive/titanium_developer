@@ -1066,7 +1066,6 @@ Projects.handleNewProjectClick = function()
 						{
 							TiDev.resetConsole();
 						},2000);
-						alert('it worked')
 						return;
 					
 					}

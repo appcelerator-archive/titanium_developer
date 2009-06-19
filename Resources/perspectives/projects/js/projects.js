@@ -1465,7 +1465,7 @@ Projects.createProject = function(options, createProjectFiles)
 				if (options.android==true)
 				{
 					args.push('android');
-					args.push('"' + TiDev.androidSDKDir.trim() + '"');
+					args.push(TiDev.androidSDKDir.trim());
 				}
 
 				TiDev.setConsoleMessage('Creating mobile project: ' + options.name);

@@ -114,7 +114,6 @@ EditProject.setFormData = function(p)
 		}
 
 	}
-	
 	$('#edit_project_runtime').val(p.runtime);
 	
 	TiUI.validator('edit_project',function(valid)

@@ -276,6 +276,11 @@ EditProject.setupView = function()
 			{
 				break;
 			} 
+			if (line.indexOf('<window') != -1)
+			{ 
+				inWindowSection = true;
+			}
+
 			if (line.indexOf('version') != -1)
 			{
 				newXML += '<version>' + version + '</version>\n';
@@ -285,10 +290,6 @@ EditProject.setupView = function()
 			{
 				newXML += '<name>' + name + '</name>\n';
 				continue;
-			}
-			if (line.indexOf('<window') != -1)
-			{ 
-				inWindowSection = true;
 			}
 			if (line.indexOf('<id') != -1 && inWindowSection == false)
 			{
@@ -300,7 +301,7 @@ EditProject.setupView = function()
 				newXML += '<publisher>' + pub + '</publisher>\n';
 				continue;
 			}
-			if (line.indexOf('icon') != -1)
+			if (line.indexOf('<icon') != -1  && inWindowSection == false)
 			{
 				newXML += '<icon>' + image + '</icon>\n';
 				continue;

@@ -715,7 +715,6 @@ PackageProject.setupMobileView = function()
 				PackageProject.currentIPhonePID.terminate();
 				PackageProject.currentIPhonePID = null;
 			}
-			
 			PackageProject.currentIPhonePID = TiDev.launchPython(Titanium.Filesystem.getFile(PackageProject.iPhoneEmulatorPath).toString(),['simulator', '"'+sdk+'"','"'+ PackageProject.currentProject.dir+ '"',PackageProject.currentProject.appid, '"' + PackageProject.currentProject.name+ '"']);
 			var buf = '';
 			PackageProject.initializeConsoleWidth();

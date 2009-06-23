@@ -1378,14 +1378,21 @@ Projects.importProject = function(f)
 		options.guid = Titanium.Platform.createUUID();
 	}
 	
-	// ALWAYS SET TO CURRENT RUNTIME (FOR BETA RELEASE)
-	options.runtime = Projects.currentRuntimeVersion;
 	
 	// if not type - default to desktop
 	if (!options.type)
 	{
 		options.type = 'desktop';
 	}
+
+	// ALWAYS SET TO CURRENT RUNTIME (FOR BETA RELEASE)
+	if (options.type == 'desktop') {
+		options.runtime = Projects.currentRuntimeVersion;
+	} else {
+		var sdks = Titanium.Project.getMobileSDKVersions();
+		options.runtime = sdks[0];
+	}
+
 	TiDev.track('project-import',{guid:options.guid,name:options.name});
 
 	Projects.createProject(options);

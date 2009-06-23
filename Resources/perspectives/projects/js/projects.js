@@ -1072,15 +1072,18 @@ Projects.handleNewProjectClick = function()
 					}
 					
 					var androidCheck = TiDev.launchPython(Titanium.Filesystem.getFile(androidPrereqPath).toString(),['project']);
+					var dir = null;
 					androidCheck.onread = function(e)
 					{
-						TiDev.androidSDKDir = e.trim();
-						Projects.updateAndroidSDKLoc(TiDev.androidSDKDir);
+						dir = e.trim();
 					};
 					androidCheck.onexit = function(e)
 					{
 						if (e == 0)
 						{
+							TiDev.androidSDKDir = dir;
+							Projects.updateAndroidSDKLoc(TiDev.androidSDKDir);
+
 							Projects.hasAndroid = true;
 							$('#android_sdk_true').css('display','block');
 							$('#android_sdk_false').css('display','none');							

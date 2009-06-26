@@ -1407,15 +1407,6 @@ Projects.importProject = function(f)
 		options.runtime = versions[0];
 	}
 	
-	// ALWAYS SET TO CURRENT RUNTIME (FOR BETA RELEASE)
-	if (options.type == 'desktop') {
-		options.runtime = Projects.currentRuntimeVersion;
-	} else {
-		var sdks = Titanium.Project.getMobileSDKVersions();
-		options.runtime = sdks[0];
-	}
-
->>>>>>> d583b7544528fe7d7b530e29ed8f94a2c5210d62:Resources/perspectives/projects/js/projects.js
 	TiDev.track('project-import',{guid:options.guid,name:options.name});
 
 	Projects.createProject(options);

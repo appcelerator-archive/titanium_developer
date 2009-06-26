@@ -1386,6 +1386,30 @@ Projects.importProject = function(f)
 	{
 		options.type = 'desktop';
 	}
+	
+	// ensure sdk verison is available
+	if (options.type == 'desktop')
+	{
+		var versions = Titanium.Project.getSDKVersions();
+		if (versions.length == 0)
+		{
+			alert('You are importing a desktop project, but no Desktop SDK versions exist on your system');
+			return;
+		}
+		options.runtime = versions[0];
+	}
+	else
+	{
+		var versions = Titanium.Project.getMobileSDKVersions();
+
+		if (versions.length == 0)
+		{
+			alert('You are importing a mobile project, but no Mobile SDK versions exist on your system');
+			return;
+		}
+		options.runtime = versions[0];
+	}
+	
 	TiDev.track('project-import',{guid:options.guid,name:options.name});
 
 	Projects.createProject(options);

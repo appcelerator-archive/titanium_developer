@@ -1378,15 +1378,13 @@ Projects.importProject = function(f)
 		options.guid = Titanium.Platform.createUUID();
 	}
 	
-	// ALWAYS SET TO CURRENT RUNTIME (FOR BETA RELEASE)
-	options.runtime = Projects.currentRuntimeVersion;
 	
 	// if not type - default to desktop
 	if (!options.type)
 	{
 		options.type = 'desktop';
 	}
-	
+
 	// ensure sdk verison is available
 	if (options.type == 'desktop')
 	{
@@ -1401,7 +1399,6 @@ Projects.importProject = function(f)
 	else
 	{
 		var versions = Titanium.Project.getMobileSDKVersions();
-
 		if (versions.length == 0)
 		{
 			alert('You are importing a mobile project, but no Mobile SDK versions exist on your system');
@@ -1410,6 +1407,15 @@ Projects.importProject = function(f)
 		options.runtime = versions[0];
 	}
 	
+	// ALWAYS SET TO CURRENT RUNTIME (FOR BETA RELEASE)
+	if (options.type == 'desktop') {
+		options.runtime = Projects.currentRuntimeVersion;
+	} else {
+		var sdks = Titanium.Project.getMobileSDKVersions();
+		options.runtime = sdks[0];
+	}
+
+>>>>>>> d583b7544528fe7d7b530e29ed8f94a2c5210d62:Resources/perspectives/projects/js/projects.js
 	TiDev.track('project-import',{guid:options.guid,name:options.name});
 
 	Projects.createProject(options);

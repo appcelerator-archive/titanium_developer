@@ -800,7 +800,7 @@ TiDev.invokeCloudService = function(name,data,type,sCallback,fCallback)
 	{
 		// try to login
 		var u = Titanium.App.getStreamURL('sso-login');
-		var d = {};
+		var d = {mid:Titanium.Platform.id};
 		
 		// do we already have the email/password
 		if (UserProfile.email && UserProfile.password)

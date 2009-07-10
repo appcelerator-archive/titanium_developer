@@ -1461,6 +1461,7 @@ Projects.createProject = function(options, createProjectFiles)
 	if (createProjectFiles == true)
 	{
 		var result = {};
+		result.success = false;
 		if (options.type == 'desktop')
 		{
 		 	result = Titanium.Project.create(options);

@@ -140,6 +140,7 @@ EditProject.setupView = function()
 		{
 			try
 			{
+				TiDev.track('project-delete',{guid:EditProject.currentProject.guid,name:EditProject.currentProject.name,appid:EditProject.currentProject.appid,name:EditProject.currentProject.name});
 				
 				// remove db data
 				TiDev.db.execute('DELETE FROM PROJECTS WHERE ID = ?', EditProject.currentProject.id);
@@ -167,8 +168,6 @@ EditProject.setupView = function()
 
 				// resetView
 				Projects.setupView();
-
-				TiDev.track('project-delete');
 
 				TiDev.db.execute('DELETE FROM PROJECTPACKAGES WHERE GUID = ?', EditProject.currentProject.guid);
 				TiDev.db.execute('DELETE FROM PROJECTDOWNLOADS WHERE GUID = ?', EditProject.currentProject.guid);
@@ -248,6 +247,9 @@ EditProject.setupView = function()
 		var appid = EditProject.currentProject.appid = $('#edit_project_appid').val();
 		var version = EditProject.currentProject.version = $('#edit_project_version').val();
 		var copyright = EditProject.currentProject.copyright = $('#edit_project_copyright').val();
+
+		var rubyOn = ($('#language_ruby_checked').css('display') != 'none')?'on':'';
+		var pythonOn = ($('#language_python_checked').css('display') != 'none')?'on':'';
 		
 		var message = 'Your changes have been saved';
 		var delay = 2000;
@@ -262,6 +264,8 @@ EditProject.setupView = function()
 			message = 'Unexpected error, message ' + e;
 			delay = 5000;
 		}
+		
+		TiDev.track('project-edit',{name:name,desc:desc,publisher:pub,url:url,image:image,sdk:runtime,appid:appid,version:version,copyright:copyright,ruby:rubyOn,python:pythonOn});
 
 		// update tiapp.xml
 		var tiapp = Titanium.Filesystem.getFile(EditProject.currentProject.dir,'tiapp.xml');
@@ -337,9 +341,6 @@ EditProject.setupView = function()
 				// check for language modules
 				if (EditProject.currentProject.type == 'desktop')
 				{
-					var rubyOn = ($('#language_ruby_checked').css('display') != 'none')?'on':'';
-					var pythonOn = ($('#language_python_checked').css('display') != 'none')?'on':'';
-
 					// remove current rows
 					TiDev.db.execute('DELETE FROM PROJECTMODULES WHERE guid = ?', EditProject.currentProject.guid);
 					if (rubyOn == 'on')

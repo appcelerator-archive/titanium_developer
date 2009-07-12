@@ -223,7 +223,7 @@ Titanium.Project =
 					{
 						if (version == modules[i].getVersion())
 						{
-							return modules[i]
+							return modules[i];
 						}
 					}
 					else

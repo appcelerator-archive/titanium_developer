@@ -153,7 +153,7 @@ Sandbox.setupView = function()
 		// launch desktop app
 		p = TiDev.launchPython(PackageProject.desktopPackage.toString(), ["-d",dest.toString(),"-t", "network","-a",assets.toString(),appdir.toString(),"-n","-r","-v","-s",basePath.toString()]);
 	
-	 	TiDev.track('sandbox-launch');
+	 	TiDev.track('sandbox-launch',options);
 	 });
 	
 	// load APIs

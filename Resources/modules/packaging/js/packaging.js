@@ -618,7 +618,7 @@ PackageProject.setupMobileView = function()
 			var certName = PackageProject.getIPhoneAttribute('dist_name');
 			var location = $('#iphone_dist_location').val();
 			var sdk = $('#iphone_distribution_sdk').val();
-			TiDev.track('iphone-distribute',{sdk:sdk});
+			TiDev.track('iphone-distribute',{sdk:sdk,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name,uuid:uuid,certName:certName});
 			
 			var x = TiDev.launchPython(Titanium.Filesystem.getFile(PackageProject.iPhoneEmulatorPath).toString(),['distribute','"'+sdk+'"', '"'+ PackageProject.currentProject.dir+ '"',PackageProject.currentProject.appid, '"' + PackageProject.currentProject.name+ '"', uuid,'"'+certName+'"','"'+location+'"']);
 			var buffer = '';
@@ -647,7 +647,7 @@ PackageProject.setupMobileView = function()
 			if ($(this).hasClass('disabled')==false)
 			{
 				var sdk = $('#iphone_device_sdk').val();				
-				TiDev.track('iphone-install',{sdk:sdk});
+				TiDev.track('iphone-install',{sdk:sdk,uuid:uuid,devName:devName,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name});
 				var x = TiDev.launchPython(Titanium.Filesystem.getFile(PackageProject.iPhoneEmulatorPath).toString(),['install','"'+sdk+'"', '"'+ PackageProject.currentProject.dir+ '"',PackageProject.currentProject.appid, '"' + PackageProject.currentProject.name+ '"','"'+uuid+'"', '"'+devName + '"']);
 				var buffer = '';
 				x.onread = function(e)
@@ -707,7 +707,7 @@ PackageProject.setupMobileView = function()
 			$('#mobile_iphone_emulator_viewer').empty();
 			
 			var sdk = $('#iphone_emulator_sdk').val();
-			TiDev.track('iphone-simulator',{sdk:sdk});
+			TiDev.track('iphone-simulator',{sdk:sdk,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name});
 			
 			// kill if still running
 			if (PackageProject.currentIPhonePID != null)
@@ -803,7 +803,7 @@ PackageProject.setupMobileView = function()
 		$('#android_install_on_device_button').click(function()
 		{
 			TiDev.setConsoleMessage('Installing app on device...');
-			TiDev.track('android-install');
+			TiDev.track('android-install',{name:PackageProject.currentProject.name,appid:PackageProject.currentProject.appid});
 			
 			var args = ["install", '"'+ PackageProject.currentProject.name+ '"','"' +TiDev.androidSDKDir+ '"', '"' + PackageProject.currentProject.dir + '"', '"'+PackageProject.currentProject.appid+'"'];
 		 	var installAndroid = TiDev.launchPython(Titanium.Filesystem.getFile(PackageProject.AndroidEmulatorPath).toString(),args);
@@ -881,7 +881,7 @@ PackageProject.setupMobileView = function()
 				}
 			};
 				
-			TiDev.track('android-distribute');
+			TiDev.track('android-distribute',{name:PackageProject.currentProject.name,appid:PackageProject.currentProject.appid});
 			
 		});
 
@@ -961,7 +961,7 @@ PackageProject.setupMobileView = function()
 		{
 			if ($(this).hasClass('disabled'))return;
 			
-			TiDev.track('android-simulator');
+			TiDev.track('android-simulator',{name:PackageProject.currentProject.name,appid:PackageProject.currentProject.appid});
 			
 			$('#android_kill_button').removeClass('disabled');
 			
@@ -1514,8 +1514,6 @@ PackageProject.setupDesktopView = function()
 	{
 		if ($(this).hasClass('disabled'))return;
 		
-		TiDev.track('desktop-launch');
-		
 		$('#launch_app_button').addClass('disabled');
 		$('#launch_kill_button').removeClass('disabled');
 		
@@ -1542,6 +1540,8 @@ PackageProject.setupDesktopView = function()
 
 			// write out new manifest based on current modules
 			Titanium.Project.writeManifest(PackageProject.currentProject);
+
+			TiDev.track('desktop-launch',{sdk:runtime,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name,guid:PackageProject.currentProject.guid});
 			
 			// launch desktop app
 			PackageProject.currentAppPID = TiDev.launchPython(PackageProject.desktopPackage.toString(), ["-d",dest.toString(),"-t", "bundle","-a",assets.toString(),appdir.toString(),"-n","-r","-v","-s",basePath.toString()]);

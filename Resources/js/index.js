@@ -34,6 +34,9 @@ TiDev.feedbackURL = 'user-feedback';
 // user permissions
 TiDev.permissions = {};
 
+// user attributes
+TiDev.attributes = {};
+
 //
 // Helper function for loading module and perspective JS and CSS
 //
@@ -725,7 +728,11 @@ TiDev.invokeCloudService = function(name,data,type,sCallback,fCallback)
 
 	var url = Titanium.App.getStreamURL(name);
 	var type = (type)?type:'POST';
-	var data = (data)?data:{};
+
+	if (typeof(data)=='undefined')
+	{
+		data = {};
+	}
 	
 	// always pass MID
 	data.mid = Titanium.Platform.id;
@@ -847,6 +854,9 @@ TiDev.invokeCloudService = function(name,data,type,sCallback,fCallback)
 					Projects.userUIDT = resp.uidt;
 					
 					TiDev.permissions  = resp.permissions;
+					TiDev.attributes = resp.attributes;	
+					
+					UserProfile.updateUser(d.un,TiDev.attributes);				
 					
 					// toggle login status
 					$('#tiui_shield_off').css('display','none');

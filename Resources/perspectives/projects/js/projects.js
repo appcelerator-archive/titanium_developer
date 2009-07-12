@@ -114,7 +114,7 @@ Projects.createUser = function()
 			try
 			{
 				TiDev.db.execute('INSERT INTO USERS (fname, lname, email, password, organization, city, state, country, twitter) VALUES (?,?,?,?,?,?,?,?,?)',
-					fname,lname,email,password,org,city,state,country,twitter)
+					fname,lname,email,password,org,city,state,country,twitter);
 			}
 			// create table and try again
 			catch (e)
@@ -455,6 +455,9 @@ Projects.setupView = function()
 					Projects.userUIDT = resp.uidt;
 
 					TiDev.permissions  = resp.permissions;
+					TiDev.attributes = resp.attributes;
+					UserProfile.updateUser(email,TiDev.attributes);				
+					
 					// show authenticated indicator
 					$('#tiui_shield_off').css('display','none');
 					$('#tiui_shield_on').css('display','inline');
@@ -481,7 +484,7 @@ Projects.setupView = function()
 				}
 			};
 			// login
-			TiDev.invokeCloudService(Projects.ssoLoginURL,{un:email,pw:password},'POST',loginOK, loginFailed);
+			TiDev.invokeCloudService(Projects.ssoLoginURL,{un:email,pw:password,mid:Titanium.platform.id},'POST',loginOK, loginFailed);
 		}
 		else
 		{
@@ -1168,8 +1171,6 @@ Projects.handleNewProjectClick = function()
 		options.android = ($('#android_sdk_true').css('display') != 'none')?true:false;
 		options.ruby = ($('#language_ruby_checked').css('display') != 'none')?'on':'';
 		options.python = ($('#language_python_checked').css('display') != 'none')?'on':'';
-		TiDev.track('project-create',{name:options.name,type:options.type,runtime:options.runtime});
-		
 		Projects.createProject(options,true);
 	});
 
@@ -1325,6 +1326,10 @@ Projects.importProject = function(f)
 			{
 				options.name = entry.value;
 			}
+			if (entry.key.indexOf('version') != -1)
+			{
+				options.version = entry.value;
+			}
 			else if (entry.key.indexOf('publisher') != -1)
 			{
 				options.publisher = entry.value;
@@ -1407,9 +1412,9 @@ Projects.importProject = function(f)
 		options.runtime = versions[0];
 	}
 	
-	TiDev.track('project-import',{guid:options.guid,name:options.name});
-
 	Projects.createProject(options);
+
+	TiDev.track('project-import',options);
 	
 	// show message
 	TiDev.setConsoleMessage('Your project has been imported',2000);
@@ -1456,6 +1461,8 @@ Projects.createProject = function(options, createProjectFiles)
 		copyright:options.copyright,
 		'languageModules':{'ruby':options.ruby,'python':options.python}
 	};
+
+	TiDev.track('project-create',record);
 
 	// create project directories
 	if (createProjectFiles == true)

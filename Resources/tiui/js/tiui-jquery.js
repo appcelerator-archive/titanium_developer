@@ -41,11 +41,11 @@ TiUI.validator = function(clazz, callback)
 				if (/^[^\._][a-z0-9A-Z-\.]+[^\._]$/.test(appid) == false || $(this).hasClass('hinttext') == true)
 				{
 					valid = false;
-					$(this).addClass('tiui_invalid_field')
+					$(this).addClass('tiui_invalid_field');
 				}
 				else
 				{
-					$(this).removeClass('tiui_invalid_field')
+					$(this).removeClass('tiui_invalid_field');
 				}
 			}
 
@@ -54,11 +54,11 @@ TiUI.validator = function(clazz, callback)
 				if ($(this).val() == '' || $(this).hasClass('hinttext') == true)
 				{
 					valid = false;
-					$(this).addClass('tiui_invalid_field')
+					$(this).addClass('tiui_invalid_field');
 				}
 				else
 				{
-					$(this).removeClass('tiui_invalid_field')
+					$(this).removeClass('tiui_invalid_field');
 				}
 			}
 			if ($(this).hasClass('email'))
@@ -66,26 +66,26 @@ TiUI.validator = function(clazz, callback)
 				if (EMAIL_REGEX.test($(this).val()) == false || $(this).hasClass('hinttext') == true)
 				{
 					valid = false;
-					$(this).addClass('tiui_invalid_field')
+					$(this).addClass('tiui_invalid_field');
 				}				
 				else
 				{
-					$(this).removeClass('tiui_invalid_field')
+					$(this).removeClass('tiui_invalid_field');
 				}
 				
 			}
 		})
 		callback(valid);
-	}
+	};
 
 	$('.' + clazz).keyup(function()
 	{
 		validate();
-	})
+	});
 	$('.' + clazz).change(function()
 	{
 		validate();
-	})
+	});
 	
 	// perform initial validation
 	validate();

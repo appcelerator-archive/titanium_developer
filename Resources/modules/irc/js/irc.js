@@ -254,7 +254,7 @@ IRC.connect = function()
 	IRC.setUsers();
 	$('#irc_user_count_container').css('display','block');
 	$('#irc_user_count').html(IRC.users.length);
-	TiDev.track('irc-connect');
+	TiDev.track('irc-connect',{'nick':IRC.nick});
 	
 };
 

@@ -8,6 +8,88 @@ UserProfile.defaultValues = {
 UserProfile.user = {};
 
 //
+// method is called when receiving details from backend so that
+// they can be updated on the front-end in case the user has updated their
+// profile on the website
+//
+UserProfile.updateUser = function(email,data)
+{
+	UserProfile.user['email']  = email;
+	
+	try
+	{
+		var dbrow = TiDev.db.execute("select password from USERS where email = ?", email);
+		while (dbrow.isValidRow())
+		{
+			UserProfile.user['password']  = dbrow.fieldByName('password');
+			$('#user_profile_password').val(UserProfile.user['password']).removeClass('tiui_invalid_field');
+			break;
+		}
+	}
+	catch(E)
+	{
+	}
+	
+	for(var name in data)
+	{
+		var value = data[name];
+		switch(name)
+		{
+			case 'firstname':
+			{
+				$('#user_profile_fname').val(value).removeClass('tiui_invalid_field');
+				TiDev.db.execute('UPDATE USERS SET fname = ? where email = ?',value,email);
+				UserProfile.user['fname']  = value;
+				break;
+			}
+			case 'lastname':
+			{
+				$('#user_profile_lname').val(value).removeClass('tiui_invalid_field');
+				TiDev.db.execute('UPDATE USERS SET lname = ? where email = ?',value,email);
+				UserProfile.user['lname']  = value;
+				break;
+			}
+			case 'twitter':
+			{
+				$('#user_profile_twitter').val(value).removeClass('tiui_invalid_field');
+				TiDev.db.execute('UPDATE USERS SET twitter = ? where email = ?',value,email);
+				UserProfile.user['twitter']  = value;
+				break;
+			}
+			case 'organization':
+			{
+				$('#user_profile_org').val(value).removeClass('tiui_invalid_field');
+				TiDev.db.execute('UPDATE USERS SET organization = ? where email = ?',value,email);
+				UserProfile.user['organization']  = value;
+				break;
+			}
+			case 'city':
+			{
+				$('#user_profile_city').val(value).removeClass('tiui_invalid_field');
+				TiDev.db.execute('UPDATE USERS SET city = ? where email = ?',value,email);
+				UserProfile.user['city']  = value;
+				break;
+			}
+			case 'state':
+			{
+				$('#user_profile_state').val(value).removeClass('tiui_invalid_field');
+				TiDev.db.execute('UPDATE USERS SET state = ? where email = ?',value,email);
+				UserProfile.user['state']  = value;
+				break;
+			}
+			case 'country':
+			{
+				$('#user_profile_country').val(value).removeClass('tiui_invalid_field');
+				TiDev.db.execute('UPDATE USERS SET country = ? where email = ?',value,email);
+				UserProfile.user['country']  = value;
+				break;
+			}
+		}
+	}
+	
+};
+
+//
 // insert a new row
 //
 UserProfile.insertRow = function()
@@ -88,7 +170,6 @@ UserProfile.setupView = function()
 		
 		var message = 'Your changes have been saved';
 		var delay = 2000;
-		TiDev.track('profile-edit');
 		
 		try
 		{
@@ -108,7 +189,16 @@ UserProfile.setupView = function()
 		}
 		
 		TiDev.setConsoleMessage(message,delay);
-		
+
+		var copy = {};
+		for (var p in UserProfile.user)
+		{
+			if (p != 'password' && p != 'email')
+			{
+				copy[p]=UserProfile.user[p];
+			}
+		}
+		TiDev.track('profile-edit',copy);
 	});
 	
 	// set form data
@@ -185,6 +275,7 @@ UserProfile.setupView = function()
 			$('#user_profile_password').get(0).type = 'password';
 		}
 	})
+	
 	// validation
 	TiUI.validator('user_profile',function(valid)
 	{
@@ -193,9 +284,8 @@ UserProfile.setupView = function()
 		else
 			$('#save_profile_button').addClass('disabled');
 	});
+};
 
-
-}
 // setup event handler
 UserProfile.eventHandler = function(event)
 {
@@ -206,10 +296,6 @@ UserProfile.eventHandler = function(event)
 	else if (event == 'load')
 	{
 		UserProfile.setupView();
-	}
-	else
-	{
-		
 	}
 };
 

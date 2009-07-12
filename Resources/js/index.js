@@ -667,6 +667,8 @@ TiDev.sortArray = function(a,b)
 //
 TiDev.isAuthenticated = function()
 {
+	//FIXME - you can't use these
+	
 	if ((Projects.userSID != null) &&
 		(Projects.userToken != null) &&
 		(Projects.userUID != null) &&
@@ -724,6 +726,9 @@ TiDev.invokeCloudService = function(name,data,type,sCallback,fCallback)
 	var url = Titanium.App.getStreamURL(name);
 	var type = (type)?type:'POST';
 	var data = (data)?data:{};
+	
+	// always pass MID
+	data.mid = Titanium.Platform.id;
 	
 	// set timeout low if the online event hasn't fired and we are logging (should only happen once)
 	var timeout = (name == 'sso-login' && !Titanium.Network.online && TiDev.onlineListenerFired==false)?800:10000;
@@ -833,6 +838,9 @@ TiDev.invokeCloudService = function(name,data,type,sCallback,fCallback)
 				if (resp.success == true)
 				{		
 					// record tokens
+					
+					//FIXME - these are only good for 12 hours and during the login -JGH
+					
 					Projects.userSID = resp.sid;
 					Projects.userToken = resp.token;
 					Projects.userUID = resp.uid;

@@ -55,7 +55,7 @@ EditProject.setFormData = function(p)
 			}
 			case 'linux':
 			{
-				//TODO: waiting for answer from martin on how to do this.
+				Titanium.Process.launc("xdg-open",[p.dir]);
 				break;
 			}
 		}

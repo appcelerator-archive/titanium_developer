@@ -1,3 +1,14 @@
+#edit_project_div 
+{
+	position:relative;
+}
+#edit_project_open
+{
+	position:absolute;
+	top:10px;
+	left:420px;
+	cursor:pointer;
+}
 #project_edit
 {
 	padding:20px;
@@ -12,5 +23,5 @@
 	font-size:21px;
 	margin-bottom:10px;
 	color:#999;
+	cursor:pointer;
 }
-

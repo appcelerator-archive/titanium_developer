@@ -37,6 +37,31 @@ EditProject.setFormData = function(p)
 	{
 		displayDir = p.dir.substring(0,50) + '...';
 	}
+	
+	
+	function openProjectFolder()
+	{
+		switch(Titanium.platform)
+		{
+			case 'osx':
+			{
+				Titanium.Process.launch("/usr/bin/open",[p.dir]);
+				break;
+			}
+			case 'win32':
+			{
+				Titanium.Process.launch("C:\\Windows\\explorer.exe",["/e,"+Titanium.Filesystem.getFile(p.dir).toString()]);
+				break;
+			}
+			case 'linux':
+			{
+				//TODO: waiting for answer from martin on how to do this.
+				break;
+			}
+		}
+	};
+	$("#edit_project_dir").click(openProjectFolder);
+	$("#edit_project_open").click(openProjectFolder);
 
 	$('#edit_project_dir').html(displayDir);
 	$('#edit_project_name').val(p.name);

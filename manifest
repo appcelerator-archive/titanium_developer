@@ -4,7 +4,7 @@
 #image:titanium_beta.png
 #url:http://www.appcelerator.com
 #guid:2adec37f-e394-479f-8cbb-ac54209818a6
-#desc:Titanium Developer is the application for managing your Titanium Mobile and Desktop applications.
+#desc:Titanium Developer is a cool new app created by Appcelerator
 #type:desktop
 runtime:0.4.4
 api:0.4.4
@@ -14,7 +14,7 @@ tiplatform:0.4.4
 tiui:0.4.4
 javascript:0.4.4
 tianalytics:0.4.4
-mobilesdk:0.5.0
+mobilesdk:0.5.1
 sdk:0.4.4
 python:0.4.4
 ruby:0.4.4

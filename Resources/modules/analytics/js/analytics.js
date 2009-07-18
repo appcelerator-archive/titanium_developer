@@ -8,7 +8,10 @@ $MQL('l:tidev.projects.row_selected',function(msg)
 {
 	if (msg.payload.activeTab == 'analytics')
 	{
-		Analytics.setPageData();
+//		Analytics.setPageData();
+		$('#analytics_view').css('display','none');
+		$('#no_analytics_view').css('display','block');
+
 	}
 });
 
@@ -98,7 +101,10 @@ Analytics.setupView = function()
 	TiDev.contentLeft.show();
 	TiDev.contentLeftHideButton.show();
 	TiDev.contentLeftShowButton.hide();		
-	Analytics.setPageData()
+	//Analytics.setPageData();
+	$('#analytics_view').css('display','none');
+	$('#no_analytics_view').css('display','block');
+	
 };
 
 // setup event handler

@@ -762,9 +762,8 @@ TiDev.invokeCloudService = function(name,data,type,sCallback,fCallback)
 	{
 		data.sid = Projects.userSID;
 		data.token = Projects.userToken;
-		data.uid = Projects.userUID;
+		data.uid = String(Projects.userUID);
 		data.uidt = Projects.userUIDT;
-		
 		$.ajax({
 			url:url,
 			type:type,
@@ -847,7 +846,6 @@ TiDev.invokeCloudService = function(name,data,type,sCallback,fCallback)
 					// record tokens
 					
 					//FIXME - these are only good for 12 hours and during the login -JGH
-					
 					Projects.userSID = resp.sid;
 					Projects.userToken = resp.token;
 					Projects.userUID = resp.uid;

@@ -132,7 +132,6 @@ UserProfile.updateRow = function()
 	obj.state=UserProfile.user['state'];
 	obj.country=UserProfile.user['country'];
 	obj.twitter=UserProfile.user['twitter'];
-	
 	TiDev.invokeCloudService(UserProfile.updateURL,obj,'POST');
 
 };

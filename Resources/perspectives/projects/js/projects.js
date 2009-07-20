@@ -1018,9 +1018,10 @@ Projects.handleNewProjectClick = function()
 					TiDev.setConsoleMessage('Checking for iPhone prerequisites...');
 					
 					// run iphone prereq check
-					var iPhoneCheck = TiDev.launchPython(Titanium.Filesystem.getFile(iPhonePrereqPath).toString(),['project']);
-					iPhoneCheck.onexit = function(e)
+					var iPhoneCheck = TiDev.launchPython([Titanium.Filesystem.getFile(iPhonePrereqPath).toString(),'project']);
+					iPhoneCheck.setOnExit(function(event)
 					{
+						var e = iPhoneCheck.getExitCode();
 						// success
 						if (e == 0)
 						{
@@ -1052,8 +1053,8 @@ Projects.handleNewProjectClick = function()
 							checkAndroid();
 							
 						}
-					};
-					
+					});
+					iPhoneCheck.launch();
 				}
 				
 				// helper function for checking android prereqs
@@ -1074,14 +1075,15 @@ Projects.handleNewProjectClick = function()
 					
 					}
 					
-					var androidCheck = TiDev.launchPython(Titanium.Filesystem.getFile(androidPrereqPath).toString(),['project']);
+					var androidCheck = TiDev.launchPython([Titanium.Filesystem.getFile(androidPrereqPath).toString(),'project']);
 					var dir = null;
-					androidCheck.onread = function(e)
+					androidCheck.setOnRead(function(event)
 					{
-						dir = e.trim();
-					};
-					androidCheck.onexit = function(e)
+						dir = event.data.toString().trim();
+					});
+					androidCheck.setOnExit(function(event)
 					{
+						var e = androidCheck.getExitCode();
 						if (e == 0)
 						{
 							TiDev.androidSDKDir = dir;
@@ -1129,7 +1131,8 @@ Projects.handleNewProjectClick = function()
 								props);						
 							}
 						}
-					};
+					});
+					androidCheck.launch();
 				};
 				
 
@@ -1505,9 +1508,11 @@ Projects.createProject = function(options, createProjectFiles)
 				// determine path to project create script
 				var sdk = Titanium.Project.getMobileSDKVersions(options.runtime);
 				var path = Titanium.Filesystem.getFile(sdk.getPath(),'project.py');
-				var	x = TiDev.launchPython(Titanium.Filesystem.getFile(path).toString(),args);
-				x.onexit = function(e)
+				args.unshift(Titanium.Filesystem.getFile(path).toString());
+				var	x = TiDev.launchPython(args);
+				x.setOnExit(function(event)
 				{
+					var e = x.getExitCode();
 					if (e!=0)
 					{
 						result.message = 'Error creating project.  Please try again.';
@@ -1524,7 +1529,8 @@ Projects.createProject = function(options, createProjectFiles)
 						writeAppTextFiles();
 						
 					}
-				};
+				});
+				x.launch();
 			}
 		}
 		

@@ -45,17 +45,17 @@ EditProject.setFormData = function(p)
 		{
 			case 'osx':
 			{
-				Titanium.Process.launch("/usr/bin/open",[p.dir]);
+				Titanium.Process.createProcess(["/usr/bin/open",p.dir]).launch();
 				break;
 			}
 			case 'win32':
 			{
-				Titanium.Process.launch("C:\\Windows\\explorer.exe",["/e,"+Titanium.Filesystem.getFile(p.dir).toString()]);
+				Titanium.Process.createProcess(["C:\\Windows\\explorer.exe","/e,"+Titanium.Filesystem.getFile(p.dir).toString()]).launch();
 				break;
 			}
 			case 'linux':
 			{
-				Titanium.Process.launc("xdg-open",[p.dir]);
+				Titanium.Process.createProcess(["xdg-open",p.dir]).launch();
 				break;
 			}
 		}

@@ -1462,7 +1462,11 @@ Projects.createProject = function(options, createProjectFiles)
 		'languageModules':{'ruby':options.ruby,'python':options.python}
 	};
 
-	TiDev.track('project-create',record);
+	// only record event if we are creating project files
+	if (createProjectFiles == true)
+	{
+		TiDev.track('project-create',record);
+	}
 
 	// create project directories
 	if (createProjectFiles == true)

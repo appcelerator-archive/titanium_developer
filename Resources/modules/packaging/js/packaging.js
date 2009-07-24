@@ -1280,7 +1280,7 @@ PackageProject.uploadIPhoneProvisioningProfile = function(profileType,callback)
 			{
 				var json = swiss.evalJSON(d);
 				var appid = json['appid'];
-				var type = json['type'];
+				var type = (profileType =='distribution_profile')?'distribution':'development';
 				var name = json['name'];
 				var uuid = json['uuid']
 				if (name && type && appid)

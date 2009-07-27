@@ -181,8 +181,9 @@ Titanium.Project =
 						var moduleDest = TFS.getFile(app.base,"modules");
 						TFS.asyncCopy(appModules,moduleDest, function()
 						{
-							Titanium.Process.setEnv('KR_DEBUG','true');
-							var x =  Titanium.Process.launch(app.executable.nativePath(),args);
+							args.unshift(app.executable.nativePath());
+							var x =  Titanium.Process.createProcess({args: args, env: {"KR_DEBUG": "true"}});
+							x.launch();
 							if (x && callback)
 							{
 								callback(x);
@@ -191,8 +192,8 @@ Titanium.Project =
 					}
 					else
 					{
-						Titanium.Process.setEnv('KR_DEBUG','true');
-						var x = Titanium.Process.launch(app.executable.nativePath(),args);
+						args.unshift(app.executable.nativePath());
+						var x = Titanium.Process.createProcess({args: args, env: {"KR_DEBUG": "true"}});
 						if (x && callback)
 						{
 							callback(x);

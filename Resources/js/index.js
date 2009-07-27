@@ -1053,23 +1053,21 @@ TiDev.formatURIs = function(str)
 	
 };
 
-TiDev.launchPython = function(script, args)
+TiDev.launchPython = function(args)
 {
 	var process = null;
+	console.log(args);
+	
 	if (Titanium.platform == "win32") {
-		var scriptArgs = [];
-		scriptArgs.push('"'+script+'"');
+		args.unshift("python.exe");
+		/*scriptArgs.push('"'+script+'"');
 		for (var i = 0; i < args.length; i++) {
 			var arg = args[i];
 			if (args[i].substring(0,1) != '"') {
 				arg = '"' + arg + '"';
 			}
 			scriptArgs.push(arg);
-		}
-		process = Titanium.Process.launch("python.exe", scriptArgs);
+		}*/
 	}
-	else {
-		process = Titanium.Process.launch(script, args);
-	}
-	return process;
+	return Titanium.Process.createProcess(args);
 };

@@ -64,7 +64,7 @@ EditProject.setFormData = function(p)
 	$("#edit_project_open").click(openProjectFolder);
 
 	$('#edit_project_dir').html(displayDir);
-	$('#edit_project_name').val(p.name);
+	$('#edit_project_name').html(p.name);
 	$('#edit_project_desc').val(p.description);
 	$('#edit_project_publisher').val(p.publisher);	
 	$('#edit_project_url').val(p.url);
@@ -263,7 +263,7 @@ EditProject.setupView = function()
 		TiDev.track('project-edit');
 		
 		// save project and update cache
-		var name = EditProject.currentProject.name = $('#edit_project_name').val();
+		var name = EditProject.currentProject.name = $('#edit_project_name').html();
 		var desc = EditProject.currentProject.description =$('#edit_project_desc').val();
 		var pub = EditProject.currentProject.publisher = $('#edit_project_publisher').val();	
 		var url = EditProject.currentProject.url = $('#edit_project_url').val();

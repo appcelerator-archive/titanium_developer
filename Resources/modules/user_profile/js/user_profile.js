@@ -133,7 +133,9 @@ UserProfile.updateRow = function()
 	obj.country=UserProfile.user['country'];
 	obj.twitter=UserProfile.user['twitter'];
 	TiDev.invokeCloudService(UserProfile.updateURL,obj,'POST');
-
+	
+	// update Android SDK
+	Projects.updateAndroidSDKLoc($('#user_android_sdk').val());
 };
 
 //
@@ -152,6 +154,7 @@ UserProfile.setFormData = function()
 	$('#user_profile_twitter').val(UserProfile.user['twitter']);
 	$('#user_profile_password').get(0).type = 'password';
 	$('#save_profile_button').removeClass('disabled');
+	$('#user_android_sdk').val(Projects.getAndroidSDKLoc());
 };
 
 UserProfile.setupView = function()
@@ -283,6 +286,21 @@ UserProfile.setupView = function()
 		else
 			$('#save_profile_button').addClass('disabled');
 	});
+
+	$('#android_sdk_icon_button').click(function()
+	{
+		var props = {multiple:false,directories:true,files:false};
+		Titanium.UI.currentWindow.openFolderChooserDialog(function(f)
+		{
+			if (f.length)
+			{
+				// set file and revalidate
+				$('#user_android_sdk').val(f[0]);
+			}
+		},
+		props);						
+	});
+
 };
 
 // setup event handler

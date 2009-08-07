@@ -629,9 +629,9 @@ $(document).ready(function()
 		},300);
 		
 	});
-	alert(Titanium.App.getVersion())
 	// set title
 	document.title = "Titanium Developer (" + Titanium.App.getVersion() + ")";
+	//Titanium.UI.currentWindow.title =  "Titanium Developer (" + Titanium.App.getVersion() + ")";	
 });
 
 

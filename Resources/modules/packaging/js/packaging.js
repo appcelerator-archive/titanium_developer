@@ -621,7 +621,7 @@ PackageProject.setupMobileView = function()
 			var location = $('#iphone_dist_location').val();
 			var sdk = $('#iphone_distribution_sdk').val();
 			TiDev.track('iphone-distribute',{sdk:sdk,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name,uuid:uuid,certName:certName});
-			
+			alert('distribute '+sdk+ ' '+ PackageProject.currentProject.dir+ ' ' +PackageProject.currentProject.appid+ ' ' + PackageProject.currentProject.name+ ' '+ uuid+' '+certName+'"'+'"'+location+'"');
 			var x = TiDev.launchPython([Titanium.Filesystem.getFile(PackageProject.iPhoneEmulatorPath).toString(),'distribute','"'+sdk+'"', '"'+ PackageProject.currentProject.dir+ '"',PackageProject.currentProject.appid, '"' + PackageProject.currentProject.name+ '"', uuid,'"'+certName+'"','"'+location+'"']);
 			var buffer = '';
 			x.setOnRead(function(event)
@@ -873,18 +873,20 @@ PackageProject.setupMobileView = function()
 			var args = [Titanium.Filesystem.getFile(PackageProject.AndroidEmulatorPath).toString(), "distribute", '"'+ PackageProject.currentProject.name+ '"','"' +TiDev.androidSDKDir+ '"', '"' + PackageProject.currentProject.dir + '"', '"'+PackageProject.currentProject.appid+'"','"'+keystore+'"','"'+password+'"','"'+alias+'"', '"'+location+'"'];
 		 	var  x = TiDev.launchPython(args);
 			var buffer = '';
-			x.setOnRead(function(e)
+			x.setOnRead(function(event)
 			{
-				buffer += e;
+				buffer += event.data.toString();
 			});
-			x.setOnExit(function(e)
+			x.setOnExit(function(event)
 			{
 				TiDev.messageArea.showDefaultMessage();
-				if (e != 0)
+
+				if (x.getExitCode() != 0)
 				{
-					alert('Distribution Error\n\n' + buffer);
+					alert('Distribtuion Error\n\n' + buffer);
 				}
 			});
+			
 			x.launch();
 				
 			TiDev.track('android-distribute',{name:PackageProject.currentProject.name,appid:PackageProject.currentProject.appid});

@@ -988,12 +988,17 @@ Projects.handleNewProjectClick = function()
 	// reset dropdown
 	$('#new_project_type').val('desktop');
 	
-	
+	// set library dropdown
+	$('#new_project_js').html('<option value="jquery">JQuery</option><option value="entourage">Entourage</option><option value="mootools">Mootools</option><option value="prototype">Prototype</option><option value="scriptaculous">Scriptaculous</option><option value="dojo">Dojo</option><option value="yui">Yahoo YUI</option><option value="swf">SWF Object</option>');
+
 	// project type listener
 	$('#new_project_type').change(function()
 	{
 		if ($(this).val() == 'mobile')
 		{
+			// set library dropdown
+			$('#new_project_js').html('<option value="jquery">JQuery</option><option value="entourage">Entourage</option><option value="mootools">Mootools</option><option value="prototype">Prototype</option><option value="scriptaculous">Scriptaculous</option><option value="dojo">Dojo</option><option value="yui">Yahoo YUI</option>');
+			
 			var sdkVers = Titanium.Project.getMobileSDKVersions();
 			var sdk = Titanium.Project.getMobileSDKVersions(sdkVers[0]);
 
@@ -1142,6 +1147,8 @@ Projects.handleNewProjectClick = function()
 		{
 			$('#mobile_platforms').css('display','none');
 			$('#desktop_language_modules').css('display','block');
+			// set library dropdown
+			$('#new_project_js').html('<option value="jquery">JQuery</option><option value="entourage">Entourage</option><option value="mootools">Mootools</option><option value="prototype">Prototype</option><option value="scriptaculous">Scriptaculous</option><option value="dojo">Dojo</option><option value="yui">Yahoo YUI</option><option value="swf">SWF Object</option>');
 			
 		}
 	})

@@ -738,7 +738,7 @@ TiDev.invokeCloudService = function(name,data,type,sCallback,fCallback)
 	data.mid = Titanium.Platform.id;
 	
 	// set timeout low if the online event hasn't fired and we are logging (should only happen once)
-	var timeout = (name == 'sso-login' && !Titanium.Network.online && TiDev.onlineListenerFired==false)?800:10000;
+	var timeout = (name == 'sso-login' && !Titanium.Network.online && TiDev.onlineListenerFired==false)?3000:10000;
 	
 	// xhr auth (for packaging services)
 	function xhrAuth(data)

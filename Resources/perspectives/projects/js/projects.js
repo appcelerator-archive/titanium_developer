@@ -284,7 +284,7 @@ Projects.showLogin = function()
 				Projects.userUID = resp.uid;
 				Projects.userUIDT = resp.uidt;
 				
-				TiDev.permissions  = resp.permissions;
+				TiDev.setPermissions(resp.permissions);				
 				
 				// we have NO local data - so create record
 				if (Projects.needLogin == true)
@@ -454,7 +454,8 @@ Projects.setupView = function()
 					Projects.userUID = resp.uid;
 					Projects.userUIDT = resp.uidt;
 
-					TiDev.permissions  = resp.permissions;
+					TiDev.setPermissions(resp.permissions);
+					
 					TiDev.attributes = resp.attributes;
 					UserProfile.updateUser(email,TiDev.attributes);				
 					
@@ -948,6 +949,10 @@ Projects.handleNewProjectClick = function()
 
 	// see if we have a mobile sdk
 	var sdks = Titanium.Project.getMobileSDKVersions();
+	
+	// reload perms
+	TiDev.permissions = TiDev.getPermissions();
+	
 	if (TiDev.permissions['mobilesdk'] !='enabled' || sdks.length == 0)
 	{
 		$('#new_project_type').attr('disabled','true');

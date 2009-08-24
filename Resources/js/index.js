@@ -32,7 +32,7 @@ TiDev.androidSDKDir = null;
 TiDev.feedbackURL = 'user-feedback';
 
 // user permissions
-TiDev.permissions = {};
+TiDev.permissions = {}
 
 // user attributes
 TiDev.attributes = {};
@@ -552,12 +552,63 @@ TiDev.showDefaultSystemMessage = function()
 };
 
 //
+// get permissions from DB
+//
+TiDev.getPermissions = function()
+{
+	var perms = {};
+	try
+	{
+		var dbrow = TiDev.db.execute('SELECT * from PERMISSIONS');
+		while (dbrow.isValidRow())
+		{
+			var perm = dbrow.fieldByName('permission');
+			var enabled = dbrow.fieldByName('enabled');
+			perms[perm] = (enabled == 1)?'enabled':'disabled';
+			dbrow.next();		
+		}
+	}
+	catch (e)
+	{
+		TiDev.db.execute('CREATE TABLE PERMISSIONS (permission TEXT, enabled INTEGER)');;
+	}
+	return perms;
+};
+
+//
+// set permissions
+//
+TiDev.setPermissions = function(perm)
+{
+	function insertValues()
+	{
+		for (v in perm)
+		{
+			var value = (perm[v] == 'enabled')?1:0;
+			TiDev.db.execute('INSERT INTO PERMISSIONS (PERMISSION, ENABLED)  VALUES (?,?)',v,value );
+		}
+	};
+
+	try
+	{
+		TiDev.db.execute('DELETE FROM PERMISSIONS');
+		insertValues();
+	}
+	catch(e)
+	{
+		TiDev.db.execute('CREATE TABLE PERMISSIONS (permission TEXT, enabled INTEGER)');
+		insertValues();
+	}
+};
+
+//
 // Create UI
 // 
 $(document).ready(function()
 {
 	// initialize UI
 	TiDev.init();
+	
 	
 	// hide/show top-level controls based on window size
 	Titanium.UI.currentWindow.addEventListener(function(event)
@@ -851,7 +902,7 @@ TiDev.invokeCloudService = function(name,data,type,sCallback,fCallback)
 					Projects.userUID = resp.uid;
 					Projects.userUIDT = resp.uidt;
 					
-					TiDev.permissions  = resp.permissions;
+					TiDev.setPermissions(resp.permissions);
 					TiDev.attributes = resp.attributes;	
 					
 					UserProfile.updateUser(d.un,TiDev.attributes);				

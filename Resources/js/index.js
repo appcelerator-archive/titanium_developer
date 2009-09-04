@@ -905,7 +905,8 @@ TiDev.invokeCloudService = function(name,data,type,sCallback,fCallback)
 					TiDev.setPermissions(resp.permissions);
 					TiDev.attributes = resp.attributes;	
 					
-					UserProfile.updateUser(d.un,TiDev.attributes);				
+					if (UserProfile)
+						UserProfile.updateUser(d.un,TiDev.attributes);				
 					
 					// toggle login status
 					$('#tiui_shield_off').css('display','none');

@@ -193,7 +193,7 @@ PackageProject.setupMobileView = function()
 
 					// update select
 					PackageProject.updateProvisioningSelect('iphone_dist_profile_select',
-						PackageProject.getIPhoneProvisioningProfiles('distribution'),r.appid);
+						PackageProject.getIPhoneProvisioningProfiles('distribution'),r.uuid);
 					
 					// reset console
 					TiDev.resetConsole();
@@ -224,13 +224,11 @@ PackageProject.setupMobileView = function()
 		{
 			if ($(this).val()=='')return;
 
-			// need to find UUID for selected profile
-			var row = TiDev.db.execute('SELECT UUID FROM IPHONE_PROVISIONING_PROFILES WHERE APPID = ? AND TYPE = "distribution"', $(this).val())
-			while (row.isValidRow())
-			{
-				PackageProject.setIPhoneAttribute('dist_uuid',row.field(0));
-				break;
-			}
+			var el =  document.getElementById('iphone_dist_profile_select');
+			var text = el.options(el.selectedIndex).text;
+			var uuidStr = text.split('uuid:')
+
+			PackageProject.setIPhoneAttribute('dist_uuid',uuidStr[1]);
 
 			PackageProject.setIPhoneAttribute('distribution_profile',$(this).val());
 			PackageProject.iPhoneDevPrereqs['iphone_dist_profile'] = true;					
@@ -249,7 +247,7 @@ PackageProject.setupMobileView = function()
 				{
 					// update select
 					PackageProject.updateProvisioningSelect('iphone_dist_profile_select',
-						PackageProject.getIPhoneProvisioningProfiles('distribution'),r.appid);
+						PackageProject.getIPhoneProvisioningProfiles('distribution'),r.uuid);
 						
 					// update project
 					PackageProject.setIPhoneAttribute('distribution_profile',r.appid);
@@ -280,13 +278,12 @@ PackageProject.setupMobileView = function()
 		{
 			if ($(this).val()=='')return;
 			
+			var el =  document.getElementById('iphone_dev_profile_select');
+			var text = el.options(el.selectedIndex).text;
+			var uuidStr = text.split('uuid:')
+			
 			// need to find UUID for selected profile
-			var row = TiDev.db.execute('SELECT UUID FROM IPHONE_PROVISIONING_PROFILES WHERE APPID = ? AND TYPE = "development"', $(this).val())
-			while (row.isValidRow())
-			{
-				PackageProject.setIPhoneAttribute('dev_uuid',row.field(0));
-				break;
-			}
+			PackageProject.setIPhoneAttribute('dev_uuid',uuidStr[1]);
 			PackageProject.setIPhoneAttribute('development_profile',$(this).val());
 			PackageProject.updateMobileAppId($(this).val());
 			// update state var
@@ -295,6 +292,40 @@ PackageProject.setupMobileView = function()
 			// check state
 			PackageProject.checkIPhoneDevPrereqs();
 		
+		});
+		
+		$('#remove_dev_profile_link').click(function()
+		{
+			var el =  document.getElementById('iphone_dev_profile_select');
+			var value = el.options(el.selectedIndex).value;
+			var text = el.options(el.selectedIndex).text;
+			var uuidStr = text.split('uuid:')
+			if (value == '')
+			{
+				alert('You must select a profile to delete first.');
+				return;
+			}
+			
+			if (confirm('Are you sure you want to delete the profile:\n' + text))
+			{
+				// remove matching profile
+				PackageProject.removeIPhoneProvisioningProfile('development',uuidStr[1]);
+				
+				// update select
+				PackageProject.updateProvisioningSelect('iphone_dev_profile_select',
+					PackageProject.getIPhoneProvisioningProfiles('development'));
+					
+				// reset profile uuid 
+				PackageProject.setIPhoneAttribute('dev_uuid',null);
+				
+				// set tracking var to false
+				PackageProject.iPhoneDevPrereqs['iphone_dev_profile'] = false;
+
+				// check state
+				PackageProject.checkIPhoneDevPrereqs();
+				
+				
+			}
 		});
 		
 		// add new provisioning profile even if you have a valid one
@@ -306,7 +337,7 @@ PackageProject.setupMobileView = function()
 				{
 					// update select
 					PackageProject.updateProvisioningSelect('iphone_dev_profile_select',
-						PackageProject.getIPhoneProvisioningProfiles('development'),r.appid);
+						PackageProject.getIPhoneProvisioningProfiles('development'),r.uuid);
 						
 					PackageProject.setIPhoneAttribute('development_profile',r.appid);
 					
@@ -341,7 +372,7 @@ PackageProject.setupMobileView = function()
 
 					// update select
 					PackageProject.updateProvisioningSelect('iphone_dev_profile_select',
-						PackageProject.getIPhoneProvisioningProfiles('development'),r.appid);
+						PackageProject.getIPhoneProvisioningProfiles('development'),r.uuid);
 					
 					// reset console
 					TiDev.resetConsole();
@@ -526,7 +557,7 @@ PackageProject.setupMobileView = function()
 					$('.not_found.dist_profile').css('display','none');
 					$('.found.dist_profile').css('display','block');
 
-					var selectedProfile = PackageProject.getIPhoneAttribute('distribution_profile');
+					var selectedProfile = PackageProject.getIPhoneAttribute('dist_uuid');
 					if (selectedProfile == null)
 					{
 						PackageProject.iPhoneDevPrereqs['iphone_dist_profile'] = false;					
@@ -553,7 +584,7 @@ PackageProject.setupMobileView = function()
 					$('.not_found.dev_profile').css('display','none');
 					$('.found.dev_profile').css('display','block');
 
-					var selectedProfile = PackageProject.getIPhoneAttribute('development_profile');
+					var selectedProfile = PackageProject.getIPhoneAttribute('dev_uuid');
 					if (selectedProfile == null)
 					{
 						PackageProject.iPhoneDevPrereqs['iphone_dev_profile'] = false;					
@@ -591,6 +622,38 @@ PackageProject.setupMobileView = function()
 		$('.project_has_iphone_true').css('display','block');
 		$('.project_has_iphone_false').css('display','none');
 
+		$('#remove_dist_profile_link').click(function()
+		{
+			var el =  document.getElementById('iphone_dist_profile_select');
+			var value = el.options(el.selectedIndex).value;
+			var text = el.options(el.selectedIndex).text;
+			var uuidStr = text.split('uuid:')
+			if (value == '')
+			{
+				alert('You must select a profile to delete first.');
+				return;
+			}
+			
+			if (confirm('Are you sure you want to delete the profile:\n' + text))
+			{
+				// remove matching profile
+				PackageProject.removeIPhoneProvisioningProfile('distribution',uuidStr[1]);
+				
+				// update select
+				PackageProject.updateProvisioningSelect('iphone_dist_profile_select',
+					PackageProject.getIPhoneProvisioningProfiles('distribution'));
+					
+				// reset profile uuid 
+				PackageProject.setIPhoneAttribute('dist_uuid',null);
+				
+				// set tracking var to false
+				PackageProject.iPhoneDevPrereqs['iphone_dist_profile'] = false;
+
+				// check state
+				PackageProject.checkIPhoneDistPrereqs();
+			}
+		});
+
 		// handler for distribution location
 		$('#add_dist_location_link').click(function()
 		{
@@ -621,7 +684,6 @@ PackageProject.setupMobileView = function()
 			var location = $('#iphone_dist_location').val();
 			var sdk = $('#iphone_distribution_sdk').val();
 			TiDev.track('iphone-distribute',{sdk:sdk,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name,uuid:uuid,certName:certName});
-			alert('distribute '+sdk+ ' '+ PackageProject.currentProject.dir+ ' ' +PackageProject.currentProject.appid+ ' ' + PackageProject.currentProject.name+ ' '+ uuid+' '+certName+'"'+'"'+location+'"');
 			var x = TiDev.launchPython([Titanium.Filesystem.getFile(PackageProject.iPhoneEmulatorPath).toString(),'distribute','"'+sdk+'"', '"'+ PackageProject.currentProject.dir+ '"',PackageProject.currentProject.appid, '"' + PackageProject.currentProject.name+ '"', uuid,'"'+certName+'"','"'+location+'"']);
 			var buffer = '';
 			x.setOnRead(function(event)
@@ -1199,19 +1261,20 @@ PackageProject.checkIPhoneDistPrereqs = function()
 PackageProject.updateProvisioningSelect = function(id,data,selected)
 {
 	var html = ''
+	if (selected == null || data.length ==0)
+	{
+		html += '<option value="" selected>Select provisioning profile</option>';		
+	}
+
 	for (var i=0;i<data.length;i++)
 	{
-		if (selected == null && i ==0)
+		if (data[i].uuid == selected)
 		{
-			html += '<option value="" selected>Select provisioning profile</option>';		
-		}
-		if (data[i].appid == selected)
-		{
-			html += '<option value="'+data[i].appid+'" selected>'+data[i].appid+ ' ('+data[i].name+')</option>';		
+			html += '<option value="'+data[i].appid+'" selected>'+data[i].appid+ ' ('+data[i].name+') uuid:'+data[i].uuid+'</option>';		
 		}
 		else
 		{
-			html += '<option value="'+data[i].appid+'">'+data[i].appid+ ' ('+data[i].name+')</option>';		
+			html += '<option value="'+data[i].appid+'">'+data[i].appid+ ' ('+data[i].name+') uuid:'+data[i].uuid+'</option>';		
 		}
 	}
 	$('#'+id).html(html);
@@ -1309,7 +1372,7 @@ PackageProject.uploadIPhoneProvisioningProfile = function(profileType,callback)
 					PackageProject.setIPhoneAttribute(profileType,appid);
 					PackageProject.setIPhoneAttribute(uuidString,uuid);
 
-					callback({result:true,appid:appid});
+					callback({result:true,appid:appid,uuid:uuid});
 					
 				}
 				else
@@ -1332,6 +1395,14 @@ PackageProject.addIPhoneProvisioningProfile = function(appid,dir,type,name,uuid)
 };
 
 //
+// Remove a iphone provisioning profile by type (developer | distribution)
+//
+PackageProject.removeIPhoneProvisioningProfile = function(type,uuid)
+{
+	TiDev.db.execute('DELETE FROM IPHONE_PROVISIONING_PROFILES WHERE type=? AND uuid=?',type,uuid);
+};
+
+//
 // Get a list of iphone provisioning profiles by type (developer | distribution)
 //
 PackageProject.getIPhoneProvisioningProfiles = function(type)
@@ -1342,7 +1413,7 @@ PackageProject.getIPhoneProvisioningProfiles = function(type)
 		var dbrows = TiDev.db.execute('SELECT * FROM IPHONE_PROVISIONING_PROFILES WHERE type = ?', type);
 		while (dbrows.isValidRow())
 		{
-			profiles.push({appid:dbrows.fieldByName('APPID'), name:dbrows.fieldByName('NAME')});
+			profiles.push({appid:dbrows.fieldByName('APPID'), name:dbrows.fieldByName('NAME'), uuid:dbrows.fieldByName('UUID')});
 			dbrows.next();
 		}
 		return profiles;

@@ -281,13 +281,14 @@ Titanium.Project =
 			for (var i=0;i<modules.length;i++)
 			{
 				var mod = modules[i];
-				if (mod.getVersion() == runtime)
+				if (mod.getVersion() == runtime || mod.getName()=='mobilesdk')
 				{
 					if (mod.getName()=='runtime')
 					{
 						runtimeDir = mod.getPath();
 					}
-					else if (mod.getName() != 'mobilesdk')
+					else
+					//else if (mod.getName() != 'mobilesdk')
 					{
 						if (!tracker[mod.getName()])
 						{

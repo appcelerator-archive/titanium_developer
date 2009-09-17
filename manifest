@@ -6,6 +6,7 @@
 #guid:2adec37f-e394-479f-8cbb-ac54209818a6
 #desc:Titanium Developer is the application for managing your Titanium Mobile and Desktop applications.
 #type:desktop
+<<<<<<< HEAD:manifest
 runtime:0.7.0
 api:0.7.0
 tiapp:0.7.0
@@ -25,3 +26,26 @@ tinetwork:0.7.0
 tinotification:0.7.0
 tiprocess:0.7.0
 tiworker:0.7.0
+=======
+runtime:0.6.0
+api:0.6.0
+tiapp:0.6.0
+tifilesystem:0.6.0
+tiplatform:0.6.0
+tiui:0.6.0
+javascript:0.6.0
+tianalytics:0.6.0
+mobilesdk:0.6.2
+sdk:0.6.0
+python:0.6.0
+ruby:0.6.0
+tidatabase:0.6.0
+tidesktop:0.6.0
+tigrowl:0.6.0
+timedia:0.6.0
+timonkey:0.6.0
+tinetwork:0.6.0
+tinotification:0.6.0
+tiprocess:0.6.0
+tiworker:0.6.0
+>>>>>>> abb433feafa5b4c6846307c0508392070788ab91:manifest

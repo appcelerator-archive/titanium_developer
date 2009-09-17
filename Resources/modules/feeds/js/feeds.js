@@ -142,7 +142,8 @@ Feeds.setupView = function()
 	});
 	
 	// configure button bar
-	Feeds.buttonBar.configure({id:'tiui_content_submenu',tabs:['Twitter','Friend Feed','Send Tweet'],active:0});
+	//Feeds.buttonBar.configure({id:'tiui_content_submenu',tabs:['Twitter','Friend Feed','Send Tweet'],active:0});
+	Feeds.buttonBar.configure({id:'tiui_content_submenu',tabs:['Twitter','Friend Feed'],active:0});
 	
 	// add date to bar
 	Feeds.buttonBar.appendContent('<div style="position:absolute;right:15px;top:1px;font-size:10px;color:#fff" id="feeds_last_update"></div>')

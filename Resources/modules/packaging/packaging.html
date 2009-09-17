@@ -701,7 +701,7 @@
 
 								<!--EMULATOR SDK VERSION -->
 								<div style="float:left;margin-top:20px">
-									<span class="help_text" style="position:relative;top:-3px">Select SDK Verison:</span>
+									<span class="help_text" style="position:relative;top:-3px">Select SDK Version:</span>
 									<select style="width:50px" id="iphone_emulator_sdk"> 			
 										<option>loading...</option>
 									</select>
@@ -723,6 +723,16 @@
 									style="width:120px;margin-top:20px;float:left;margin-left:10px">
 									Stop Emulator
 								</div> 
+								
+								<div style="margin-right:10px;float:right;">
+									<span class="help_text">Filter:</span>
+									<select style="width:60px;margin-top:20px;" id="iphone_log_filter">
+										<option value="debug">Debug</option>
+										<option value="info" selected>Info</option>
+										<option value="warn">Warn</option>
+										<option value="error">Error</option>
+									</select>
+								</div>
 							</div>
 
 							<!-- DEBUG OUTPUT  FOR ANDROID EMULATOR -->
@@ -744,6 +754,16 @@
 									style="width:120px;margin-top:20px;float:left;margin-left:10px">
 									Stop Emulator
 								</div> 
+
+								<div style="margin-right:10px;float:right;">
+									<span class="help_text">Filter:</span>
+									<select style="width:60px;margin-top:20px;" id="android_log_filter">
+										<option value="debug">Debug</option>
+										<option value="info" selected>Info</option>
+										<option value="warn">Warn</option>
+										<option value="error">Error</option>
+									</select>
+								</div>
 							</div>
 
 						</div>

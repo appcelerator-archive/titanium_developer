@@ -508,6 +508,11 @@ TiUI.MainTab = function()
 		}
 	};
 	
+	this.setLeftPadding = function(amt)
+	{
+		$("#tiui_tabbar_container").css("padding-left",amt+"px");
+	};
+	
 	//
 	// Configure
 	//
@@ -523,6 +528,7 @@ TiUI.MainTab = function()
 		// create tab markup
 		//
 		this.width = (this.tabs.length * 120) + this.tabs.length + 1;
+		// we pad left by 200px since that's the size of the project view and we want to center the tabbar in the center of right pane
 		this.html = '<div id="tiui_tabbar_container" style="width:' + this.width + 'px;margin:auto">';
 		for (var i=0;i<this.tabs.length;i++)
 		{

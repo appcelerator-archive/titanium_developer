@@ -27,6 +27,79 @@ PackageProject.desktopPackage = null;
 // distribution iphone validator
 PackageProject.iPhoneDistValidator = null; 
 
+// number of concurrent worker threads to create
+PackageProject.worker_max = 5;
+
+//
+// called by the worker thread when a job is complete
+//
+PackageProject.job_complete=function(event)
+{
+	PackageProject.pending_jobs--;
+	if (typeof(PackageProject.progress_callback)=='function')
+	{
+		PackageProject.progress_callback(event.message);
+	}
+	if (PackageProject.pending_jobs==0 && typeof(PackageProject.progress_complete)=='function')
+	{
+		PackageProject.progress_complete();
+	}
+}
+
+// create a number of worker threads
+PackageProject.workers = [];
+PackageProject.pending_jobs = 0;
+PackageProject.pending_callback = null;
+
+for (var c=0;c<PackageProject.worker_max;c++)
+{
+	var compiler = Titanium.Worker.createWorker('app://modules/packaging/js/compiler.js');
+	compiler.onmessage = PackageProject.job_complete;
+	PackageProject.workers.push(compiler);
+	compiler.start();
+}
+
+PackageProject.compileResources = function(dir, progress_callback, progress_complete)
+{
+	var resources = Titanium.Filesystem.getFile(dir);
+	var jobs = resources.getDirectoryListing();
+
+	// reset pending jobs
+	PackageProject.pending_jobs = 0;
+	PackageProject.progress_callback = progress_callback;
+	PackageProject.progress_complete = progress_complete;
+	
+	var worker_idx = 0;
+	var job_id = 0;
+	var job_count = 0;
+	
+	for (var c=0;c<jobs.length;c++,worker_idx++)
+	{
+		// pull out a worker so we can distribute the jobs
+		var job = jobs[c];
+		
+		if (job.isFile() && job.extension()=="js")
+		{
+			var idx = worker_idx % PackageProject.workers.length;
+			var worker = PackageProject.workers[idx];
+			
+			PackageProject.pending_jobs++;
+
+			// figure out the relative path
+			var path = job.nativePath().substring(resources.nativePath().length+1);
+
+			job_count++;
+			
+			// queue the worker to be compiled
+			worker.postMessage({path:path,file:job.nativePath(),id:job_id++});
+		}
+	}
+	
+	if (job_count==0)
+	{
+		PackageProject.progress_complete();
+	}
+}
 
 //
 // add close listener to close emulators if still running
@@ -75,6 +148,50 @@ $MQL('l:tidev.projects.row_selected',function(msg)
 });
 
 //
+// this is a generic compiler function that is used by both android and iphone
+//
+PackageProject.mobileCompile = function(dir,platform,callback)
+{
+	PackageProject.initializeConsoleWidth();
+	
+	// start compile
+	$('#mobile_'+platform+'_emulator_viewer').append('<div style="margin-bottom:3px;" class="log_info">[INFO] Compiling JavaScript...one moment</div>');
+	$('#mobile_'+platform+'_emulator_viewer').get(0).scrollTop = $('#mobile_'+platform+'_emulator_viewer').get(0).scrollHeight;
+	
+	var compiler_errors = 0;
+
+	PackageProject.compileResources(dir,
+	function(event){
+			if (!event.result)
+			{
+				for (var c=0;c<event.errors.length;c++)
+				{
+					var e = event.errors[c];
+					if (e.reason.indexOf("Use '===' to compare")==0 || 
+					    e.reason.indexOf("Use '!==' to compare")==0 ||
+					    e.reason.indexOf("Unnecessary semicolon")==0)
+					{
+						// skip these errors
+						continue;
+					}
+					compiler_errors++;
+					$('#mobile_'+platform+'_emulator_viewer').append('<div style="margin-bottom:3px;" class="log_warn">[WARN] JavaScript compiler reported "'+ e.reason + '" at ' + event.path + ":"+e.line+'</div>');
+					$('#mobile_'+platform+'_emulator_viewer').get(0).scrollTop = $('#mobile_'+platform+'_emulator_viewer').get(0).scrollHeight;
+				}
+			}
+	},
+	function()
+	{
+		if (compiler_errors===0)
+		{
+			$('#mobile_'+platform+'_emulator_viewer').append('<div style="margin-bottom:3px;" class="compiler_noerrors">No JavaScript errors detected.</div>');
+			$('#mobile_'+platform+'_emulator_viewer').get(0).scrollTop = $('#mobile_'+platform+'_emulator_viewer').get(0).scrollHeight;
+		}
+		callback();
+	});
+};
+
+//
 // View setup
 //
 PackageProject.setupView = function()
@@ -97,6 +214,209 @@ PackageProject.setupView = function()
 	{
 		PackageProject.setupDesktopView();
 	}
+	PackageProject.initializeConsoleWidth();
+};
+
+PackageProject.openResource = function(id)
+{
+	var el = $('#'+id);
+	var fn = el.attr('fn');
+	var ln = el.attr('ln');
+	var msg = el.get(0).msg;
+	
+	Titanium.UI.showDialog({
+		'url': 'app://modules/packaging/resource_view.html',
+		'width': 700,
+		'height': 500,
+		'resizable':true,
+		'parameters':{
+			'file':fn,
+			'line':ln,
+			'msg':msg
+		}
+	});
+};
+
+PackageProject.logReaderWorker=null;
+
+PackageProject.logReader = function(process,platform)
+{
+	if (PackageProject.logReaderWorker)
+	{
+		PackageProject.logReaderWorker.terminate();
+		PackageProject.logReaderWorker=null;
+	}
+	
+	var buf = '';
+	var verbose = false;
+	var skip = false;
+	var verbose_id = null;
+	var compiler_started = null;
+	//TODO: consider placing this on event queue
+	process.setOnRead(function(event)
+	{
+		var d = event.data.toString();
+		buf += d;
+		var idx = buf.indexOf('\n');
+		var exception_msg = null;
+		var exception_id = null;
+		while (idx!=-1)
+		{
+			var str = buf.substring(0,idx);
+			var cls = '';
+			// attempt to color code any special output lines
+			if (str.indexOf('[EXCEPTION]')!=-1)
+			{
+				cls='log_unhandled_exception';
+				var a = str.indexOf(']');
+				var i = str.indexOf(':');
+				var fn = str.substring(a+2,i);
+				var y = str.indexOf(' ',i+1);
+				var line = str.substring(i+1,y);
+				var f = Titanium.Filesystem.getFile(PackageProject.currentProject.dir,'Resources',fn);
+				if (!f.exists())
+				{
+					f = Titanium.Filesystem.getFile(PackageProject.currentProject.dir,'Resources',platform,fn);
+				}
+				if (f.exists())
+				{
+					exception_msg = str.substring(y+1);
+					exception_id = 'exception_'+new Date().getTime();
+					str = "[EXCEPTION] <a fn='"+f.nativePath()+"' ln='"+line+"' id='"+exception_id+"' onclick='PackageProject.openResource(\""+exception_id+"\");return false;'>" + fn + ":" + line + "</a> " + exception_msg;
+				}
+			}
+			else if (str.indexOf('[ERROR]')!=-1)
+			{
+				cls='log_error';
+			}
+			else if (str.indexOf('[WARN]')!=-1)
+			{
+				cls='log_warn';
+			}
+			else if (str.indexOf('[DEBUG]')!=-1)
+			{
+				cls='log_debug';
+			}
+			else if (str.indexOf('[INFO]')!=-1)
+			{
+				cls='log_info';
+			}
+			else if (str.indexOf('[FATAL]')!=-1)
+			{
+				cls='log_fatal';
+			}
+			else if (str.indexOf('[CRITICIAL]')!=-1)
+			{
+				cls='log_critical';
+			}
+			else if (str.indexOf('[BEGIN_VERBOSE]')!=-1)
+			{
+				verbose=true;
+				skip=true;
+				compiler_started = new Date().getTime();
+				verbose_id = 'verbose_' + (new Date().getTime());
+				var _str = str.substring('[BEGIN_VERBOSE]'.length+1);
+				var show = PackageProject.logFilterVisible('log_info',platform) ? 'block':'none';
+				var html = '<div style="margin-bottom:3px;display:'+show+';" class="verbose_logger" id="'+verbose_id+'">[INFO] '+ _str + '</div>';
+				$('#mobile_'+platform+'_emulator_viewer').append(html);
+				var the_id = verbose_id;
+				$("#"+the_id).click(function()
+				{
+					if($('#'+the_id).hasClass('visible'))
+					{
+						$('#'+the_id+' > .log_verbose').css('display','none');
+						$('#'+the_id).removeClass('visible');
+					}
+					else
+					{
+						$('#'+the_id+' > .log_verbose').css('display','block');
+						$('#'+the_id).addClass('visible');
+					}
+					$('#mobile_'+platform+'_emulator_viewer').get(0).scrollTop = $('#mobile_'+platform+'_emulator_viewer').get(0).scrollHeight;
+				});
+			}
+			else if (str.indexOf('[END_VERBOSE]')!=-1)
+			{
+				verbose=false;
+				skip=true;
+				verbose_id = null;
+				var duration = ((new Date().getTime()) - compiler_started) / 1000;
+				var show = PackageProject.logFilterVisible('log_info',platform) ? 'block':'none';
+				$('#mobile_'+platform+'_emulator_viewer').append('<div style="margin-bottom:3px;display:'+show+';" class="log_info">[INFO] Compile completed in '+duration+' seconds</div>');
+				$('#mobile_'+platform+'_emulator_viewer').get(0).scrollTop = $('#mobile_'+platform+'_emulator_viewer').get(0).scrollHeight;
+			}
+			else if (str.indexOf("Terminating in response to SpringBoard's termination")!=-1)
+			{
+				// we can ignore this
+				skip=true;
+			}
+			if (verbose)
+			{
+				cls='log_verbose';
+			}
+			if (!skip)
+			{
+				var display = PackageProject.logFilterVisible(cls,platform)==false ? 'display:none': '';
+				var html = '<div style="margin-bottom:3px;'+display+';" class="'+cls+'">'+ str + '</div>';
+				if (verbose_id)
+				{
+					$('#'+verbose_id).append(html);
+				}
+				else
+				{
+					$('#mobile_'+platform+'_emulator_viewer').append(html);
+					
+					if (exception_id)
+					{
+						$('#'+exception_id).get(0).msg = exception_msg;
+					}
+				}
+				$('#mobile_'+platform+'_emulator_viewer').get(0).scrollTop = $('#mobile_'+platform+'_emulator_viewer').get(0).scrollHeight;
+			}
+			else
+			{
+				skip=false;
+			}
+			if (idx+1 < buf.length)
+			{
+				buf = buf.substring(idx+1);
+				idx = buf.indexOf('\n');
+			}
+			else
+			{
+				buf = '';
+				break;
+			}
+		}
+	});
+};
+
+//
+// function that will perform log filtering for the console
+//
+PackageProject.logFilterVisible = function(cls,platform)
+{
+	var show = true;
+	var level = $('#'+platform+'_log_filter').val();
+	if (level == 'info')
+	{
+		if (cls=='log_debug')
+		{
+			show=false;
+		}
+	}
+	else if (level == 'warn')
+	{
+		if (cls=='log_debug' || cls=='log_info' || cls.indexOf('verbose_logger visible')!=-1)
+		{
+			show=false;
+		}
+	}
+	else if (level == 'error')
+	{
+		show=(cls=='log_error' || cls=='log_unhandled_exception');
+	}
+	return show;
 };
 
 //
@@ -126,7 +446,7 @@ PackageProject.setupMobileView = function()
 		$(this).addClass('active');
 		$('#mobile_device_content_iphone').css('display','block');
 		$('#mobile_device_content_android').css('display','none');
-		
+		PackageProject.initializeConsoleWidth();
 	});
 	$('#tab_android_dev').click(function()
 	{
@@ -134,7 +454,7 @@ PackageProject.setupMobileView = function()
 		$(this).addClass('active')
 		$('#mobile_device_content_iphone').css('display','none');
 		$('#mobile_device_content_android').css('display','block');
-		
+		PackageProject.initializeConsoleWidth();
 	});
 
 	// setup tabs for "packaging"
@@ -144,7 +464,7 @@ PackageProject.setupMobileView = function()
 		$(this).addClass('active');
 		$('#mobile_packaging_content_iphone').css('display','block');
 		$('#mobile_packaging_content_android').css('display','none');
-		
+		PackageProject.initializeConsoleWidth();
 	});
 	$('#tab_android_package').click(function()
 	{
@@ -152,7 +472,18 @@ PackageProject.setupMobileView = function()
 		$(this).addClass('active')
 		$('#mobile_packaging_content_iphone').css('display','none');
 		$('#mobile_packaging_content_android').css('display','block');
-		
+		PackageProject.initializeConsoleWidth();
+	});
+	
+	$("#iphone_log_filter").change(function()
+	{
+		var level = $(this).val();
+		$.each($("#mobile_iphone_emulator_viewer > div"),function()
+		{
+			var cls = $(this).attr('class');
+			var show = PackageProject.logFilterVisible(cls,'iphone');
+			$(this).css('display',show ? 'block':'none');
+		});
 	});
 	
 	// check project for iphone
@@ -323,8 +654,6 @@ PackageProject.setupMobileView = function()
 
 				// check state
 				PackageProject.checkIPhoneDevPrereqs();
-				
-				
 			}
 		});
 		
@@ -755,7 +1084,7 @@ PackageProject.setupMobileView = function()
 			$('#mobile_distribution_detail').css('display','none');	
 			$('#mobile_help_detail').css('display','none');
 
-
+			PackageProject.initializeConsoleWidth();
 		});
 
 		// 
@@ -780,42 +1109,23 @@ PackageProject.setupMobileView = function()
 				PackageProject.currentIPhonePID.terminate();
 				PackageProject.currentIPhonePID = null;
 			}
-			PackageProject.currentIPhonePID = TiDev.launchPython([Titanium.Filesystem.getFile(PackageProject.iPhoneEmulatorPath).toString(),'simulator', '"'+sdk+'"','"'+ PackageProject.currentProject.dir+ '"',PackageProject.currentProject.appid, '"' + PackageProject.currentProject.name+ '"']);
-			var buf = '';
-			PackageProject.initializeConsoleWidth();
 			
-			PackageProject.currentIPhonePID.setOnRead(function(event)
+			PackageProject.mobileCompile(Titanium.Filesystem.getFile(PackageProject.currentProject.dir,"Resources").nativePath(),'iphone',function()
 			{
-				var d = event.data.toString();
-				buf += d;
-				var idx = buf.indexOf('\n');
-				while (idx!=-1)
+				PackageProject.currentIPhonePID = TiDev.launchPython([Titanium.Filesystem.getFile(PackageProject.iPhoneEmulatorPath).toString(),'simulator', '"'+sdk+'"','"'+ PackageProject.currentProject.dir+ '"',PackageProject.currentProject.appid, '"' + PackageProject.currentProject.name+ '"']);
+				PackageProject.logReader(PackageProject.currentIPhonePID,'iphone');
+				PackageProject.currentIPhonePID.setOnExit(function(event)
 				{
-					var str = buf.substring(0,idx);
-					$('#mobile_iphone_emulator_viewer').append('<div style="margin-bottom:3px;">'+ str + '</div>');
-					$('#mobile_iphone_emulator_viewer').get(0).scrollTop = $('#mobile_iphone_emulator_viewer').get(0).scrollHeight;
-					if (idx+1 < buf.length)
-					{
-						buf = buf.substring(idx+1);
-						idx = buf.indexOf('\n');
-					}
-					else
-					{
-						buf = '';
-						break;
-					}
-				}
+					PackageProject.currentIPhonePID = null;
+					$('#iphone_launch_button').removeClass('disabled');
+					$('#iphone_kill_button').addClass('disabled');
+					
+				});
+				PackageProject.currentIPhonePID.launch();
 			});
-			PackageProject.currentIPhonePID.setOnExit(function(event)
-			{
-				PackageProject.currentIPhonePID = null;
-				$('#iphone_launch_button').removeClass('disabled');
-				$('#iphone_kill_button').addClass('disabled');
-				
-			});
-			PackageProject.currentIPhonePID.launch();
 			
 		});
+		
 		// create emulator buttons
 		TiUI.GreyButton({id:'iphone_launch_button'});
 		TiUI.GreyButton({id:'iphone_kill_button'});
@@ -945,7 +1255,7 @@ PackageProject.setupMobileView = function()
 
 				if (x.getExitCode() != 0)
 				{
-					alert('Distribtuion Error\n\n' + buffer);
+					alert('Distribution Error\n\n' + buffer);
 				}
 			});
 			
@@ -989,6 +1299,7 @@ PackageProject.setupMobileView = function()
 			$('#mobile_distribution_detail').css('display','none');	
 			$('#mobile_help_detail').css('display','none');
 			
+			PackageProject.initializeConsoleWidth();
 		});
 
 		// setup emulator buttons
@@ -1023,7 +1334,6 @@ PackageProject.setupMobileView = function()
 				PackageProject.isAndroidEmulatorRunning  = false;
 
 				$(this).addClass('disabled')
-
 			}
 		});
 		
@@ -1157,6 +1467,7 @@ PackageProject.setupMobileView = function()
 		$('#packaging .option').removeClass('active');
 		$(this).addClass('active');
 		
+		PackageProject.initializeConsoleWidth();
 	});
 	
 	// mobile help tab
@@ -1177,6 +1488,7 @@ PackageProject.setupMobileView = function()
 		$('#packaging .option').removeClass('active');
 		$(this).addClass('active');
 		
+		PackageProject.initializeConsoleWidth();
 	});
 	
 	// handle install on device click
@@ -1197,6 +1509,7 @@ PackageProject.setupMobileView = function()
 		$('#packaging .option').removeClass('active');
 		$(this).addClass('active');
 		
+		PackageProject.initializeConsoleWidth();
 	});
 	
 };
@@ -1588,7 +1901,8 @@ PackageProject.setupDesktopView = function()
 		$('#desktop_packaging_overview').css('display','none');
 		$('#desktop_packaging_options').css('display','none');
 		$('#desktop_launch_detail').css('display','block');
-
+		
+		PackageProject.initializeConsoleWidth();
 	});
 	
 	//
@@ -1688,6 +2002,7 @@ PackageProject.setupDesktopView = function()
 		$('#desktop_package').removeClass('active');
 		$('#desktop_launch').removeClass('active');
 
+		PackageProject.initializeConsoleWidth();
 	});
 
 	// setup desktop package handler
@@ -1712,10 +2027,12 @@ PackageProject.setupDesktopView = function()
 		$('#desktop_help').removeClass('active');
 		$('#desktop_launch').removeClass('active');
 
+		PackageProject.initializeConsoleWidth();
 	});
 	
 	
 };
+
 
 //
 // set initial console width
@@ -1723,10 +2040,16 @@ PackageProject.setupDesktopView = function()
 PackageProject.initializeConsoleWidth = function()
 {
 	var windowWidth = Titanium.UI.currentWindow.getWidth();
+	var windowHeight = Titanium.UI.currentWindow.getHeight();
 	var leftWidth = $('#tiui_content_left').width();
 	var rightWidth = windowWidth - leftWidth;	
-	$('.debug_console').css('width',(rightWidth-250) + 'px');
+	var height = $("#tiui_content_right").height() - 160;
+	$('.debug_console').css('width',(rightWidth-250) + 'px').css('height',height + 'px');
+	$(".detail").css('height',(height+80)+'px');
 };
+
+// resize console when the window resizes
+window.onresize = PackageProject.initializeConsoleWidth;
 
 // setup event handler
 PackageProject.eventHandler = function(event)
@@ -2063,6 +2386,6 @@ TiDev.registerModule({
 	displayName: 'Test & Package',
 	perspectives:['projects'],
 	html:'packaging.html',
-	idx:1,
+	idx:2,
 	callback:PackageProject.eventHandler
 });

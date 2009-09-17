@@ -202,7 +202,7 @@
 	-webkit-border-top-right-radius: 10px;
 	-webkit-border-top-left-radius: 10px;
 	-webkit-border-bottom-right-radius: 10px;
-	background-color:#1c1c1c;
+	background-color:#000;
 	font-family:'Courier';
 	height:300px;
 	color:#00ff00;
@@ -232,5 +232,63 @@
 	position:absolute;
 	top:7px;
 	left:10px;
+}
+
+.compiler_warning
+{
+	color:#DAC457;
+}
+
+.compiler_noerrors
+{
+	color:#8A4B63;
+}
+
+.log_unhandled_exception, .log_error, .log_fatal, .log_critical
+{
+	color:#f00;
+}
+
+.log_debug
+{
+	color:#B93473;
+}
+
+.log_warn
+{
+	color:#770;
+	font-weight:bold;
+}
+
+.log_info
+{
+	color:#2AAECD;
+}
+
+.log_verbose
+{
+	color:#999;
+	display:none;
+	margin-left:15px;
+}
+
+.verbose_logger
+{
+	color:#2AAECD;
+	cursor:pointer;
+}
+
+.verbose_logger span
+{
+	color:#888 !important;
+	font-weight:bold;
+}
+
+
+.log_unhandled_exception a
+{
+	cursor:pointer;
+	border-bottom:1px dotted #999;
+	text-decoration:none;
 }
 

@@ -4,7 +4,7 @@ Profile.eventHandler = function(event)
 {
 	if (event == 'focus')
 	{
-		// do nothing right now
+		TiDev.subtabs.setLeftPadding(0);
 	}
 	else
 	{

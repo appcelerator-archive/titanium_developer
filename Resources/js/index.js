@@ -287,6 +287,18 @@ TiDev.perspectiveChange = function(idx)
 	}
 };
 
+TiDev.getActiveSubTab = function()
+{
+	for (var i=0;i<TiDev.activePerspective.views.length;i++)
+	{
+		if (TiDev.activePerspective.views[i].active)
+		{
+			return i;
+		}
+	}
+	return -1;
+};
+
 //
 //  Execute Subtab Change
 //
@@ -1112,14 +1124,34 @@ TiDev.launchPython = function(args)
 	
 	if (Titanium.platform == "win32") {
 		args.unshift("python.exe");
-		/*scriptArgs.push('"'+script+'"');
-		for (var i = 0; i < args.length; i++) {
-			var arg = args[i];
-			if (args[i].substring(0,1) != '"') {
-				arg = '"' + arg + '"';
-			}
-			scriptArgs.push(arg);
-		}*/
 	}
 	return Titanium.Process.createProcess(args);
 };
+
+TiDev.statusBarTimer = null;
+TiDev.initialStatusBar = function()
+{
+	// var script = document.createElement("script");
+	// script.setAttribute("type","text/javascript");
+	// script.setAttribute("src","http://localhost/test.php");
+	// document.body.appendChild(script);
+};
+TiDev.setStatusBarMessage = function(message,action,timeout)
+{
+	if (TiDev.statusBarTimer)
+	{
+		clearTimeout(TiDev.statusBarTimer);
+	}
+	timeout = typeof(timeout)=='undefined' ? 10000 : timeout;
+	$('#tiui_message_bar').html(message).click(function()
+	{
+		action();
+		return false;
+	}).show();
+	TiDev.statusBarTimer = setTimeout(function()
+	{
+		TiDev.statusBarTimer=null;
+		$('#tiui_message_bar').hide();
+	},timeout);
+};
+window.onload=TiDev.initialStatusBar;

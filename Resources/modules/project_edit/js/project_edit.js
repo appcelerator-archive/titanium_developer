@@ -411,7 +411,8 @@ TiDev.registerModule({
 	displayName: 'Edit',
 	perspectives:['projects'],
 	html:'project_edit.html',
-	idx:0,
+	idx:1,
 	callback:EditProject.eventHandler
 });
+
 

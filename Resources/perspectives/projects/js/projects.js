@@ -498,6 +498,8 @@ Projects.setupView = function()
 	}
 };
 
+Projects.welcomeScreenShown = false;
+
 //
 //  Show authenticated view
 //
@@ -514,6 +516,56 @@ Projects.showAuthenticatedView = function()
 	{
 		Projects.initDB();
 	}
+	
+	var show = true;
+	
+	if (!Projects.welcomeScreenShown)
+	{
+		var found = false;
+		try
+		{
+			var rs = TiDev.db.execute("select SHOW from WELCOME");
+			while (rs.isValidRow())
+			{
+				show = rs.field(0);
+				found = true;
+				break;
+			}
+			rs.close();
+
+		}
+		catch(e)
+		{
+			TiDev.db.execute('CREATE TABLE IF NOT EXISTS WELCOME (SHOW INT)');
+		}
+
+		show=true;
+		Projects.welcomeScreenShown=true;
+
+		if (!found)
+		{
+			TiDev.db.execute('insert into WELCOME values (1)');
+		}
+	}
+	else
+	{
+		show=false;
+	}
+	
+	if (show)
+	{
+		var win = Titanium.UI.createWindow({
+			url:'app://welcome/welcome.html',
+			width:950,
+			height:580,
+			resizable:false,
+			maximizable:false,
+			minimizable:false,
+			closeable:false
+		});
+		win.open();
+	}
+	
 	// show no project view
 	if (Projects.projectList.length == 0)
 	{
@@ -542,12 +594,30 @@ Projects.showAuthenticatedView = function()
 	{
 		// set base UI stuff
 		$('#no_project_view').css('display','none');
-		TiDev.subtabs.show();		
+		TiDev.subtabs.show();			
+		TiDev.subtabs.setLeftPadding(200);
+
+		// remember the last project we selected
+		try
+		{
+			var rs = TiDev.db.execute("select ACTIVE from PROJECT_VIEW");
+			while (rs.isValidRow())
+			{
+				Projects.selectedProjectIdx = rs.field(0);
+				break;
+			}
+			rs.close();
+		}
+		catch(e)
+		{
+			TiDev.db.execute('CREATE TABLE IF NOT EXISTS PROJECT_VIEW (ACTIVE INT)');
+			TiDev.db.execute('insert into PROJECT_VIEW VALUES(0)');
+		}
 
 		// if we have projects and no tab is selected, select edit
 		if (TiDev.subtabs.activeIndex = -1)
 		{
-			Projects.selectInitialTab = true;
+			//Projects.selectInitialTab = true;
 
 			// if all modules are loaded, select first tab
 			if (Projects.modulesLoaded == true)
@@ -562,12 +632,7 @@ Projects.showAuthenticatedView = function()
 		{
 			var classes = 'child ';
 			
-			if (Projects.selectedProjectIdx == -1 && i == 0)
-			{
-				classes += 'active';
-				Projects.selectedProjectIdx = Projects.projectList[i].id;
-			}
-			else if (Projects.selectedProjectIdx == Projects.projectList[i].id)
+			if (Projects.selectedProjectIdx == Projects.projectList[i].id)
 			{
 				classes += 'active';
 			}
@@ -577,7 +642,7 @@ Projects.showAuthenticatedView = function()
 			{
 				if (Projects.projectList[i].type == 'mobile')
 				{
-					TiDev.subtabs.hideTab(2)
+					//TiDev.subtabs.hideTab(2)
 				}
 				else
 				{
@@ -589,8 +654,10 @@ Projects.showAuthenticatedView = function()
 		}
 		
 		// fire selected message
-		$MQ('l:tidev.projects.row_selected',{'project_id':Projects.selectedProjectIdx});			
-		
+		if (Projects.selectedProjectIdx >= 0)
+		{
+			$MQ('l:tidev.projects.row_selected',{'project_id':Projects.selectedProjectIdx});			
+		}
 		
 		// set content
 		TiDev.contentLeft.setContent(html);
@@ -604,13 +671,19 @@ Projects.showAuthenticatedView = function()
 			Projects.selectedProjectIdx = $(this).attr('project_id');	
 			if (Projects.getProject().type == 'mobile')
 			{
-				TiDev.subtabs.hideTab(2);
+				//TiDev.subtabs.hideTab(2);
 			}		
 			else
 			{
 				TiDev.subtabs.showTab(2);
 			}
+			if (TiDev.getActiveSubTab()==0)
+			{
+				// make sure edit is always selected if they are clicking a project from dashboard view
+				TiDev.subtabChange(1);
+			}
 			$MQ('l:tidev.projects.row_selected',{'project_id':Projects.selectedProjectIdx,'activeTab':TiDev.activeSubtab.name});
+			TiDev.db.execute('update PROJECT_VIEW set ACTIVE = ?',Projects.selectedProjectIdx);
 		});
 		
 	}
@@ -629,7 +702,7 @@ $MQL('l:tidev.modules.loaded',function()
 	{
 		if (p.type == 'mobile')
 		{
-			TiDev.subtabs.hideTab(2)
+			//TiDev.subtabs.hideTab(2)
 		}
 		else
 		{
@@ -649,10 +722,7 @@ Projects.eventHandler = function(event)
 	else if (event == 'focus')
 	{
 		Projects.setupView();
-	}
-	else
-	{
-		
+		TiDev.subtabs.setLeftPadding(200);
 	}
 }
 
@@ -1637,3 +1707,5 @@ TiDev.registerPerspective({
 	idx:0,
 	views:[]
 });
+
+

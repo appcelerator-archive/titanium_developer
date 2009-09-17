@@ -19,8 +19,6 @@ $MQL('l:tidev.projects.row_selected',function(msg)
 	}
 });
 
-Links.insertDBData
-
 //
 // Set page data
 //
@@ -168,7 +166,7 @@ TiDev.registerModule({
 	displayName: 'Links',
 	perspectives:['projects'],
 	html:'links.html',
-	idx:2,
+	idx:3,
 	callback:Links.eventHandler
 });
 

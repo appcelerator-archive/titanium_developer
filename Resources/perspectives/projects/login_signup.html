@@ -44,13 +44,13 @@
 					<div style="float:left;width:130px;border-top:1px solid #494949;margin-top:26px"></div>
 					<div style="clear:both"></div>
 					<div style="font-size:25px;margin-bottom:10px">Login 
-						<span style="font-size:12px">(if you have one of the following)</span>	
+						<span style="font-size:12px"></span>	
 					</div>
 					<div style="margin-bottom:5px">
 						<img src="images/check.png"/>
 						<span style="font-size:16px;position:relative;top:-8px">Appcelerator Network Account</span>
 					</div>
-					<div>
+					<div style="display:none">
 						<img src="images/check.png"/>
 						<span style="font-size:16px;position:relative;top:-8px">Facebook Account</span>
 					</div>
@@ -439,8 +439,8 @@
 							style="width:120px;margin-top:10px;margin-left:120px;float:left">
 							Sign Up
 						</div>
-						 <div id="fbconnect_button" class="disabled"  
-							style="margin-left:20px;margin-top:10px;float:left;cursor:pointer;">
+						<div id="fbconnect_button" class="disabled"  
+							style="margin-left:20px;margin-top:10px;float:left;cursor:pointer;display:none;">
 							<img src="data:image/gif;base64,R0lGODlhqQAUANU%2FAGmAsLfC2XeKtF12qoSWvD9dmUFemlNso0NckzpTikplnkVhnFhyp01poejr8qayzT1ZlJmpyc3T4qGtyGh7pZ2pxNzh63KErIqbwGB5rGZ%2Br1JpnLO906u30Epil%2FT1%2BdDW5NLY5sPL3G6AqdXb6JSjw0BYjn2QuTxWj2yDsmt%2BqGF2o9re6lVvpmJ4q0dfll94q5emyElfklxxn2%2BGtE9onjdQh%2F%2F%2F%2F2N8rpunw2h%2FsI6gxGB3qd%2Fj7XKGsf%2F%2F%2FyH5BAEAAD8ALAAAAACpABQAAAb%2FwF8kQCwaj0QIcslsOp%2FQqHRKrTYjvxghxe16v1wIeEwum8%2FotHrNbpcJsRhgTq%2Fb6ZDTfc%2Fv%2B%2F%2BAgYKDhIV9MSU6hRACAIqGkJGSk5SSJTsamZqbmRwONzeZjJykpaanqKmqq6ytrq%2BbOzs4tLW2OBygNw60jLe2GBwcEQK%2FxsfIyco4BCQZGbciJ8cEGNbW0Mu%2FExLP2rYCARPZyDsYz%2BjpGTCfEic6zxA06ugSujcPDAP0%2FP3%2B6OEiDIDxbx2GGwcYYAgwMMONEwwIqiNxD%2BG%2BgvQobmCAUd3BDgcu9rM2EIbJkydBCTwpryTKEzdCbJCxYUVIlyhz6ty5kwC%2B%2F5s8Tw44sLEDiYQwbgjYgNMkxQs%2BBPjY0IJHUJ4UZbRoehWGzwk1IgbFQGCAvrNm04KCmFZMWrRfEdTYcODAjh43PohwwaDIpw4tTpDgtgsAAwEUP3Bo0ffDrhN4HYTwoa9DDAYMJHTAHGAH4gMBHHwIUYHBjQAhCqOlaELG3A0BHH%2BYgDnCpw8QOzjuIYABRQt5MTDAIWI3hq0dPjkA%2FNXDBBIEMKPVRyC69OuZK97ADMEwdgZfZSTk%2BGG2CHw1EoMo7wHmDQvAS2yg2OF89fcTOqwIcEPCBJsMdBDABgL08IECBzhwAkwKXBCABResUMMNIlDggQUP1MCYbzdcIP%2FACQK0gMEDEwC3Ag95TTCBCjBZMMEHFtSQGgcvOqBABxS%2B%2BMEMLZaoFEz%2FwejBeNgRcEILSCaZpD33SIAkBBoomSSQCByAJJAmIHADCC%2BkJoMJINxgggA3dIDCBTdU8MJ7I5Rwg4o3jJClB2RWYIIHGkLmwQMcQGiaDGQioMADINw54QUIeADCBEMimZouIcylwAsTdEjmBHM%2BcEMJI7BwAwKpJQCmmKmZYEKlF2h6gQloTnApf4hqKGVgJ9Rl660RRACKBLnWBQEOt9oKUwVy1TXsnf2NmsALYaJQpwk%2BpKnlPRVUOoKgNRyLYEKfWqBCfgKAgACZJgwq7pAdyhX%2FwgTFHpAaBSOMsMILNIQQwicjRGunAjVoeg8KYSag6A0A37CspiNYO26aaOYiAgovNBCssQI0YPHFGDegEsYQZJCxxdqCnGa5%2FRUscKj6jjnyDSxQoIIKGygs8r4XW0DABwhQ4EB%2BC6OwZ6EKaIxoA%2BsKanGoWb7ggWgThKkCmjRrisHLKpjsQagB73nDt1u%2FUOcIadqzgQcfWyxAxUGn3YDaG6cNwQBrxx20C7ucTYAASbEwQgw3cJBAwF0anPKzol3QpgcHcXABAQqQKcIIC6QdAAscmPCCAywQoDLEhKKwgMbXKrAuBAoEHaYNL5SuAMsInEfBDCyPIIALiavw%2FyECTp%2FwgQM28IeBD8Bt4JPi%2FBEAdgUb9Ge02kELQIPq0EOvEvRvR696pbpMUAD2u3hQsA2432ADmjmgEG35B%2BkiIXCgKLAA%2Bx5ErsBBJ0DM3wYQRJvAwv4tsDUECwBBBTxXutMJqnQ42sUNKGAC%2FqylBp4ChQjCBwrcJGAGnwBFDmwAgTDtygZgy0ECKnADAhjAegqgAQ0ix0L3udB%2FN4hACyHAgBa20AAvoMDrEgABBORwBjbgIQJQkIACGICICIBAAlBgACWiIFE6RMD%2BILACCmygiDVQgQcSYAAWEtEECzji%2FhYAARQUYAEtqFoSUQDAIwIwcmI8o%2FsMsAEE2OwgiBAowAZ22MMZvI6DCFCBDu%2FIRAj40QQ2YCIC9uiBICZxiUPkoQ3dR4MUhPGSXcwkDCOgSRpq8pMFKCMKzGiAUI4SAgZoohFVWcoCGNGVrxQlKpt4ylSWcZZhhGUqXZnKUu4SAnnk5S7PmMk8dnEBuQQmMHd5SiOKkpTPNCYt2bhKYI7ylbwU5icXkAIA9PKb31TJNyHQAnCCE5arbGU6zcnOXqLTncLUZTvnqc152vOc2pSnOvG5Tn3eM5WOYAA6B0pQV0LgAAVNqEIXytCGOvShEI2oRB%2FKAB38ABZQgoVGN8rRjnr0oz8IAgA7"/>
 						</div>
 						<div style="clear:both"></div>

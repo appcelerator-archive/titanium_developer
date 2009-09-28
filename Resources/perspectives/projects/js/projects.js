@@ -430,7 +430,7 @@ Projects.showLogin = function()
 		}
 
 		//insert a new record
-//		Projects.createUser(); 
+		Projects.createUser(); 
 	});
 	
 	// handler to show registration
@@ -443,7 +443,7 @@ Projects.showLogin = function()
 		$('#login_tab').removeClass('active');
 		$('#register_tab').addClass('active');
 		$('#password_field').css('display','block');
-		$('#fbconnect_login_button_container').hide();
+//		$('#fbconnect_login_button_container').hide();
 		$('#login_email').get(0).focus();
 	});
 	// handler to show login
@@ -451,7 +451,7 @@ Projects.showLogin = function()
 	{
 		$('#registration_fields').hide();
 		$('#login_button').show();
-		$('#fbconnect_login_button_container').show();
+//		$('#fbconnect_login_button_container').show();
 		$('#reset_checkbox_container').show();
 		$('#login_tab').addClass('active');
 		$('#register_tab').removeClass('active');
@@ -624,44 +624,44 @@ Projects.showAuthenticatedView = function()
 		Projects.initDB();
 	}
 	
-	var show = true;
-	
-	if (!Projects.welcomeScreenShown)
-	{
-		var found = false;
-		try
-		{
-			var rs = TiDev.db.execute("select SHOW from WELCOME");
-			while (rs.isValidRow())
-			{
-				show = rs.field(0);
-				found = true;
-				break;
-			}
-			rs.close();
-
-		}
-		catch(e)
-		{
-			TiDev.db.execute('CREATE TABLE IF NOT EXISTS WELCOME (SHOW INT)');
-		}
-
-		Projects.welcomeScreenShown=true;
-
-		if (!found)
-		{
-			TiDev.db.execute('insert into WELCOME values (1)');
-		}
-	}
-	else
-	{
-		show=false;
-	}
-	
-	if (show)
-	{
-		Projects.loadVideoWindow();
-	}
+	// var show = true;
+	// 
+	// if (!Projects.welcomeScreenShown)
+	// {
+	// 	var found = false;
+	// 	try
+	// 	{
+	// 		var rs = TiDev.db.execute("select SHOW from WELCOME");
+	// 		while (rs.isValidRow())
+	// 		{
+	// 			show = rs.field(0);
+	// 			found = true;
+	// 			break;
+	// 		}
+	// 		rs.close();
+	// 
+	// 	}
+	// 	catch(e)
+	// 	{
+	// 		TiDev.db.execute('CREATE TABLE IF NOT EXISTS WELCOME (SHOW INT)');
+	// 	}
+	// 
+	// 	Projects.welcomeScreenShown=true;
+	// 
+	// 	if (!found)
+	// 	{
+	// 		TiDev.db.execute('insert into WELCOME values (1)');
+	// 	}
+	// }
+	// else
+	// {
+	// 	show=false;
+	// }
+	// 
+	// if (show)
+	// {
+	// 	Projects.loadVideoWindow();
+	// }
 	
 	// show no project view
 	if (Projects.projectList.length == 0)

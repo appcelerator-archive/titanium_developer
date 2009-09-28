@@ -680,7 +680,6 @@ $(document).ready(function()
 	// 
 	$('#learn_button').click(function()
 	{
-		/*
 		var win = Titanium.UI.createWindow('app://feedback.html');
 		win.setHeight(300);
 		win.setWidth(430);
@@ -691,8 +690,7 @@ $(document).ready(function()
 		    win.window.init(TiDev);
 
 		},300);
-		*/
-		Projects.loadVideoWindow();
+//		Projects.loadVideoWindow();
 	});
 	// set title
 	document.title = "Titanium Developer (" + Titanium.App.getVersion() + ")";

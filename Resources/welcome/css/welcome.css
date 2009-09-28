@@ -3,6 +3,7 @@ body
 	font-family:sans-serif;
 	background-color:#fff;
 	overflow:hidden;
+	border-top:1px solid #444;
 }
 * {
 	margin:0;
@@ -10,16 +11,26 @@ body
 }
 #left
 {
-	background-color:#fff;
+	background-color:#f1f1f1;
 	float:left;
-	width:690px;
+	width:240px;
+	border-right:1px solid #e0e0e0;
+	padding:0px;
+	margin:auto;
+	height:100%;
+}
+#right
+{
+	background-color:#fff;
+	float:right;
+	width:678px;
 	padding:10px;
 	margin:auto;
 	text-align:center;
-	background-repeat:no-repeat;
-	background-position:10px 10px;
+	margin-right:20px;
+	margin-right:10px;
 }
-#left h1
+#right h1
 {
 	margin:0;
 	margin-top:10px;
@@ -27,26 +38,39 @@ body
 	font-size:24px;
 	color:#222;
 }
-#video
+#videocontainer 
 {
+	position:relative;
 	margin:0;
 	padding:0;
 	width:640px;
 	margin:auto;
 	text-align:center;
-	margin-left:30px;
-	margin-top:25px;
+	margin-top:30px !important;
 }
-#right
+#videobutton 
+{ 
+	line-height: 55pt;
+	border: 6px solid white; 
+	-webkit-border-radius: 40px;
+	opacity: 0.4;
+	position: absolute;
+	font-size: 40pt  !important;
+	color: #fff !important;
+	background-color: #888;
+	cursor: pointer;
+	text-align: center; 
+	z-index: 10;
+	-webkit-transition-duration:1.0s;
+	font-family:"bitstream vera sans","arial",sans-serif !important;
+	top:140px;
+	left:200px;
+	width:200px;
+}
+#videobutton:hover 
 {
-	background-color:#bababa;
-	float:right;
-	width:220px;
-	height:520px;
-	padding:0px;
-	margin:auto;
-	padding-top:20px;
-	border-left:1px solid #bbb;
+	opacity:0.7;
+	-webkit-transition-duration:1.0s;
 }
 #bottom
 {
@@ -77,38 +101,32 @@ body
 }
 .entry
 {
-	font-size:12px;
-	color:#666;
-	width:220px;
+	font-size:12.5px;
+	letter-spacing:0.9px;
+	color:#8C8080;
 	margin:auto;
-	margin-bottom:15px;
-	text-align:center;
-}
-.entry img
-{
-	margin-bottom:10px;
-}
-.entry div.info
-{
-	width:190px;
-	margin:auto;
-	margin-top:10px;
-}
-.entry h2
-{
-	color:#444;
-}
-.learn
-{
-	margin:auto;
-	margin-top:10px;
-	background-image:url(images/tit_learnBUTT.png);
-	background-repeat:no-repeat;
-	width:100px;
-	height:19px;
+	text-align:left;
+	font-family:"Myriad Pro","Helvetica Neue",helvetica,sans-serif;
+	border-top:1px solid #ffffff;
+	border-bottom:1px solid #d2d2d2;
+	padding:20px;
+	text-shadow: 0.1em 0.1em #fff;
+	padding-left:0;
+	margin-left:0;
+	padding-right:0;
 	cursor:pointer;
 }
-#left div
+.entry.active
+{
+	color:#1a1a1a;
+	background: -webkit-gradient(linear, left top, left bottom, from(#bebebe), to(#bebebe), color-stop(0.5, #eee));
+}
+.entry:hover
+{
+	color:#111;
+	background: -webkit-gradient(linear, left top, left bottom, from(#bebebe), to(#bebebe), color-stop(0.5, #fff));
+}
+#right div
 {
 	margin-top:12px;
 	margin-left:25px;
@@ -122,3 +140,64 @@ body
 {
 	margin-right:10px;
 }
+
+div.entry  div.progress
+{
+	margin-left:12px;
+	float:left;
+	width:21px;
+	height:21px;
+	margin-top:5px;
+}
+
+div.entry  div.active
+{
+	background-image:url(../images/tit_active.png);
+	background-repeat:no-repeat;
+	background-position:0 0;
+	text-shadow: none;
+	padding-left:7px;
+	padding-top:3px;
+	color:#fff;
+}
+
+div.entry  div.inactive
+{
+	background-image:url(../images/tit_display.png);
+	background-repeat:no-repeat;
+	background-position:0 0;
+	text-shadow: none;
+	padding-left:7px;
+	padding-top:3px;
+}
+
+div.entry  div.complete
+{
+	background-image:url(../images/tit_check.png);
+}
+
+div.entry  div.title
+{
+	float:left;
+	padding-left:6px;
+	line-height:30px;
+}
+
+div.entry div.complete span
+{
+	display:none;
+}
+
+#tiui_perspective_bar
+{
+	margin-top:10px;
+	font-size:10px;
+}
+
+#tiui_perspective_bar .tiui-button-tab-title
+{
+	color:#1a1a1a;
+	text-shadow: 0.1em 0.1em #fff;
+}
+
+

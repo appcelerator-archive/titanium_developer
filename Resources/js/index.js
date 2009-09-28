@@ -678,8 +678,9 @@ $(document).ready(function()
 	//
 	// feedback handler
 	// 
-	$('#feedback_button').click(function()
+	$('#learn_button').click(function()
 	{
+		/*
 		var win = Titanium.UI.createWindow('app://feedback.html');
 		win.setHeight(300);
 		win.setWidth(430);
@@ -690,11 +691,11 @@ $(document).ready(function()
 		    win.window.init(TiDev);
 
 		},300);
-		
+		*/
+		Projects.loadVideoWindow();
 	});
 	// set title
 	document.title = "Titanium Developer (" + Titanium.App.getVersion() + ")";
-	//Titanium.UI.currentWindow.title =  "Titanium Developer (" + Titanium.App.getVersion() + ")";	
 });
 
 

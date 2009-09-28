@@ -171,9 +171,12 @@ EditProject.setupView = function()
 				TiDev.db.execute('DELETE FROM PROJECTS WHERE ID = ?', EditProject.currentProject.id);
 				TiDev.db.execute('DELETE FROM PROJECTMODULES WHERE GUID = ?', EditProject.currentProject.guid);
 
-				// remove files
+				// remove directory and contents only after super double check. I call this the 'bess ho' alert.  -JGH
 				var f = Titanium.Filesystem.getFile(EditProject.currentProject.dir);
-				f.deleteDirectory(true);
+				if (confirm("WARNING: Delete the directory and it's contents:\n\n" + f.nativePath() + "\n\nor leave the directory contents intact?\n\nClick 'OK' to delete or 'Cancel' to leave directory intact."))
+				{
+					f.deleteDirectory(true);
+				}
 
 				// remove from cache
 				var a = [];

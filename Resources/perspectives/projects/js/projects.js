@@ -43,6 +43,10 @@ Projects.userUIDT = null;
 // var to determine if login should be shown
 Projects.needLogin = false;
 
+// facebook session stuff
+Projects.facebookAppId = "9494e611f2a93b8d7bfcdfa8cefdaf9f";
+Projects.facebookSession = null;
+
 //
 //  Return current project object
 //
@@ -130,6 +134,12 @@ Projects.createUser = function()
 			// show authenticated indicator
 			$('#tiui_shield_off').css('display','none');
 			$('#tiui_shield_on').css('display','inline');
+			
+			// if the user is connecting via Facebook
+			if (Projects.facebookSession && Projects.facebookSession.isLoggedIn())
+			{
+				Projects.facebookSession.publishFeed('134879989930');
+			}
 		}
 		// show error
 		else
@@ -204,6 +214,66 @@ Projects.showLogin = function()
 	TiUI.GreyButton({id:'login_button'});
 	TiUI.GreyButton({id:'signup_button'});
 	TiUI.GreyButton({id:'reset_password_button'});
+	
+	// connect with facebook
+	$("#fbconnect_button").click(function()
+	{
+		Titanium.Facebook.createSession(Projects.facebookAppId,function(fb)
+		{
+				fb.login(function(ok,url,vars,email,pass)
+				{
+					if (ok)
+					{
+						Projects.facebookSession = fb;
+						
+						fb.query("select first_name,last_name,pic,current_location,work_history from user where uid = " + fb.getUID(),function(re)
+						{
+							var r = re[0];
+							var current_location = r.current_location;
+							var city = current_location ? current_location.city : null;
+							var state = current_location ? current_location.state : null;
+							var country = current_location ? current_location.country : null;
+							var first_name = r.first_name;
+							var last_name = r.last_name;
+							var pic = r.pic;
+							var organization = null;
+							if (r.work_history && r.work_history.length > 0)
+							{
+								organization = r.work_history[0].company_name;
+							}
+							$('#login_email').val(fb.getUserEmail()).removeClass('tiui_invalid_field').css({
+								'background-color':'transparent',
+								'border':'none',
+								'color':'#fff'
+							});
+							$('#login_fname').val(first_name).removeClass('tiui_invalid_field');
+							$('#login_lname').val(last_name).removeClass('tiui_invalid_field');
+							$('#login_password').val(pass).removeClass('tiui_invalid_field');
+							$('#login_repeat_password').val(pass).removeClass('tiui_invalid_field');
+							$('#repeat_password_field').css('display','none');
+							$('#password_field').css('display','none');
+							$('#login_org').val(organization);
+							$('#login_city').val(city);
+							$('#login_state').val(state);
+							$('#login_country').val(country);
+							
+							$("#column_banner").css("display","none");
+							$("#column_facebook").css("display","block");
+							$('#profile_pic').attr("src",pic);
+							$('#fb_name').html("Welcome, "+first_name+"!");
+							$("#fbconnect_button").css("display","none");
+							$('#login_tab').css('display','none');
+							$('#register_tab').html('Connect to Facebook').css('width','200px');
+							$('#profile_divider').css('display','none');
+							$('#profile_description').css('display','none');
+							$('#profile_fb_description').css("display","block");
+							$('#signup_button').html('Complete Connection');
+							$('#signup_button').removeClass('disabled').get(0).focus();
+						});
+					}
+				});
+		});
+	});
 	
 	// setup checkbox for reset on/off
 	$('#reset_pw_checkbox').click(function()
@@ -353,15 +423,19 @@ Projects.showLogin = function()
 			$('#error_message_area').css('display','inline');
 			return;
 		}
-		
-		// insert a new record
-		Projects.createUser(); 
+
+		if (Projects.facebookSession && Projects.facebookSession.isLoggedIn())
+		{
+			Projects.facebookSession.publishFeed('134879989930',null,'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.');
+		}
+
+		//insert a new record
+//		Projects.createUser(); 
 	});
 	
 	// handler to show registration
 	$('#register_tab').click(function()
 	{
-		$('#login_frame').animate({'height':'400px'});
 		$('#login_button').hide();
 		$('#reset_checkbox_container').hide();
 		$('#reset_password_button').hide();
@@ -369,17 +443,36 @@ Projects.showLogin = function()
 		$('#login_tab').removeClass('active');
 		$('#register_tab').addClass('active');
 		$('#password_field').css('display','block');
+		$('#fbconnect_login_button_container').hide();
+		$('#login_email').get(0).focus();
 	});
 	// handler to show login
 	$('#login_tab').click(function()
 	{
 		$('#registration_fields').hide();
-		$('#login_frame').animate({'height':'100px'});
 		$('#login_button').show();
+		$('#fbconnect_login_button_container').show();
 		$('#reset_checkbox_container').show();
 		$('#login_tab').addClass('active');
 		$('#register_tab').removeClass('active');
 		$('#reset_pw_checkbox').removeAttr('checked');
+		$('#login_email').get(0).focus();
+	});
+	
+	// connect the fb connect login button
+	$('#fbconnect_login_button').click(function()
+	{
+		Titanium.Facebook.createSession(Projects.facebookAppId,function(fb)
+		{
+				fb.login(function(ok,url,vars,email,pass)
+				{
+					if (ok)
+					{
+						//TODO: do the login here
+						alert("You should be logged in here");
+					}
+				});
+		});
 	});
 	
 	// validation for login
@@ -500,6 +593,20 @@ Projects.setupView = function()
 
 Projects.welcomeScreenShown = false;
 
+Projects.loadVideoWindow = function()
+{
+	var win = Titanium.UI.createWindow({
+		url:'app://welcome/welcome.html',
+		width:950,
+		height:580,
+		resizable:false,
+		maximizable:false,
+		minimizable:false,
+		closeable:false
+	});
+	win.open();
+};
+
 //
 //  Show authenticated view
 //
@@ -539,7 +646,6 @@ Projects.showAuthenticatedView = function()
 			TiDev.db.execute('CREATE TABLE IF NOT EXISTS WELCOME (SHOW INT)');
 		}
 
-		show=true;
 		Projects.welcomeScreenShown=true;
 
 		if (!found)
@@ -554,16 +660,7 @@ Projects.showAuthenticatedView = function()
 	
 	if (show)
 	{
-		var win = Titanium.UI.createWindow({
-			url:'app://welcome/welcome.html',
-			width:950,
-			height:580,
-			resizable:false,
-			maximizable:false,
-			minimizable:false,
-			closeable:false
-		});
-		win.open();
+		Projects.loadVideoWindow();
 	}
 	
 	// show no project view

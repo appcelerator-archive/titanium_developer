@@ -2,37 +2,24 @@
 <head>
 	<title>Welcome to Appcelerator Titanium</title>
 	<link rel="stylesheet" href="css/welcome.css" type="text/css" media="screen">
+	<link rel="stylesheet" href="app://tiui/css/tiui.css" type="text/css" media="screen">
 	<script type="text/javascript" src="app://js/entourage-jquery-3.0.js"></script>
 	<script type="text/javascript" src="app://js/swfobject.js"></script>
+	<script type="text/javascript" src="app://js/fbconnect.js"></script>
 	<script type="text/javascript" src="js/welcome.js"></script>
+	<script type="text/javascript" src="app://tiui/js/tiui-jquery.js"></script>
 </head>
 <body>
+	<div id="tiui_perspective_bar"></div>
 	<div id="left">
-		<h1>Let's Get Started with Titanium</h1>
-		<div>
-			Take a few minutes now to learn how to create and run your first<br/>desktop and mobile applications with Appcelerator Titanium.
-		</div>
-		<div id="video">
-		</div>
+		<div style="margin-top:70px;" id="videos"></div>
 	</div>
 	<div id="right">
-		<div class="entry">
-			<div><img src="images/tit_VID_icon.png"></div>
-			<h2>Video Tutorials</h2>
-			<div class="info">
-				Get in-depth instruction right inside Developer with tons of tutorials on various
-				Titanium related subjects.
-			</div>
-			<div class="learn"></div>
-		</div>
-		<div style="margin:0;padding:0;margin-top:40px;"><img src="images/tit_div_shadow.png"></div>
-		<div class="entry">
-			<div><img src="images/tit_expert_icon.png"></div>
-			<h2>Expert Assistance</h2>
-			<div class="info">
-				Learn about developer-to-developer expert assistance from the professionals.
-			</div>
-			<div class="learn"></div>
+		<h1 id="title"></h1>
+		<div id="description"></div>
+		<div id="videocontainer">
+			<div id="video"></div>
+			<div id="videobutton">play &gt;</div>
 		</div>
 	</div>
 	<div id="bottom">

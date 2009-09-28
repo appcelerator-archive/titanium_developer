@@ -184,7 +184,7 @@ PackageProject.mobileCompile = function(dir,platform,callback)
 	{
 		if (compiler_errors===0)
 		{
-			$('#mobile_'+platform+'_emulator_viewer').append('<div style="margin-bottom:3px;" class="compiler_noerrors">No JavaScript errors detected.</div>');
+			$('#mobile_'+platform+'_emulator_viewer').append('<div style="margin-bottom:3px;" class="compiler_noerrors">[INFO] No JavaScript errors detected.</div>');
 			$('#mobile_'+platform+'_emulator_viewer').get(0).scrollTop = $('#mobile_'+platform+'_emulator_viewer').get(0).scrollHeight;
 		}
 		callback();
@@ -237,15 +237,23 @@ PackageProject.openResource = function(id)
 	});
 };
 
-PackageProject.logReaderWorker=null;
+PackageProject.logReaderWorkers={};
 
-PackageProject.logReader = function(process,platform)
+PackageProject.removeReaderProcess = function(platform,type)
 {
-	if (PackageProject.logReaderWorker)
+	var cur_process = PackageProject.logReaderWorkers[platform+'-'+type];
+	
+	if (cur_process)
 	{
-		PackageProject.logReaderWorker.terminate();
-		PackageProject.logReaderWorker=null;
+		delete PackageProject.logReaderWorkers[platform+'-'+type];
+		cur_process.terminate();
+		cur_process=null;
 	}
+}
+PackageProject.logReader = function(process,platform,type,filterFunc)
+{
+	PackageProject.removeReaderProcess(platform,type);
+	PackageProject.logReaderWorkers[platform+'-'+type]=process;
 	
 	var buf = '';
 	var verbose = false;
@@ -263,6 +271,10 @@ PackageProject.logReader = function(process,platform)
 		while (idx!=-1)
 		{
 			var str = buf.substring(0,idx);
+			if (filterFunc)
+			{
+				str = filterFunc(str);
+			}
 			var cls = '';
 			// attempt to color code any special output lines
 			if (str.indexOf('[EXCEPTION]')!=-1)
@@ -284,6 +296,10 @@ PackageProject.logReader = function(process,platform)
 					exception_id = 'exception_'+new Date().getTime();
 					str = "[EXCEPTION] <a fn='"+f.nativePath()+"' ln='"+line+"' id='"+exception_id+"' onclick='PackageProject.openResource(\""+exception_id+"\");return false;'>" + fn + ":" + line + "</a> " + exception_msg;
 				}
+			}
+			else if (str.indexOf('[TRACE]')!=-1)
+			{
+				cls = 'log_trace';
 			}
 			else if (str.indexOf('[ERROR]')!=-1)
 			{
@@ -345,7 +361,7 @@ PackageProject.logReader = function(process,platform)
 				$('#mobile_'+platform+'_emulator_viewer').append('<div style="margin-bottom:3px;display:'+show+';" class="log_info">[INFO] Compile completed in '+duration+' seconds</div>');
 				$('#mobile_'+platform+'_emulator_viewer').get(0).scrollTop = $('#mobile_'+platform+'_emulator_viewer').get(0).scrollHeight;
 			}
-			else if (str.indexOf("Terminating in response to SpringBoard's termination")!=-1)
+			else if (platform=='iphone' && str.indexOf("Terminating in response to SpringBoard's termination")!=-1)
 			{
 				// we can ignore this
 				skip=true;
@@ -400,14 +416,21 @@ PackageProject.logFilterVisible = function(cls,platform)
 	var level = $('#'+platform+'_log_filter').val();
 	if (level == 'info')
 	{
-		if (cls=='log_debug')
+		if (cls=='log_debug' || cls=='log_trace')
+		{
+			show=false;
+		}
+	}
+	else if (level == 'debug')
+	{
+		if (cls == 'log_trace')
 		{
 			show=false;
 		}
 	}
 	else if (level == 'warn')
 	{
-		if (cls=='log_debug' || cls=='log_info' || cls.indexOf('verbose_logger visible')!=-1)
+		if (cls=='log_trace' || cls=='log_debug' || cls=='log_info' || cls.indexOf('verbose_logger visible')!=-1)
 		{
 			show=false;
 		}
@@ -473,6 +496,17 @@ PackageProject.setupMobileView = function()
 		$('#mobile_packaging_content_iphone').css('display','none');
 		$('#mobile_packaging_content_android').css('display','block');
 		PackageProject.initializeConsoleWidth();
+	});
+
+	$("#android_log_filter").change(function()
+	{
+		var level = $(this).val();
+		$.each($("#mobile_android_emulator_viewer > div"),function()
+		{
+			var cls = $(this).attr('class');
+			var show = PackageProject.logFilterVisible(cls,'android');
+			$(this).css('display',show ? 'block':'none');
+		});
 	});
 	
 	$("#iphone_log_filter").change(function()
@@ -1113,13 +1147,13 @@ PackageProject.setupMobileView = function()
 			PackageProject.mobileCompile(Titanium.Filesystem.getFile(PackageProject.currentProject.dir,"Resources").nativePath(),'iphone',function()
 			{
 				PackageProject.currentIPhonePID = TiDev.launchPython([Titanium.Filesystem.getFile(PackageProject.iPhoneEmulatorPath).toString(),'simulator', '"'+sdk+'"','"'+ PackageProject.currentProject.dir+ '"',PackageProject.currentProject.appid, '"' + PackageProject.currentProject.name+ '"']);
-				PackageProject.logReader(PackageProject.currentIPhonePID,'iphone');
+				PackageProject.logReader(PackageProject.currentIPhonePID,'iphone','simulator');
 				PackageProject.currentIPhonePID.setOnExit(function(event)
 				{
 					PackageProject.currentIPhonePID = null;
 					$('#iphone_launch_button').removeClass('disabled');
 					$('#iphone_kill_button').addClass('disabled');
-					
+					PackageProject.removeReaderProcess('iphone','simulator');
 				});
 				PackageProject.currentIPhonePID.launch();
 			});
@@ -1347,39 +1381,53 @@ PackageProject.setupMobileView = function()
 			
 			$('#mobile_android_emulator_viewer').empty();
 			
+			// function for filtering android output
+			function androidLogFilter(str)
+			{
+				var b = str.charAt(0);
+				if (b == '[') return str;
+				
+				// check to see if android log output
+				// see if our Titanium logger
+				if (str.indexOf('/TiAPI ')!=-1)
+				{
+					var i = str.indexOf(') ');
+					var s = str.substring(i+2);
+					switch(b)
+					{
+						case 'E':
+						{
+							return '[ERROR] '+s;
+						}
+						case 'W':
+						{
+							return '[WARN] '+s;
+						}
+						case 'I':
+						{
+							return '[INFO] '+s;
+						}
+						case 'D':
+						{
+							return '[DEBUG] '+s;
+						}
+					}
+				}
+				
+				// assume it's just trace output from simulator
+				return '[TRACE] ' + str;
+			}
 			// install an android app
 			function installAndroidApp()
 			{
 				var args = [Titanium.Filesystem.getFile(PackageProject.AndroidEmulatorPath).toString(), "simulator", '"'+ PackageProject.currentProject.name+ '"','"' +TiDev.androidSDKDir+ '"', '"' + PackageProject.currentProject.dir + '"', '"'+PackageProject.currentProject.appid+'"'];
-			 	PackageProject.currentAndroidPID= TiDev.launchPython(args);
-
-				var simBuf = '';
-				PackageProject.currentAndroidPID.setOnRead(function(event)
-				{
-					var d = event.data.toString();
-					simBuf += d;
-					var idx = simBuf.indexOf('\n');
-					while (idx!=-1)
-					{
-						var str = simBuf.substring(0,idx);
-						$('#mobile_android_emulator_viewer').append('<div style="margin-bottom:3px;">'+ str + '</div>');
-						$('#mobile_android_emulator_viewer').get(0).scrollTop = $('#mobile_android_emulator_viewer').get(0).scrollHeight;
-						if (idx+1 < simBuf.length)
-						{
-							simBuf = simBuf.substring(idx+1);
-							idx = simBuf.indexOf('\n');
-						}
-						else
-						{
-							simBuf = '';
-							break;
-						}
-					}
-				});
+			 	PackageProject.currentAndroidPID = TiDev.launchPython(args);
 				PackageProject.currentAndroidPID.setOnExit(function(event)
 				{
+					PackageProject.removeReaderProcess('android','simulator');
 					PackageProject.currentAndroidPID = null;
 				});
+				PackageProject.logReader(PackageProject.currentAndroidPID,'android','simulator',androidLogFilter);
 				PackageProject.currentAndroidPID.launch();
 			};
 		
@@ -1388,47 +1436,21 @@ PackageProject.setupMobileView = function()
 			// first see if emulator is running
 			if (PackageProject.isAndroidEmulatorRunning == false)
 			{
-				var emulatorBuf = '';
-				
 				PackageProject.isAndroidEmulatorRunning = true;
 				var args = [Titanium.Filesystem.getFile(PackageProject.AndroidEmulatorPath).toString(), "emulator", '"'+ PackageProject.currentProject.name+ '"','"' +TiDev.androidSDKDir+ '"', '"' + PackageProject.currentProject.dir + '"', '"'+PackageProject.currentProject.appid+'"'];
 				PackageProject.currentAndroidEmulatorPID = TiDev.launchPython(args);
 				
-				PackageProject.currentAndroidEmulatorPID.setOnRead(function(event)
-				{
-					var d = event.data.toString();
-					emulatorBuf += d;
-					var idx = emulatorBuf.indexOf('\n');
-					while (idx!=-1)
-					{
-						var str = emulatorBuf.substring(0,idx);
-						if (str.indexOf('starting applications loader')!= -1)
-						{
-							installAndroidApp();
-						}
-						$('#mobile_android_emulator_viewer').append('<div style="margin-bottom:3px">'+ str + '</div>');
-						$('#mobile_android_emulator_viewer').get(0).scrollTop = $('#mobile_android_emulator_viewer').get(0).scrollHeight;
-						if (idx+1 < emulatorBuf.length)
-						{
-							emulatorBuf = emulatorBuf.substring(idx+1);
-							idx = emulatorBuf.indexOf('\n');
-						}
-						else
-						{
-							emulatorBuf = '';
-							break;
-						}
-					}
-
-				});
 				PackageProject.currentAndroidEmulatorPID.setOnExit(function(event)
 				{
 					PackageProject.currentAndroidEmulatorPID = null;
 					PackageProject.isAndroidEmulatorRunning = false;
+					PackageProject.removeReaderProcess('android','emulator');
 					$('#android_kill_button').addClass('disabled');
-					
 				});
+				
+				PackageProject.logReader(PackageProject.currentAndroidEmulatorPID,'android','emulator',androidLogFilter);
 				PackageProject.currentAndroidEmulatorPID.launch();
+				setTimeout(installAndroidApp,10000);
 			}
 			else
 			{

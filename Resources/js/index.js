@@ -867,7 +867,7 @@ TiDev.invokeCloudService = function(name,data,type,sCallback,fCallback)
 	};
 
 	// we are good, run the request
-	if (TiDev.isAuthenticated() == true || name == 'sso-login' || name == 'sso-register')
+	if (TiDev.isAuthenticated() == true || name == 'sso-login' || name == 'sso-register' || name == 'sso-reset-password')
 	{
 		runIt();
 	}

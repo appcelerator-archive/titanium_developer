@@ -165,7 +165,7 @@ EditProject.setupView = function()
 		{
 			try
 			{
-				TiDev.track('project-delete',{guid:EditProject.currentProject.guid,name:EditProject.currentProject.name,appid:EditProject.currentProject.appid,name:EditProject.currentProject.name});
+				TiDev.track('project-delete',{guid:EditProject.currentProject.guid,name:EditProject.currentProject.name,appid:EditProject.currentProject.appid});
 				
 				// remove db data
 				TiDev.db.execute('DELETE FROM PROJECTS WHERE ID = ?', EditProject.currentProject.id);
@@ -262,8 +262,6 @@ EditProject.setupView = function()
 	$('#project_edit_save_button').click(function()
 	{
 		if ($(this).hasClass('disabled')) return;
-		
-		TiDev.track('project-edit');
 		
 		// save project and update cache
 		var name = EditProject.currentProject.name = $('#edit_project_name').html();

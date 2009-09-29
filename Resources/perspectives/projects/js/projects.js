@@ -1015,7 +1015,7 @@ Projects.runMigrations = function()
 		try
 		{
 			TiDev.db.execute('INSERT INTO PROJECTS (id, type, guid, runtime, description, timestamp, name, directory, appid, publisher, url, image, version, copyright) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-				p['id'],type,guid,runtime,p['desc'],p['date'],p['name'],p['location'],p['appid'],p['publisher'],p['url'],p['image'],version,copyright);
+				p['id'],type,guid,runtime,p['description'],p['date'],p['name'],p['location'],p['appid'],p['publisher'],p['url'],p['image'],version,copyright);
 		} 
 		catch (e)
 		{
@@ -1532,9 +1532,9 @@ Projects.importProject = function(f)
 			{
 				options.guid = entry.value;
 			}
-			else if (entry.key.indexOf('desc') != -1)
+			else if (entry.key.indexOf('desc') != -1) // will pick up 'desc' or 'description'
 			{
-				options.desc = entry.value;
+				options.description = entry.value;
 			}
 			else if (entry.key.indexOf('type') != -1)
 			{
@@ -1615,7 +1615,7 @@ Projects.createProject = function(options, createProjectFiles)
 	options.url = (options.url)?options.url:'';
 	options.image = (options.image)?options.image:'default_app_logo.png';
 	options.guid = (options.guid)?options.guid:Titanium.Platform.createUUID();
-	options.desc = (options.desc)?options.desc:'No description provided';
+	options.description = (options.description)?options.description:'No description provided';
 	options.id = options.appid;
 	options.version = "1.0";
 	options.copyright = date.getFullYear() + ' by ' + options.publisher;
@@ -1636,7 +1636,7 @@ Projects.createProject = function(options, createProjectFiles)
 		url:options.url,
 		image:options.image,
 		guid:options.guid,
-		description:options.desc,
+		description:options.description,
 		runtime: options.runtime,
 		type:(options.type)?options.type:'desktop',
 		version:options.version,

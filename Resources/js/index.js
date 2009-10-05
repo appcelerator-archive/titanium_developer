@@ -248,7 +248,7 @@ TiDev.perspectiveChange = function(idx)
 
 		if (analytics_event_from != undefined) // avoid firing during initialization
 		{
-			Titanium.Analytics.navEvent(analytics_event_from+'pc', analytics_event_to);		
+			Titanium.Analytics.navEvent(analytics_event_from, analytics_event_to);		
 		}
 
 		// add subtabs tabs
@@ -325,7 +325,7 @@ TiDev.subtabChange = function(idx, lognav)
 		// set nav analytics data
 		var analytics_nav_from = TiDev.activePerspective.name.concat('.',TiDev.activeSubtab.name);
 		var analytics_nav_to = TiDev.activePerspective.name.concat('.',TiDev.activePerspective.views[idx].name);
-		Titanium.Analytics.navEvent(analytics_nav_from+'sc', analytics_nav_to);
+		Titanium.Analytics.navEvent(analytics_nav_from, analytics_nav_to);
 	}
 	
 	// call blur on 

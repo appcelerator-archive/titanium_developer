@@ -186,7 +186,7 @@ TiDev.registerModule = function(options)
 					// setup subtab listener
 					TiDev.subtabs.addListener(function(idx)
 					{
-						TiDev.subtabChange(idx);
+						TiDev.subtabChange(idx, true);
 					});	
 				}
 			}			
@@ -199,6 +199,15 @@ TiDev.registerModule = function(options)
 //
 TiDev.perspectiveChange = function(idx)
 {
+	// construct the data for the navigation analytics event
+	// before changing the activePerspective
+	var analytics_event_from = TiDev.activePerspective.name;
+	var a_actv_subtab = TiDev.activePerspective.views ? TiDev.getActiveSubTab() : -1;
+	if (0 <= a_actv_subtab)
+	{
+		analytics_event_from = analytics_event_from.concat('.',TiDev.activePerspective.views[a_actv_subtab].name);
+	}
+	
 	if (TiDev.activePerspective.callback)
 	{
 		TiDev.activePerspective.callback('blur');
@@ -212,6 +221,7 @@ TiDev.perspectiveChange = function(idx)
 
 	var subtabs = [];
 	var fireLoad = false;
+	var analytics_event_to = TiDev.activePerspective.name;
 
 	if (TiDev.viewedPerspectives[TiDev.activePerspective.name] != true)
 	{
@@ -232,7 +242,13 @@ TiDev.perspectiveChange = function(idx)
 			{
 				activeIdx = j;
 				TiDev.subtabChange(j);
+				analytics_event_to = analytics_event_to.concat('.',TiDev.activePerspective.views[j].name);
 			}
+		}
+
+		if (analytics_event_from != undefined) // avoid firing during initialization
+		{
+			Titanium.Analytics.navEvent(analytics_event_from+'pc', analytics_event_to);		
 		}
 
 		// add subtabs tabs
@@ -253,7 +269,7 @@ TiDev.perspectiveChange = function(idx)
 		// setup subtab listener
 		TiDev.subtabs.addListener(function(idx)
 		{
-			TiDev.subtabChange(idx);
+			TiDev.subtabChange(idx, true);
 		});	
 
 		// show subtabs	
@@ -302,8 +318,16 @@ TiDev.getActiveSubTab = function()
 //
 //  Execute Subtab Change
 //
-TiDev.subtabChange = function(idx)
+TiDev.subtabChange = function(idx, lognav)
 {
+	if (true == lognav)
+	{
+		// set nav analytics data
+		var analytics_nav_from = TiDev.activePerspective.name.concat('.',TiDev.activeSubtab.name);
+		var analytics_nav_to = TiDev.activePerspective.name.concat('.',TiDev.activePerspective.views[idx].name);
+		Titanium.Analytics.navEvent(analytics_nav_from+'sc', analytics_nav_to);
+	}
+	
 	// call blur on 
 	if (TiDev.activeSubtab.callback)
 	{

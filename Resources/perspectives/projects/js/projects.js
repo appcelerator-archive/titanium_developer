@@ -1596,7 +1596,7 @@ Projects.importProject = function(f)
 	
 	Projects.createProject(options);
 
-	TiDev.track('project-import',options);
+	Titanium.Analytics.featureEvent('project.import',options);
 	
 	// show message
 	TiDev.setConsoleMessage('Your project has been imported',2000);
@@ -1647,7 +1647,7 @@ Projects.createProject = function(options, createProjectFiles)
 	// only record event if we are creating project files
 	if (createProjectFiles == true)
 	{
-		TiDev.track('project-create',record);
+		Titanium.Analytics.featureEvent('project.create',record);
 	}
 
 	// create project directories

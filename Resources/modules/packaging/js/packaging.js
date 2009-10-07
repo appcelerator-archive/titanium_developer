@@ -2145,7 +2145,7 @@ PackageProject.writeTiManifest = function(project)
 		timanifest.platforms.push('linux');
 		linuxTrue = true;
 	}
-	TiDev.track('desktop-package',{win:winTrue,linux:linuxTrue,mac:macTrue});
+	TiDev.track('desktop-package',{win:winTrue,linux:linuxTrue,mac:macTrue,guid:project.guid});
 
 	timanifest.visibility = visibility;
 

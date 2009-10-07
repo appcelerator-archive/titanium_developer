@@ -299,18 +299,14 @@ TiUI.GreyButtonBar = function()
 		this.tabOrButton = (options.tabOrButton)?options.tabOrButton:'button';
 		this.active = options.active;
 		this.imageOffset = (options.imageOffset)?options.imageOffset:'3px';
+		this.tabItemWidth = (options.tabItemWidth)?options.tabItemWidth:30;
 
 		//
 		// create markup
 		//
 		this.html = '<div class="tiui-button-tab-container">';
 
-		//
-		// adjust width based on tab count
-		//
-		this.width = (this.tabs.length * 30 ) + (this.tabs.length+1);
-		$('#'+this.id).css('width',this.width + 'px');
-		$('#'+this.id).empty();
+		var hasText = false;
 
 		for (var i=0;i<this.tabs.length;i++)
 		{
@@ -332,19 +328,33 @@ TiUI.GreyButtonBar = function()
 					src = this.activeImages[i];
 				}
 			}
-			this.html += '<div idx="'+i+'" class="'+ classes + '">';
+			this.html += '<div idx="'+i+'" class="'+ classes + '" style="width:'+this.tabItemWidth+'px">';
 
 			var title = '';
 
 			if (this.imageTitles && this.imageTitles[i])
 			{
-				title = this.imageTitles[i]
+				title = this.imageTitles[i];
 			}
-			this.html += '<img src="'+src+'" style="position:relative;top:'+this.imageOffset+'" title="'+title+'"/></div>';
+			if (src.text)
+			{
+				this.html += '<span>'+src.text+'</span></div>';
+				hasText = true;
+			}
+			else
+			{
+				this.html += '<img src="'+src+'" style="position:relative;top:'+this.imageOffset+'" title="'+title+'"/></div>';
+			}
 		}
 		this.html+='</div>'
 		$('#'+this.id).html(this.html);
 
+		//
+		// adjust width based on tab count
+		//
+		this.width = (this.tabs.length * this.tabItemWidth ) + (this.tabs.length+1);
+		$('#'+this.id).css('width',this.width + 'px');
+		
 		//
 		// Add title text if specified
 		//
@@ -521,13 +531,15 @@ TiUI.MainTab = function()
 		this.tabs = options.tabs;
 		this.active = options.active;
 		this.activeIndex = -1;
+		this.tabItemWidth = options.tabItemWidth || 120;
+		
 		// add main class to div
 		$('#tiui_tabbar').addClass('tiui-secondary-tabbar');
 
 		//
 		// create tab markup
 		//
-		this.width = (this.tabs.length * 120) + this.tabs.length + 1;
+		this.width = (this.tabs.length * this.tabItemWidth) + this.tabs.length + 1;
 		// we pad left by 200px since that's the size of the project view and we want to center the tabbar in the center of right pane
 		this.html = '<div id="tiui_tabbar_container" style="width:' + this.width + 'px;margin:auto">';
 		for (var i=0;i<this.tabs.length;i++)

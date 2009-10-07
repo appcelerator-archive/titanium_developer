@@ -81,6 +81,15 @@
 	color:#fff;
 	
 }
+#login_signup .frame.fb
+{
+	text-align:left;
+	height:415px;
+	width:302px;
+	color:white;
+	font-size:14px;
+	background-color:#000;
+}
 #login_signup .frame.left
 {
 	-webkit-border-top-right-radius: 0px;
@@ -140,3 +149,6 @@
 	
 }
 
+#profile_pic {
+	box-shadow: 3px 3px 3px #333; 
+}

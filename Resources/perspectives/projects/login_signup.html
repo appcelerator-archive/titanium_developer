@@ -2,13 +2,13 @@
 	
 	<table width="100%" style="margin-top:20px" align="center">
 		<tr>
-			<td valign="top" align="center" width="310px">
+			<td valign="top" align="center" width="310px" id="column_banner">
 				<div style="position:absolute;top:53px;left:43px;z-index:2">
 					<img src="images/logo.png"/>
 				</div>
-				<div class="frame left"  align="center">
+				<div class="frame left" align="center" style="height:415px;">
 					<div style="font-size:25px;margin-bottom:15px;margin-top:70px">Sign Up 
-						<span style="font-size:12px">(to get the following)</span>	
+						<span style="font-size:12px">(it's free and cool!)</span>	
 					</div>
 					<div style="margin-bottom:10px">
 						<img src="images/greencheck.png"/>
@@ -16,21 +16,20 @@
 					</div>
 					<div style="margin-bottom:10px">
 						<img src="images/greencheck.png"/>
-						<span style="font-size:12px;margin-left:5px">Distribute your Apps</span>
+						<span style="font-size:12px;margin-left:5px">Package and distribute your Apps</span>
 					</div>
 					<div style="margin-bottom:10px">
 						<img src="images/greencheck.png"/>
 						<span style="font-size:12px;margin-left:5px">
-							Get detailed Analytics about your Apps
+							Interact with other Titanium Developers
 						</span>
 					</div>
 					<div style="margin-bottom:10px">
 						<img src="images/greencheck.png"/>
 						<span style="font-size:12px;margin-left:5px">
-							Interact with other developers
+							View video tutorials
 						</span>
 					</div>
-
 					<div>
 						<img src="images/greencheck.png"/>
 						<span style="font-size:12px;margin-left:5px">
@@ -45,21 +44,21 @@
 					<div style="float:left;width:130px;border-top:1px solid #494949;margin-top:26px"></div>
 					<div style="clear:both"></div>
 					<div style="font-size:25px;margin-bottom:10px">Login 
-						<span style="font-size:12px">(if you have one of the following)</span>	
+						<span style="font-size:12px"></span>	
 					</div>
 					<div style="margin-bottom:5px">
 						<img src="images/check.png"/>
-						<span style="font-size:16px;position:relative;top:-8px">Appcelerator Community Account</span>
+						<span style="font-size:16px;position:relative;top:-8px">Appcelerator Network Account</span>
 					</div>
-					<div>
+					<div style="display:none">
 						<img src="images/check.png"/>
-						<span style="font-size:16px;position:relative;top:-8px">Approved Beta Account</span>
+						<span style="font-size:16px;position:relative;top:-8px">Facebook Account</span>
 					</div>
 
 				</div>
 			</td>
 
-			<td valign="top" align="center" >
+			<td valign="top" align="center" id="column_register" >
 				<div class="tab active" id="register_tab">
 					Sign Up
 				</div>
@@ -74,7 +73,7 @@
 				<div style="position:absolute;top:30px;left:615px;color:#999;font-size:11px;display:none;"
 					id="success_message">
 					<img src="images/greencheck.png"/>
-					you're request has been sent
+					your request has been sent
 				</div>
 
 				<div style="position:absolute;top:30px;left:615px;color:#999;font-size:11px;display:none"
@@ -84,7 +83,13 @@
 				</div>
 
 				<div style="clear:both"></div>
-				<div class="frame right" id="login_frame" align="center" style="height:400px">
+				<div class="frame right" id="login_frame" align="center" style="height:415px">
+					
+					<div id="profile_fb_description" style="display:none;margin-bottom:30px;color:#fff;font-size:14px;">
+						Once you signup below, you can use your Facebook credentials to login to the Appcelerator Network and Titanium Developer.
+						We have synchronized your Facebook profile information with your Appcelerator Network profile below. Please review and 
+						make any desired changes before continuing.
+					</div>
 
 					<!-- EMAIL -->
 					<div class="label">Email:</div>
@@ -103,10 +108,10 @@
 					<!-- LOGIN BUTTON -->
 					<div id="login_button" class="disabled"  
 						style="width:120px;margin-top:10px;margin-left:120px;float:left;display:none">Login</div>
-
+						
 					<!-- RESET PASSWORD BUTTON -->
 					<div id="reset_password_button" class="disabled"  
-						style="width:120px;margin-top:10px;margin-left:120px;float:left;display:none">
+						style="width:120px;margin-top:10px;margin-left:10px;float:left;display:none">
 						Reset Password
 					</div>
 
@@ -119,14 +124,27 @@
 						</span>
 					</div>
 					
-
+					<div style="clear:both"></div>
+					
+					<div id="fbconnect_login_button_container" style="display:none">
+						<div style="color:#fff;font-size:14px;margin-top:50px;"> 
+							You can also login with your Facebook account if you've already connected it via signup 
+						</div>
+					
+						<div id="fbconnect_login_button" style="margin-top:20px;margin-left:0px;cursor:pointer;">
+							<img src="data:image/gif;base64,R0lGODlhawAXANU%2FAP%2F%2F%2F2Z9rkVinT5bmVJtpGyDskJfm7fC2WmAsUBemmqCsmd%2FsExooWB5rGN7rUplnlt1qV53q1ZwpllyqEJclD5YkUFYjc7U4jxUikNgnEVgmdPa53yQuaayzXaLtp6qxE5onoqcwYOWvWp8pens86KvyktilfT1%2BVJpnN3i7EdekjhQhsLL3XCGs6240JOjxWF5q5amyG%2BAqG2Es5ioyXKFrVlxpJunw0dglmuCsV5yn%2FP0%2BI%2BgxGJ3o2mAr%2F%2F%2F%2FyH5BAEAAD8ALAAAAABrABcAAAb%2FwB%2FtQCwaj8gBcslsOp%2FQ6JH2i4lmhax2y%2BUOON2weEwum89bUSymaLvf8DjiG6%2Fb7%2Fi8fg%2BPvRCAgYKDhHMehYiJiouMjYsvLwuSk5SUBQCYAJIBAx6Vn6ChoqOkpaYvPAGqq6yrl5kAq50OrbWrIQcpGwcvMLS2wMHCw8Q8IQ7IycrJsJjJAy3L0skuzR02vtPa29zJARsnENndyCEhDejp6umZ6w3Q7vENJAAcKiooPQQR8v3%2B%2Fw0wgbABMJ25CAgTKkT4CsDCCANmPJwYAZMFEwQy2uBwAVOKEBAiHLhAYwOmGBM4bCjBgl4KGBAQsDgBIIWHkDToATigEtOF%2Fw0TQlJUGEIEhKNIkx5tqBTCgBxNo0KwiCKpy44AHNgwCesECBHNANwgwAIAiY4nUHjAtOFCiRpcL7AAIUGqUhEiJujdyzdspr0DEPAdPJjq3rUpLFio9gKEyQ4mLFjkYFaGhQ8APpigGblajQ4AXChW8QAEJgwqMBJeLYKDhNewY%2FvFBHtAgNi4cVuk%2BxrshYugNZu0%2FMDi2gsYcATH4fMCPRklMlsAgSLjaYwEcmvnwCGj9%2B8EZgPwbhu8ee%2BnH3in%2FJtBcArDcYQHgOH49PfNL1zoEf2DChDo0afeeedxR%2BB3DZk3gAMHgodJausB8NsD7w2nAgOn2UdhZhRgsv8CBopR0B8FAFonYIPgceABAyy26CKLDb3IwAAwyGgjAya51UEHPDxAUwcl0KRDBSaNQAGGAKxQg4QYbHiDBWWx8AFLOIC1w5QigMAATTeEoOWNL3qwIpgwZiLjABCQ6aIPOmHiAgUh7JBJBytQ0JGRxSW5JHIagHZDBQG0uUMFGhyQyQUUPFBNTYmqyaIHLTwg6aSUStpQpQ%2BgiemmDwhAAQojjIACBoRWEKoFKxCqQQUYJKoBBhgYQAGpGgjAKqEU6DCCDqlqoAGoI%2FQqQA8jWFCBAJxW2kILAjTr7LPNzpAJtAIMMAG12DpLQQXcUpCAABpsWwEFBjQrawbNeuuTK7nNhouup9xW8K0AsnI776ryZkttCzPo62xD0GYwgAT%2BYpuBAQa8K0AGBytccLYNP9uwwgw77O8MOSCs8cYaN8SxAQMQ8PHIJJds8skop8xxDi0YkMDLMMecQEMyJxByzTjnrPPOPPfss8w%2BLCDBAEQXbfTRSIec9NJMN%2B3001A3LcECPxAjjG1WZ6311lzX8kMQADs%3D"/>
+						</div>	
+					</div>
+						
 					<!-- REGISTRATION FIELDS -->
 					<div style="display:block;" id="registration_fields">
 
-						<div class="label">Repeat Password:</div>
-						<input type="password" class="signup required" 
-							id="login_repeat_password" style="margin-bottom:10px"/>
-
+						<div id="repeat_password_field">
+							<div class="label">Repeat Password:</div>
+							<input type="password" class="signup required" 
+								id="login_repeat_password" style="margin-bottom:10px"/>
+						</div>
+						
 						<div class="label">First Name:</div>
 						<input type="text" class="signup required" id="login_fname" />
 
@@ -135,10 +153,10 @@
 						<div class="label">Last Name:</div>
 						<input type="text" class="signup required"   id="login_lname" />
 
-						<div style="clear:both;height:10px; border-top:1px solid #888; margin-top:10px;"></div>
+						<div style="clear:both;height:10px; border-top:1px solid #888; margin-top:10px;" id="profile_divider"></div>
 
 
-						<div style="font-size:11px;color:#aaa;margin-bottom:15px;text-align:center;font-style:italic">
+						<div style="font-size:11px;color:#aaa;margin-bottom:15px;text-align:center;font-style:italic" id="profile_description">
 							These fields are optional but may be required later to enable certain features.
 						</div>
 
@@ -344,13 +362,13 @@
 						<option value="RO">Romania</option>
 						<option value="RU">Russian Federation</option>
 						<option value="RW">Rwanda</option>
-						<option value="GS">S. Georgia & S. Sandwich Isls.</option>
+						<option value="GS">S. Georgia &amp; S. Sandwich Isls.</option>
 						<option value="SH">Saint Helena</option>
-						<option value="KN">Saint Kitts & Nevis Anguilla</option>
+						<option value="KN">Saint Kitts &amp; Nevis Anguilla</option>
 						<option value="LC">Saint Lucia</option>
 						<option value="PM">Saint Pierre and Miquelon</option>
 						<option value="ST">Saint Tome (Sao Tome) and Principe</option>
-						<option value="VC">Saint Vincent & Grenadines</option>
+						<option value="VC">Saint Vincent &amp; Grenadines</option>
 						<option value="WS">Samoa</option>
 						<option value="SM">San Marino</option>
 						<option value="SA">Saudi Arabia</option>
@@ -417,21 +435,39 @@
 						<div style="clear:both;height:10px"></div>
 
 						<!-- SIGNUP BUTTON -->
-						<div id="signup_button" class="disabled"  
+						 <div id="signup_button" class="disabled"  
 							style="width:120px;margin-top:10px;margin-left:120px;float:left">
 							Sign Up
 						</div>
-						<!-- <input type="checkbox" id="signup_t_and_c" class="signup required" 
-							style="float:left;margin-left:5px;width:9px;position:relative;top:5px"/>
+						<div id="fbconnect_button" class="disabled"  
+							style="margin-left:20px;margin-top:10px;float:left;cursor:pointer;display:none;">
+							<img src="data:image/gif;base64,R0lGODlhqQAUANU%2FAGmAsLfC2XeKtF12qoSWvD9dmUFemlNso0NckzpTikplnkVhnFhyp01poejr8qayzT1ZlJmpyc3T4qGtyGh7pZ2pxNzh63KErIqbwGB5rGZ%2Br1JpnLO906u30Epil%2FT1%2BdDW5NLY5sPL3G6AqdXb6JSjw0BYjn2QuTxWj2yDsmt%2BqGF2o9re6lVvpmJ4q0dfll94q5emyElfklxxn2%2BGtE9onjdQh%2F%2F%2F%2F2N8rpunw2h%2FsI6gxGB3qd%2Fj7XKGsf%2F%2F%2FyH5BAEAAD8ALAAAAACpABQAAAb%2FwF8kQCwaj0QIcslsOp%2FQqHRKrTYjvxghxe16v1wIeEwum8%2FotHrNbpcJsRhgTq%2Fb6ZDTfc%2Fv%2B%2F%2BAgYKDhIV9MSU6hRACAIqGkJGSk5SSJTsamZqbmRwONzeZjJykpaanqKmqq6ytrq%2BbOzs4tLW2OBygNw60jLe2GBwcEQK%2FxsfIyco4BCQZGbciJ8cEGNbW0Mu%2FExLP2rYCARPZyDsYz%2BjpGTCfEic6zxA06ugSujcPDAP0%2FP3%2B6OEiDIDxbx2GGwcYYAgwMMONEwwIqiNxD%2BG%2BgvQobmCAUd3BDgcu9rM2EIbJkydBCTwpryTKEzdCbJCxYUVIlyhz6ty5kwC%2B%2F5s8Tw44sLEDiYQwbgjYgNMkxQs%2BBPjY0IJHUJ4UZbRoehWGzwk1IgbFQGCAvrNm04KCmFZMWrRfEdTYcODAjh43PohwwaDIpw4tTpDgtgsAAwEUP3Bo0ffDrhN4HYTwoa9DDAYMJHTAHGAH4gMBHHwIUYHBjQAhCqOlaELG3A0BHH%2BYgDnCpw8QOzjuIYABRQt5MTDAIWI3hq0dPjkA%2FNXDBBIEMKPVRyC69OuZK97ADMEwdgZfZSTk%2BGG2CHw1EoMo7wHmDQvAS2yg2OF89fcTOqwIcEPCBJsMdBDABgL08IECBzhwAkwKXBCABResUMMNIlDggQUP1MCYbzdcIP%2FACQK0gMEDEwC3Ag95TTCBCjBZMMEHFtSQGgcvOqBABxS%2B%2BMEMLZaoFEz%2FwejBeNgRcEILSCaZpD33SIAkBBoomSSQCByAJJAmIHADCC%2BkJoMJINxgggA3dIDCBTdU8MJ7I5Rwg4o3jJClB2RWYIIHGkLmwQMcQGiaDGQioMADINw54QUIeADCBEMimZouIcylwAsTdEjmBHM%2BcEMJI7BwAwKpJQCmmKmZYEKlF2h6gQloTnApf4hqKGVgJ9Rl660RRACKBLnWBQEOt9oKUwVy1TXsnf2NmsALYaJQpwk%2BpKnlPRVUOoKgNRyLYEKfWqBCfgKAgACZJgwq7pAdyhX%2FwgTFHpAaBSOMsMILNIQQwicjRGunAjVoeg8KYSag6A0A37CspiNYO26aaOYiAgovNBCssQI0YPHFGDegEsYQZJCxxdqCnGa5%2FRUscKj6jjnyDSxQoIIKGygs8r4XW0DABwhQ4EB%2BC6OwZ6EKaIxoA%2BsKanGoWb7ggWgThKkCmjRrisHLKpjsQagB73nDt1u%2FUOcIadqzgQcfWyxAxUGn3YDaG6cNwQBrxx20C7ucTYAASbEwQgw3cJBAwF0anPKzol3QpgcHcXABAQqQKcIIC6QdAAscmPCCAywQoDLEhKKwgMbXKrAuBAoEHaYNL5SuAMsInEfBDCyPIIALiavw%2FyECTp%2FwgQM28IeBD8Bt4JPi%2FBEAdgUb9Ge02kELQIPq0EOvEvRvR696pbpMUAD2u3hQsA2432ADmjmgEG35B%2BkiIXCgKLAA%2Bx5ErsBBJ0DM3wYQRJvAwv4tsDUECwBBBTxXutMJqnQ42sUNKGAC%2FqylBp4ChQjCBwrcJGAGnwBFDmwAgTDtygZgy0ECKnADAhjAegqgAQ0ix0L3udB%2FN4hACyHAgBa20AAvoMDrEgABBORwBjbgIQJQkIACGICICIBAAlBgACWiIFE6RMD%2BILACCmygiDVQgQcSYAAWEtEECzji%2FhYAARQUYAEtqFoSUQDAIwIwcmI8o%2FsMsAEE2OwgiBAowAZ22MMZvI6DCFCBDu%2FIRAj40QQ2YCIC9uiBICZxiUPkoQ3dR4MUhPGSXcwkDCOgSRpq8pMFKCMKzGiAUI4SAgZoohFVWcoCGNGVrxQlKpt4ylSWcZZhhGUqXZnKUu4SAnnk5S7PmMk8dnEBuQQmMHd5SiOKkpTPNCYt2bhKYI7ylbwU5icXkAIA9PKb31TJNyHQAnCCE5arbGU6zcnOXqLTncLUZTvnqc152vOc2pSnOvG5Tn3eM5WOYAA6B0pQV0LgAAVNqEIXytCGOvShEI2oRB%2FKAB38ABZQgoVGN8rRjnr0oz8IAgA7"/>
+						</div>
+						<div style="clear:both"></div>
+					 	<input type="checkbox" id="signup_t_and_c" class="signup required" checked="true"
+							style="float:left;margin-left:120px;width:9px;position:relative;top:5px"/>
 						<a style="float:left;color:white;font-size:11px;margin-left:7px;position:relative;top:12px" 
 							target="ti:systembrowser"
-							href="#"/>I agree to the Terms of Service</a> -->
+							href="http://www.appcelerator.com/company/terms-and-conditions-of-use/"/>I agree to the Terms of Service</a>
 					</div>
 					<div style="clear:both;height:10px"></div>
 
 				</div>				
 			</td>
 
+			<td valign="top" width="310px" id="column_facebook" style="display:none">
+				<div class="frame fb" style="position:relative">
+					<img id="profile_pic" style="float:left;" />
+					<div style="float:left;margin-left:20px;font-size:15px;font-weight:bold;" id="fb_name"></div>
+					<div style="clear:both"></div>
+					<div style="margin-top:30px;">
+						<div>Your Appcelerator Network will be connected to your Facebook account.</div>
+					</div>
+					<div style="margin-top:30px;">Once your account is linked, you will be able to login using your Facebook profile.</div>
+					<div style="margin-top:30px;font-weight:bold;">Please enter your email address and set a password to finalize your signup.</div>
+					<div style="position:absolute;bottom:20px;right:20px;"><img width="60" height="60" src="http://www.seattlelighthouse.org/images/facebook-logo.png" sxrc="app://perspectives/projects/images/fb.png"/></div>
+				</div>
+			</td>
 		</tr>
 	</table>
 

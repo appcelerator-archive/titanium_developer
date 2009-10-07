@@ -165,15 +165,18 @@ EditProject.setupView = function()
 		{
 			try
 			{
-				TiDev.track('project-delete',{guid:EditProject.currentProject.guid,name:EditProject.currentProject.name,appid:EditProject.currentProject.appid,name:EditProject.currentProject.name});
+				Titanium.Analytics.featureEvent('project.delete',{guid:EditProject.currentProject.guid,name:EditProject.currentProject.name,appid:EditProject.currentProject.appid});
 				
 				// remove db data
 				TiDev.db.execute('DELETE FROM PROJECTS WHERE ID = ?', EditProject.currentProject.id);
 				TiDev.db.execute('DELETE FROM PROJECTMODULES WHERE GUID = ?', EditProject.currentProject.guid);
 
-				// remove files
+				// remove directory and contents only after super double check. I call this the 'bess ho' alert.  -JGH
 				var f = Titanium.Filesystem.getFile(EditProject.currentProject.dir);
-				f.deleteDirectory(true);
+				if (confirm("WARNING: Delete the directory and it's contents:\n\n" + f.nativePath() + "\n\nor leave the directory contents intact?\n\nClick 'OK' to delete or 'Cancel' to leave directory intact."))
+				{
+					f.deleteDirectory(true);
+				}
 
 				// remove from cache
 				var a = [];
@@ -260,8 +263,6 @@ EditProject.setupView = function()
 	{
 		if ($(this).hasClass('disabled')) return;
 		
-		TiDev.track('project-edit');
-		
 		// save project and update cache
 		var name = EditProject.currentProject.name = $('#edit_project_name').html();
 		var desc = EditProject.currentProject.description =$('#edit_project_desc').val();
@@ -290,7 +291,7 @@ EditProject.setupView = function()
 			delay = 5000;
 		}
 		
-		TiDev.track('project-edit',{name:name,desc:desc,publisher:pub,url:url,image:image,sdk:runtime,appid:appid,version:version,copyright:copyright,ruby:rubyOn,python:pythonOn});
+		Titanium.Analytics.settingsEvent('project.edit',{name:name,desc:desc,publisher:pub,url:url,image:image,sdk:runtime,appid:appid,version:version,copyright:copyright,ruby:rubyOn,python:pythonOn});
 
 		// update tiapp.xml
 		var tiapp = Titanium.Filesystem.getFile(EditProject.currentProject.dir,'tiapp.xml');

@@ -27,6 +27,11 @@ PackageProject.desktopPackage = null;
 // distribution iphone validator
 PackageProject.iPhoneDistValidator = null; 
 
+// Analytics-related vars
+PackageProject.iphoneEmulatorStartDate = null;
+PackageProject.androidEmulatorStartDate = null;
+PackageProject.desktopAppLaunchDate = null;
+
 // number of concurrent worker threads to create
 PackageProject.worker_max = 5;
 
@@ -1153,7 +1158,7 @@ PackageProject.setupMobileView = function()
 				PackageProject.currentIPhonePID.setOnExit(function(event)
 				{
 					Titanium.Analytics.timedEvent('iphone.simulator',PackageProject.iphoneEmulatorStartDate, new Date(),null,{guid:PackageProject.currentProject.guid});
-					PackageProject.androidEmulatorStartDate = null;
+					PackageProject.iphoneEmulatorStartDate = null;
 					PackageProject.currentIPhonePID = null;
 					$('#iphone_launch_button').removeClass('disabled');
 					$('#iphone_kill_button').addClass('disabled');
@@ -1448,7 +1453,7 @@ PackageProject.setupMobileView = function()
 				PackageProject.currentAndroidEmulatorPID.setOnExit(function(event)
 				{
 					Titanium.Analytics.timedEvent('android.simulator',PackageProject.androidEmulatorStartDate, new Date(),null,{guid:PackageProject.currentProject.guid});
-					PackageProject.androidEmulatorStart = null;
+					PackageProject.androidEmulatorStartDate = null;
 					PackageProject.currentAndroidEmulatorPID = null;
 					PackageProject.isAndroidEmulatorRunning = false;
 					PackageProject.removeReaderProcess('android','emulator');

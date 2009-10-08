@@ -137,6 +137,17 @@ EditProject.setFormData = function(p)
 			$('#language_python_checked').css('display','none')
 			$('#language_python_unchecked').css('display','block');
 		}
+		// check for python
+		if (p['languageModules'].php == 'on')
+		{
+			$('#language_php_checked').css('display','block');
+			$('#language_php_unchecked').css('display','none');
+		}
+		else
+		{
+			$('#language_php_checked').css('display','none')
+			$('#language_php_unchecked').css('display','block');
+		}
 
 	}
 	$('#edit_project_runtime').val(p.runtime);
@@ -254,6 +265,19 @@ EditProject.setupView = function()
 			$('#language_python_unchecked').css('display','none');
 		}	
 	});
+	$('#language_php').click(function()
+	{
+		if ($('#language_php_checked').css('display') != 'none')
+		{
+			$('#language_php_checked').css('display','none');
+			$('#language_php_unchecked').css('display','block');
+		}
+		else
+		{
+			$('#language_php_checked').css('display','block');
+			$('#language_php_unchecked').css('display','none');
+		}	
+	});
 
 		
 	//
@@ -276,6 +300,7 @@ EditProject.setupView = function()
 
 		var rubyOn = ($('#language_ruby_checked').css('display') != 'none')?'on':'';
 		var pythonOn = ($('#language_python_checked').css('display') != 'none')?'on':'';
+		var phpOn = ($('#language_php_checked').css('display') != 'none')?'on':'';
 		
 		var message = 'Your changes have been saved';
 		var delay = 2000;
@@ -377,7 +402,12 @@ EditProject.setupView = function()
 					{
 					    TiDev.db.execute("INSERT INTO PROJECTMODULES (guid, name, version) VALUES (?, ?, ?)", EditProject.currentProject.guid, 'python',Projects.currentRuntimeVersion);	
 					}
-					Projects.projectList[i]['languageModules'] = {'ruby':rubyOn,'python':pythonOn};
+					if (phpOn == 'on')
+					{
+					    TiDev.db.execute("INSERT INTO PROJECTMODULES (guid, name, version) VALUES (?, ?, ?)", EditProject.currentProject.guid, 'php',Projects.currentRuntimeVersion);	
+					}
+
+					Projects.projectList[i]['languageModules'] = {'ruby':rubyOn,'python':pythonOn,'php':phpOn};
 				}
 				break;
 			}
@@ -412,7 +442,7 @@ TiDev.registerModule({
 	displayName: 'Edit',
 	perspectives:['projects'],
 	html:'project_edit.html',
-	idx:1,
+	idx:0,
 	callback:EditProject.eventHandler
 });
 

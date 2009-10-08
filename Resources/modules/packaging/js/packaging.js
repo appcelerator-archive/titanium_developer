@@ -2213,6 +2213,13 @@ PackageProject.writeTiManifest = function(project)
 					add = false;
 				}
 			}
+			if (Titanium.Project.optionalModules[c].name == 'php')
+			{
+				if (project['languageModules'].php != 'on')
+				{
+					add = false;
+				}
+			}
 
 			if (add ==true)
 			{
@@ -2408,6 +2415,6 @@ TiDev.registerModule({
 	displayName: 'Test & Package',
 	perspectives:['projects'],
 	html:'packaging.html',
-	idx:2,
+	idx:1,
 	callback:PackageProject.eventHandler
 });

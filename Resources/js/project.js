@@ -135,6 +135,15 @@ Titanium.Project =
 				}
 				continue;
 			}
+			// check for optional php language module
+			if (this.optionalModules[c].name == 'php')
+			{
+				if (project['languageModules'].php == 'on')
+				{
+					manifest+=this.optionalModules[c].name+':'+this.optionalModules[c].version+'\n';
+				}
+				continue;
+			}
 			
 			manifest+=this.optionalModules[c].name+':'+this.optionalModules[c].version+'\n';
 		}

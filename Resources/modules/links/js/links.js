@@ -166,7 +166,7 @@ TiDev.registerModule({
 	displayName: 'Links',
 	perspectives:['projects'],
 	html:'links.html',
-	idx:3,
+	idx:2,
 	callback:Links.eventHandler
 });
 

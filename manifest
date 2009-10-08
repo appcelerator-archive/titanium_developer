@@ -19,6 +19,7 @@ mobilesdk:0.7.0
 php:0.7.0
 python:0.7.0
 ruby:0.7.0
+ticodec:0.7.0
 tidatabase:0.7.0
 tidesktop:0.7.0
 tigrowl:0.7.0

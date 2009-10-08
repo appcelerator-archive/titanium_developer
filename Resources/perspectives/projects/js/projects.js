@@ -774,11 +774,11 @@ Projects.showAuthenticatedView = function()
 			{
 				TiDev.subtabs.showTab(2);
 			}
-			if (TiDev.getActiveSubTab()==0)
-			{
-				// make sure edit is always selected if they are clicking a project from dashboard view
-				TiDev.subtabChange(1);
-			}
+			// if (TiDev.getActiveSubTab()==0)
+			// {
+			// 	// make sure edit is always selected if they are clicking a project from dashboard view
+			// 	TiDev.subtabChange(1);
+			// }
 			$MQ('l:tidev.projects.row_selected',{'project_id':Projects.selectedProjectIdx,'activeTab':TiDev.activeSubtab.name});
 			TiDev.db.execute('update PROJECT_VIEW set ACTIVE = ?',Projects.selectedProjectIdx);
 		});
@@ -934,6 +934,11 @@ Projects.initDB = function()
 						{
 							languageModules['python'] = 'on';
 						}
+						if (moduleRows.fieldByName('name') == 'php')
+						{
+							languageModules['php'] = 'on';
+						}
+
 						moduleRows.next();
 					}
 					
@@ -1353,6 +1358,8 @@ Projects.handleNewProjectClick = function()
 		options.android = ($('#android_sdk_true').css('display') != 'none')?true:false;
 		options.ruby = ($('#language_ruby_checked').css('display') != 'none')?'on':'';
 		options.python = ($('#language_python_checked').css('display') != 'none')?'on':'';
+		options.php = ($('#language_php_checked').css('display') != 'none')?'on':'';
+
 		Projects.createProject(options,true);
 	});
 
@@ -1407,6 +1414,19 @@ Projects.handleNewProjectClick = function()
 			$('#language_python_unchecked').css('display','none');
 		}	
 	});
+	$('#language_php').click(function()
+	{
+		if ($('#language_php_checked').css('display') != 'none')
+		{
+			$('#language_php_checked').css('display','none');
+			$('#language_php_unchecked').css('display','block');
+		}
+		else
+		{
+			$('#language_php_checked').css('display','block');
+			$('#language_php_unchecked').css('display','none');
+		}	
+	});
 
 	// form validation
 	var validator = TiUI.validator('new_project',function(valid)
@@ -1435,6 +1455,7 @@ Projects.handleNewProjectClick = function()
 			$('#language_modules').addClass('disabled');
 			$('#new_project_ruby').attr('disabled','true');
 			$('#new_project_python').attr('disabled','true');
+			$('#new_project_php').attr('disabled','true');
 			
 			// populate select
 			var versions = Titanium.Project.getMobileSDKVersions();
@@ -1460,6 +1481,7 @@ Projects.handleNewProjectClick = function()
 			$('#language_modules').removeClass('disabled');
 			$('#new_project_ruby').removeAttr('disabled');
 			$('#new_project_python').removeAttr('disabled');
+			$('#new_project_php').removeAttr('disabled');
 
 		}
 	})
@@ -1547,6 +1569,10 @@ Projects.importProject = function(f)
 			else if (entry.key.indexOf('python') != -1)
 			{
 				options.python = 'on';
+			}
+			else if (entry.key.indexOf('php') != -1)
+			{
+				options.php = 'on';
 			}
 			
 		}
@@ -1641,7 +1667,7 @@ Projects.createProject = function(options, createProjectFiles)
 		type:(options.type)?options.type:'desktop',
 		version:options.version,
 		copyright:options.copyright,
-		'languageModules':{'ruby':options.ruby,'python':options.python}
+		'languageModules':{'ruby':options.ruby,'python':options.python, 'php':options.php}
 	};
 
 	// only record event if we are creating project files
@@ -1770,6 +1796,11 @@ Projects.createProject = function(options, createProjectFiles)
 			{
 			    TiDev.db.execute("INSERT INTO PROJECTMODULES (guid, name, version) VALUES (?, ?, ?)", record.guid, 'python',Projects.currentRuntimeVersion);	
 			}
+			if (record['languageModules'].php == 'on')
+			{
+			    TiDev.db.execute("INSERT INTO PROJECTMODULES (guid, name, version) VALUES (?, ?, ?)", record.guid, 'php',Projects.currentRuntimeVersion);	
+			}
+
 			result =  {success:true};
 		}
 		catch (e)

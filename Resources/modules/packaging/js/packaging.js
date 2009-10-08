@@ -27,6 +27,11 @@ PackageProject.desktopPackage = null;
 // distribution iphone validator
 PackageProject.iPhoneDistValidator = null; 
 
+// Analytics-related vars
+PackageProject.iphoneEmulatorStartDate = null;
+PackageProject.androidEmulatorStartDate = null;
+PackageProject.desktopAppLaunchDate = null;
+
 // number of concurrent worker threads to create
 PackageProject.worker_max = 5;
 
@@ -1046,7 +1051,7 @@ PackageProject.setupMobileView = function()
 			var certName = PackageProject.getIPhoneAttribute('dist_name');
 			var location = $('#iphone_dist_location').val();
 			var sdk = $('#iphone_distribution_sdk').val();
-			Titanium.Analytics.featureEvent('iphone.distribute',{sdk:sdk,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name,uuid:uuid,certName:certName});
+			Titanium.Analytics.featureEvent('iphone.distribute',{sdk:sdk,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name,guid:uuid,certName:certName});
 			var x = TiDev.launchPython([Titanium.Filesystem.getFile(PackageProject.iPhoneEmulatorPath).toString(),'distribute','"'+sdk+'"', '"'+ PackageProject.currentProject.dir+ '"',PackageProject.currentProject.appid, '"' + PackageProject.currentProject.name+ '"', uuid,'"'+certName+'"','"'+location+'"']);
 			var buffer = '';
 			x.setOnRead(function(event)
@@ -1075,7 +1080,7 @@ PackageProject.setupMobileView = function()
 			if ($(this).hasClass('disabled')==false)
 			{
 				var sdk = $('#iphone_device_sdk').val();
-				Titanium.Analytics.featureEvent('iphone.install',{sdk:sdk,uuid:uuid,devName:devName,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name});
+				Titanium.Analytics.featureEvent('iphone.install',{sdk:sdk,guid:uuid,devName:devName,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name});
 				var x = TiDev.launchPython([Titanium.Filesystem.getFile(PackageProject.iPhoneEmulatorPath).toString(),'install','"'+sdk+'"', '"'+ PackageProject.currentProject.dir+ '"',PackageProject.currentProject.appid, '"' + PackageProject.currentProject.name+ '"','"'+uuid+'"', '"'+devName + '"']);
 				var buffer = '';
 				x.setOnRead(function(event)
@@ -1135,21 +1140,25 @@ PackageProject.setupMobileView = function()
 			$('#mobile_iphone_emulator_viewer').empty();
 			
 			var sdk = $('#iphone_emulator_sdk').val();
-			Titanium.Analytics.featureEvent('iphone.simulator',{sdk:sdk,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name});
+			Titanium.Analytics.featureEvent('iphone.simulator',{sdk:sdk,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name,guid:PackageProject.currentProject.guid});
 			
 			// kill if still running
 			if (PackageProject.currentIPhonePID != null)
 			{
 				PackageProject.currentIPhonePID.terminate();
 				PackageProject.currentIPhonePID = null;
+				PackageProject.iphoneEmulatorStartDate = null;
 			}
 			
 			PackageProject.mobileCompile(Titanium.Filesystem.getFile(PackageProject.currentProject.dir,"Resources").nativePath(),'iphone',function()
 			{
 				PackageProject.currentIPhonePID = TiDev.launchPython([Titanium.Filesystem.getFile(PackageProject.iPhoneEmulatorPath).toString(),'simulator', '"'+sdk+'"','"'+ PackageProject.currentProject.dir+ '"',PackageProject.currentProject.appid, '"' + PackageProject.currentProject.name+ '"']);
 				PackageProject.logReader(PackageProject.currentIPhonePID,'iphone','simulator');
+				PackageProject.iphoneEmulatorStartDate = new Date();
 				PackageProject.currentIPhonePID.setOnExit(function(event)
 				{
+					Titanium.Analytics.timedEvent('iphone.simulator',PackageProject.iphoneEmulatorStartDate, new Date(),null,{guid:PackageProject.currentProject.guid});
+					PackageProject.iphoneEmulatorStartDate = null;
 					PackageProject.currentIPhonePID = null;
 					$('#iphone_launch_button').removeClass('disabled');
 					$('#iphone_kill_button').addClass('disabled');
@@ -1214,7 +1223,7 @@ PackageProject.setupMobileView = function()
 		$('#android_install_on_device_button').click(function()
 		{
 			TiDev.setConsoleMessage('Installing app on device...');
-			Titanium.Analytics.featureEvent('android.install',{name:PackageProject.currentProject.name,appid:PackageProject.currentProject.appid});
+			Titanium.Analytics.featureEvent('android.install',{name:PackageProject.currentProject.name,appid:PackageProject.currentProject.appid,guid:PackageProject.currentProject.guid});
 			
 			var args = [Titanium.Filesystem.getFile(PackageProject.AndroidEmulatorPath).toString(), "install", '"'+ PackageProject.currentProject.name+ '"','"' +TiDev.androidSDKDir+ '"', '"' + PackageProject.currentProject.dir + '"', '"'+PackageProject.currentProject.appid+'"'];
 		 	var installAndroid = TiDev.launchPython(args);
@@ -1295,7 +1304,7 @@ PackageProject.setupMobileView = function()
 			
 			x.launch();
 				
-			Titanium.Analytics.featureEvent('android.distribute',{name:PackageProject.currentProject.name,appid:PackageProject.currentProject.appid});
+			Titanium.Analytics.featureEvent('android.distribute',{name:PackageProject.currentProject.name,guid:PackageProject.currentProject.guid,appid:PackageProject.currentProject.appid});
 			
 		});
 
@@ -1375,7 +1384,7 @@ PackageProject.setupMobileView = function()
 		{
 			if ($(this).hasClass('disabled'))return;
 			
-			Titanium.Analytics.featureEvent('android.simulator',{name:PackageProject.currentProject.name,appid:PackageProject.currentProject.appid});
+			Titanium.Analytics.featureEvent('android.simulator',{name:PackageProject.currentProject.name,appid:PackageProject.currentProject.appid,guid:PackageProject.currentProject.guid});
 			
 			$('#android_kill_button').removeClass('disabled');
 			
@@ -1437,11 +1446,14 @@ PackageProject.setupMobileView = function()
 			if (PackageProject.isAndroidEmulatorRunning == false)
 			{
 				PackageProject.isAndroidEmulatorRunning = true;
+				PackageProject.androidEmulatorStartDate = new Date();
 				var args = [Titanium.Filesystem.getFile(PackageProject.AndroidEmulatorPath).toString(), "emulator", '"'+ PackageProject.currentProject.name+ '"','"' +TiDev.androidSDKDir+ '"', '"' + PackageProject.currentProject.dir + '"', '"'+PackageProject.currentProject.appid+'"'];
 				PackageProject.currentAndroidEmulatorPID = TiDev.launchPython(args);
 				
 				PackageProject.currentAndroidEmulatorPID.setOnExit(function(event)
 				{
+					Titanium.Analytics.timedEvent('android.simulator',PackageProject.androidEmulatorStartDate, new Date(),null,{guid:PackageProject.currentProject.guid});
+					PackageProject.androidEmulatorStartDate = null;
 					PackageProject.currentAndroidEmulatorPID = null;
 					PackageProject.isAndroidEmulatorRunning = false;
 					PackageProject.removeReaderProcess('android','emulator');
@@ -1962,6 +1974,7 @@ PackageProject.setupDesktopView = function()
 			Titanium.Project.writeManifest(PackageProject.currentProject);
 
 			Titanium.Analytics.featureEvent('desktop.launch',{sdk:runtime,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name,guid:PackageProject.currentProject.guid});
+			PackageProject.desktopAppLaunchDate = new Date();
 			
 			// launch desktop app
 			PackageProject.currentAppPID = TiDev.launchPython([PackageProject.desktopPackage.toString(), "-d",dest.toString(),"-t", "bundle","-a",assets.toString(),appdir.toString(),"-n","-r","-v","-s",basePath.toString()]);
@@ -1992,6 +2005,8 @@ PackageProject.setupDesktopView = function()
 			});
 			PackageProject.currentAppPID.setOnExit(function(event)
 			{
+				Titanium.Analytics.timedEvent('desktopapp.launch',PackageProject.desktopAppLaunchDate, new Date(),null,{guid:PackageProject.currentProject.guid});
+				PackageProject.desktopAppLaunchDate = null;
 				PackageProject.currentAppPID = null;
 				$('#launch_kill_button').addClass('disabled');
 				$('#launch_app_button').removeClass('disabled');
@@ -2167,7 +2182,7 @@ PackageProject.writeTiManifest = function(project)
 		timanifest.platforms.push('linux');
 		linuxTrue = true;
 	}
-	TiDev.track('desktop-package',{win:winTrue,linux:linuxTrue,mac:macTrue,guid:project.guid});
+	Titanium.Analytics.featureEvent('desktop.package',{win:winTrue,linux:linuxTrue,mac:macTrue,guid:project.guid});
 
 	timanifest.visibility = visibility;
 

@@ -189,7 +189,7 @@ PackageProject.mobileCompile = function(dir,platform,callback)
 	{
 		if (compiler_errors===0)
 		{
-			$('#mobile_'+platform+'_emulator_viewer').append('<div style="margin-bottom:3px;" class="compiler_noerrors">[INFO] No JavaScript errors detected.</div>');
+			$('#mobile_'+platform+'_emulator_viewer').append('<div style="margin-bottom:3px;" class="log_info">[INFO] No JavaScript errors detected.</div>');
 			$('#mobile_'+platform+'_emulator_viewer').get(0).scrollTop = $('#mobile_'+platform+'_emulator_viewer').get(0).scrollHeight;
 		}
 		callback();

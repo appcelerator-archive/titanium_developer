@@ -2350,6 +2350,7 @@ PackageProject.publishDesktopApp = function(destDir,project)
 		// 4 means that the POST has completed
 		if (this.readyState == 4)
 		{
+
 			destDir.deleteDirectory(true);
 			if (this.status == 200)
 			{
@@ -2374,7 +2375,13 @@ PackageProject.publishDesktopApp = function(destDir,project)
 		}
 	};
 	xhr.open("POST",url);
-	xhr.sendDir(destDir);  
+	var zipFile = Titanium.Filesystem.createTempFile();
+	var zipDir = Titanium.Filesystem.getDirectory(destDir);
+
+	Titanium.Codec.createZip(zipDir, zipFile, function() {
+	  // complete callback
+	  xhr.send(zipFile);
+	});
 };
 
 PackageProject.pollPackagingRequest = function(ticket,guid)

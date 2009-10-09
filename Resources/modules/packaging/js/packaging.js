@@ -2350,11 +2350,13 @@ PackageProject.publishDesktopApp = function(destDir,project)
 		// 4 means that the POST has completed
 		if (this.readyState == 4)
 		{
-
 			destDir.deleteDirectory(true);
+			alert('after delete')
 			if (this.status == 200)
 			{
+				alert('status = 200')
 				var json = swiss.evalJSON(this.responseText);
+				alert('after eval')
 				if (json.success == false)
 				{
 					TiDev.setConsoleMessage('Packaging failed. Error: ' + json.message, 5000);
@@ -2363,6 +2365,8 @@ PackageProject.publishDesktopApp = function(destDir,project)
 				}
 				else
 				{
+					alert('success')
+					
 					PackageProject.pollPackagingRequest(json.ticket,project.guid)
 				}
 			}
@@ -2376,9 +2380,7 @@ PackageProject.publishDesktopApp = function(destDir,project)
 	};
 	xhr.open("POST",url);
 	var zipFile = Titanium.Filesystem.createTempFile();
-	var zipDir = Titanium.Filesystem.getDirectory(destDir);
-
-	Titanium.Codec.createZip(zipDir, zipFile, function() {
+	Titanium.Codec.createZip(destDir, zipFile, function() {
 	  // complete callback
 	  xhr.send(zipFile);
 	});

@@ -739,7 +739,7 @@ Projects.showAuthenticatedView = function()
 			{
 				if (Projects.projectList[i].type == 'mobile')
 				{
-					//TiDev.subtabs.hideTab(2)
+					TiDev.subtabs.hideTab(2)
 				}
 				else
 				{
@@ -768,7 +768,7 @@ Projects.showAuthenticatedView = function()
 			Projects.selectedProjectIdx = $(this).attr('project_id');	
 			if (Projects.getProject().type == 'mobile')
 			{
-				//TiDev.subtabs.hideTab(2);
+				TiDev.subtabs.hideTab(2);
 			}		
 			else
 			{
@@ -799,7 +799,7 @@ $MQL('l:tidev.modules.loaded',function()
 	{
 		if (p.type == 'mobile')
 		{
-			//TiDev.subtabs.hideTab(2)
+			TiDev.subtabs.hideTab(2)
 		}
 		else
 		{

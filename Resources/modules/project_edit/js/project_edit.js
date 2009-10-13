@@ -319,7 +319,9 @@ EditProject.setupView = function()
 		Titanium.Analytics.settingsEvent('project.edit',{name:name,desc:desc,publisher:pub,url:url,image:image,sdk:runtime,appid:appid,version:version,copyright:copyright,ruby:rubyOn,python:pythonOn});
 
 		// update tiapp.xml
-		var tiapp = Titanium.Filesystem.getFile(EditProject.currentProject.dir,'tiapp.xml');
+		var tiapp = Titanium.Filesystem.getFileStream(EditProject.currentProject.dir,'tiapp.xml');
+		tiapp.open(Titanium.Filesystem.MODE_READ);
+		
 		var line = tiapp.readLine(true);
 		var newXML = line + '\n';
 		var inWindowSection = false;
@@ -328,6 +330,7 @@ EditProject.setupView = function()
 			line = tiapp.readLine();
 			if(line==null)
 			{
+				tiapp.close();
 				break;
 			} 
 			if (line.indexOf('<window') != -1)
@@ -372,7 +375,9 @@ EditProject.setupView = function()
 			}
 			newXML += line + '\n';
 		}
+		tiapp.open(Titanium.Filesystem.MODE_WRITE);
 		tiapp.write(newXML);
+		tiapp.close();
 
 		// update cache
 		for (var i=0;i<Projects.projectList.length;i++)

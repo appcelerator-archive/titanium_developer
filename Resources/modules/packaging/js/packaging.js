@@ -164,6 +164,7 @@ PackageProject.mobileCompile = function(dir,platform,callback)
 	$('#mobile_'+platform+'_emulator_viewer').get(0).scrollTop = $('#mobile_'+platform+'_emulator_viewer').get(0).scrollHeight;
 	
 	var compiler_errors = 0;
+	var completed = false;
 
 	PackageProject.compileResources(dir,
 	function(event){
@@ -180,14 +181,16 @@ PackageProject.mobileCompile = function(dir,platform,callback)
 						continue;
 					}
 					compiler_errors++;
-					$('#mobile_'+platform+'_emulator_viewer').append('<div style="margin-bottom:3px;" class="log_warn">[WARN] JavaScript compiler reported "'+ e.reason + '" at ' + event.path + ":"+e.line+'</div>');
-					$('#mobile_'+platform+'_emulator_viewer').get(0).scrollTop = $('#mobile_'+platform+'_emulator_viewer').get(0).scrollHeight;
 					if (e.reason.indexOf('Too many errors. (100% scanned)')!=-1)
 					{
-						$('#mobile_'+platform+'_emulator_viewer').append('<div style="margin-bottom:3px;" class="log_info">[INFO] JavaScript compiler bailed with errors...</div>');
+						$('#mobile_'+platform+'_emulator_viewer').append('<div style="margin-bottom:3px;" class="log_error">[ERROR] JavaScript compiler bailed with too errors... Yuck! (we\'ll continue but you should check that out)</div>');
+						$('#mobile_'+platform+'_emulator_viewer').get(0).scrollTop = $('#mobile_'+platform+'_emulator_viewer').get(0).scrollHeight;
+						completed = true;
 						callback();
 						break;
 					}
+					$('#mobile_'+platform+'_emulator_viewer').append('<div style="margin-bottom:3px;" class="log_warn">[WARN] JavaScript compiler reported "'+ e.reason + '" at ' + event.path + ":"+e.line+'</div>');
+					$('#mobile_'+platform+'_emulator_viewer').get(0).scrollTop = $('#mobile_'+platform+'_emulator_viewer').get(0).scrollHeight;
 				}
 			}
 	},
@@ -198,7 +201,11 @@ PackageProject.mobileCompile = function(dir,platform,callback)
 			$('#mobile_'+platform+'_emulator_viewer').append('<div style="margin-bottom:3px;" class="log_info">[INFO] No JavaScript errors detected.</div>');
 			$('#mobile_'+platform+'_emulator_viewer').get(0).scrollTop = $('#mobile_'+platform+'_emulator_viewer').get(0).scrollHeight;
 		}
-		callback();
+		if (!completed)
+		{
+			completed = true;
+			callback();
+		}
 	});
 };
 

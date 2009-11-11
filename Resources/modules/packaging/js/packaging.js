@@ -2142,25 +2142,7 @@ PackageProject.writeTiManifest = function(project)
 	
 	if (project.image)
 	{
-		// look for image in two places - either full path or in resources dir
 		var image = TFS.getFile(project.image);
-		if (!image.exists())
-		{
-			image = TFS.getFile(resources,project.image);
-		}
-		// use default if not exists
-		if (!image.exists())
-		{
-			var path = Titanium.App.appURLToPath('app://images');
-			image = TFS.getFile(path,'default_app_logo.png')
-		}
-		
-		var image_dest = TFS.getFile(resources,image.name());
-		if (image.toString() != image_dest.toString())
-		{
-			image.copy(image_dest);
-		}
-		imageName = image.name();
 		timanifest.image = image.name();
 	}
 
@@ -2192,6 +2174,9 @@ PackageProject.writeTiManifest = function(project)
 
 	timanifest.guid = project.guid;
 	
+	// see if analytics is enabled
+	var hasAnalytics = Titanium.Project.hasAnalytics(project);
+	
 	if (project.type == 'desktop')
 	{
 		timanifest.modules = [];
@@ -2199,6 +2184,12 @@ PackageProject.writeTiManifest = function(project)
 		// required modules
 		for (var i=0;i<Titanium.Project.requiredModules.length;i++)
 		{
+			// analytics disabled then ignore
+			if (hasAnalytics==false && Titanium.Project.requiredModules[i].name == 'tianalytics')
+			{
+				continue;
+			}
+
 			var m = {};
 			m.name = Titanium.Project.requiredModules[i].name;			
 			m.version = "" + Titanium.Project.requiredModules[i].version;

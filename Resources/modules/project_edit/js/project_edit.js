@@ -292,7 +292,7 @@ EditProject.setupView = function()
 		var desc = EditProject.currentProject.description =$('#edit_project_desc').val();
 		var pub = EditProject.currentProject.publisher = $('#edit_project_publisher').val();	
 		var url = EditProject.currentProject.url = $('#edit_project_url').val();
-		var image = EditProject.currentProject.image = $('#edit_project_icon').val();
+		var imageName = EditProject.currentProject.image = $('#edit_project_icon').val();
 		var runtime = EditProject.currentProject.runtime = $('#edit_project_runtime').val();
 		var appid = EditProject.currentProject.appid = $('#edit_project_appid').val();
 		var version = EditProject.currentProject.version = $('#edit_project_version').val();
@@ -304,19 +304,6 @@ EditProject.setupView = function()
 		
 		var message = 'Your changes have been saved';
 		var delay = 2000;
-		try
-		{
-			// insert record and push into cache
-		    TiDev.db.execute("UPDATE PROJECTS SET runtime = ?, description = ?, name = ?,  publisher = ?, url = ?, image = ?, appid = ?, copyright = ?, version = ? WHERE id = ?", 
-					runtime, desc, name, pub, url, image, appid, copyright, version, EditProject.currentProject.id );	
-		}
-		catch (e)
-		{
-			message = 'Unexpected error, message ' + e;
-			delay = 5000;
-		}
-		
-		Titanium.Analytics.settingsEvent('project.edit',{name:name,desc:desc,publisher:pub,url:url,image:image,sdk:runtime,appid:appid,version:version,copyright:copyright,ruby:rubyOn,python:pythonOn});
 
 		// update tiapp.xml
 		var tiapp = Titanium.Filesystem.getFileStream(EditProject.currentProject.dir,'tiapp.xml');
@@ -358,9 +345,31 @@ EditProject.setupView = function()
 				newXML += '<publisher>' + pub + '</publisher>\n';
 				continue;
 			}
+			// do special handling for image
 			if (line.indexOf('<icon') != -1  && inWindowSection == false)
 			{
-				newXML += '<icon>' + image + '</icon>\n';
+				// look for image in two places - either full path or in resources dir
+				var image = TFS.getFile(imageName);
+				var resources = TFS.getFile(EditProject.currentProject.dir,'Resources');
+				
+				if (!image.exists())
+				{
+					image = TFS.getFile(resources,imageName);
+				}
+				// use default if not exists
+				if (!image.exists())
+				{
+					var path = Titanium.App.appURLToPath('app://images');
+					image = TFS.getFile(path,'default_app_logo.png')
+				}
+
+				var image_dest = TFS.getFile(resources,image.name());
+				if (image.toString() != image_dest.toString())
+				{
+					image.copy(image_dest);
+				}
+				imageName = image.name();			
+				newXML += '<icon>' + imageName + '</icon>\n';
 				continue;
 			}
 			if (line.indexOf('url') != -1 && inWindowSection == false)
@@ -379,6 +388,21 @@ EditProject.setupView = function()
 		tiapp.write(newXML);
 		tiapp.close();
 
+		// update database
+		try
+		{
+			// insert record and push into cache
+		    TiDev.db.execute("UPDATE PROJECTS SET runtime = ?, description = ?, name = ?,  publisher = ?, url = ?, image = ?, appid = ?, copyright = ?, version = ? WHERE id = ?", 
+					runtime, desc, name, pub, url, imageName, appid, copyright, version, EditProject.currentProject.id );	
+		}
+		catch (e)
+		{
+			message = 'Unexpected error, message ' + e;
+			delay = 5000;
+		}
+		
+		Titanium.Analytics.settingsEvent('project.edit',{name:name,desc:desc,publisher:pub,url:url,image:imageName,sdk:runtime,appid:appid,version:version,copyright:copyright,ruby:rubyOn,python:pythonOn});
+
 		// update cache
 		for (var i=0;i<Projects.projectList.length;i++)
 		{
@@ -388,7 +412,7 @@ EditProject.setupView = function()
 				Projects.projectList[i].descrption = desc;
 				Projects.projectList[i].publisher = pub;
 				Projects.projectList[i].url = url;
-				Projects.projectList[i].image = image;
+				Projects.projectList[i].image = imageName;
 				Projects.projectList[i].runtime = runtime;
 				Projects.projectList[i].appid = appid;
 				Projects.projectList[i].version = version;
@@ -417,6 +441,7 @@ EditProject.setupView = function()
 				break;
 			}
 		}
+
 		
 		TiDev.setConsoleMessage(message,delay);
 	});

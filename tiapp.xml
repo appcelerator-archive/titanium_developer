@@ -25,4 +25,7 @@
         <minimizable>true</minimizable>
         <closeable>true</closeable>
     </window>
+
+<dialog-bmp>platform/developer_dialog.bmp</dialog-bmp>
+<banner-bmp>platform/developer_banner.bmp</banner-bmp>
 </ti:app>

@@ -10,6 +10,34 @@ Titanium.Project =
 	optionalModules:[],
 	runtimeDir:null,
 	runtimeVersion:null,
+
+	hasAnalytics: function(project)
+	{
+		var hasAnalytics = true;
+		var tiapp = Titanium.Filesystem.getFileStream(project.dir,'tiapp.xml');
+		tiapp.open(Titanium.Filesystem.MODE_READ);
+		var line = tiapp.readLine(true);
+		while (true)
+		{
+			line = tiapp.readLine();
+			if(line==null)
+			{
+				tiapp.close();
+				break;
+			} 
+			if (line.indexOf('<analytics') != -1)
+			{
+				if (line.indexOf('false') != -1)
+				{
+					hasAnalytics = false;
+				}
+				break;
+			}
+		}
+		tiapp.close();
+		return hasAnalytics;
+	},
+	
 	getModuleVersion: function(versions)
 	{
 		var latestVer = 0
@@ -104,10 +132,18 @@ Titanium.Project =
 		manifest+='#desc:'+project.description+'\n';
 		manifest+='#type:'+project.type+'\n';
 		manifest+='runtime:'+project.runtime+'\n';
-
+		
+		var hasAnalytics =this.hasAnalytics(project);
+		
 		// write out required modules
 		for (var i=0;i<this.requiredModules.length;i++)
 		{
+			// analytics disabled then ignore
+			if (hasAnalytics==false && this.requiredModules[i].name == 'tianalytics')
+			{
+				continue;
+			}
+			
 			manifest+= this.requiredModules[i].name +':'+ this.requiredModules[i].version+'\n';
 		}
 		// write out optional modules
@@ -130,6 +166,15 @@ Titanium.Project =
 			if (this.optionalModules[c].name == 'python')
 			{
 				if (project['languageModules'].python == 'on')
+				{
+					manifest+=this.optionalModules[c].name+':'+this.optionalModules[c].version+'\n';
+				}
+				continue;
+			}
+			// check for optional php language module
+			if (this.optionalModules[c].name == 'php')
+			{
+				if (project['languageModules'].php == 'on')
 				{
 					manifest+=this.optionalModules[c].name+':'+this.optionalModules[c].version+'\n';
 				}
@@ -373,6 +418,32 @@ Titanium.Project =
 		
 		// create manifest
 		this.writeInitialManifest(TFS.getFile(options.dir,options.name),options);
+		
+		// write out guid for new project
+		var tiapp = Titanium.Filesystem.getFileStream(options.dir,options.name,'tiapp.xml');
+		tiapp.open(Titanium.Filesystem.MODE_READ);		
+		var line = tiapp.readLine(true);
+		var newXML = line + '\n';
+		var inWindowSection = false;
+		while (true)
+		{
+			line = tiapp.readLine();
+			if(line==null)
+			{
+				tiapp.close();
+				break;
+			} 
+			if (line.indexOf('<guid') != -1)
+			{
+				newXML += '<guid>' + options.guid + '</guid>\n';
+				continue;
+			}
+			newXML += line + '\n';
+		}
+		tiapp.open(Titanium.Filesystem.MODE_WRITE);
+		tiapp.write(newXML);
+		tiapp.close();
+		
 		
 	},
 	createIndexFile:function(resources,options)

@@ -2,7 +2,7 @@
 <ti:app xmlns:ti='http://ti.appcelerator.org'>
 <id>com.appcelerator.titanium.developer</id>
 <name>Titanium Developer</name>
-<version>0.7.0</version>
+<version>0.8</version>
 <publisher>Appcelerator</publisher>
 <url>http://www.appcelerator.com</url>
 <icon>titanium_beta.png</icon>
@@ -11,7 +11,7 @@
     <window>
         <id>initial</id>
         <title>Titanium Developer</title>
-	<url>app://index.html</url>
+		<url>app://index.html</url>
         <width>1000</width>
         <max-width>3000</max-width>
         <min-width>0</min-width>

@@ -131,6 +131,6 @@ TiDev.registerModule({
 	displayName: 'Analytics',
 	perspectives:['projects'],
 	html:'analytics.html',
-	idx:4,
+	idx:3,
 	callback:Analytics.eventHandler
 });

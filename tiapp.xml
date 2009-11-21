@@ -2,7 +2,7 @@
 <ti:app xmlns:ti='http://ti.appcelerator.org'>
 <id>com.appcelerator.titanium.developer</id>
 <name>Titanium Developer</name>
-<version>0.7.0</version>
+<version>0.8</version>
 <publisher>Appcelerator</publisher>
 <url>http://www.appcelerator.com</url>
 <icon>titanium_beta.png</icon>
@@ -25,4 +25,7 @@
         <minimizable>true</minimizable>
         <closeable>true</closeable>
     </window>
+
+<dialog-bmp>platform/developer_dialog.bmp</dialog-bmp>
+<banner-bmp>platform/developer_banner.bmp</banner-bmp>
 </ti:app>

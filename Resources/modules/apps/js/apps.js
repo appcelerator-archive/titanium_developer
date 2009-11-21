@@ -3,14 +3,16 @@ Apps.buttonBar =  new TiUI.BlackButtonBar();
 Apps.app_list_url = 'app-list';
 Apps.app_rate_url = 'app-rate';
 Apps.iterator = null;
-
+Apps.popular = [];
+Apps.download = [];
+Apps.recent = [];
 Apps.setupView = function()
 {
 	// create app iterator
-	App.createControl('app_list_iterator','iterator',{'property':'rows'},function()
-	{
-		Apps.iterator = this;
-	});
+	// App.createControl('app_list_iterator','iterator',{'property':'rows'},function()
+	// {
+	// 	Apps.iterator = this;
+	// });
 
 	// set default UI state
 	TiUI.setBackgroundColor('#161616');
@@ -219,10 +221,53 @@ $MQL('l:tidev.app.list',function(msg)
 //
 // Helper function to search for apps
 //
-Apps.findApps = function(options)
+Apps.findApps = function(options, search)
 {
+	if (search==true)
+	{
+		// use cached values if exist
+		switch (options.sort)
+		{
+			case 'popular':
+			{
+				if (Apps.popular.length != 0)
+				{
+					Apps.formatAppRows(Apps.popular);
+					return;
+				}
+				break;
+			}
+			case 'download':
+			{
+				if (Apps.download.length != 0)
+				{
+					Apps.formatAppRows(Apps.download);
+					return;
+				}
+				break;
+			}
+			case 'recent':
+			{
+				if (Apps.recent.length != 0)
+				{
+					Apps.formatAppRows(Apps.recent);
+					return;
+				}
+				break;
+			}
+		}		
+	}
+	
 	TiDev.invokeCloudService(Apps.app_list_url,{f:'json',mid:Titanium.Platform.id,o:options.sort,q:options.search},'GET',function(result)
 	{
+		// cache values
+		if (search==true)
+		{
+			if (options.sort == 'popular') Apps.popular = result;
+			else if (options.sort == 'download')  Apps.download = result;
+			else Apps.recent = result;
+		}
+		
 		Apps.formatAppRows(result);
 	});
 };
@@ -234,7 +279,7 @@ $MQL('l:app_search',function(msg)
 {
 	var sort = ($('#sort_most_downloaded').hasClass('active_sort'))?'download':'popular';
 	var options = {sort:sort,search:$('#app_search').val()};
-	Apps.findApps(options);
+	Apps.findApps(options, true);
 	TiDev.track('app-search',{search:$('#app_search').val()});
 	
 })
@@ -281,11 +326,60 @@ Apps.formatAppRows = function(json)
 		$('#app_search_string').html( count + ' ' + plural + ' found');
 
 		// repaint iterator
-		Apps.iterator.execute({rows:a});
+		//Apps.iterator.execute({rows:a});
+		var html = '<div class="infobox appitem">';
+		for (var i=0;i<a.length;i++)
+		{
+			html +='<div class="infobox appitem"><div class="content" style="position:relative;height:178px;">';
+			html += '<div class="app_image"><img src="'+a[i].image+'" height="78px" width="78px"/></div>';
+			html += '<div class="app_title">';
+			html += '<div style="float:left;width:20px">';
+			html += '<img src="modules/apps/images/download.png" style="position:relative;top:3px"/>'
+			html += '</div>';
+			html += '<div style="float:left;width:172px;overflow:hidden">';
+			html += '<a href="'+a[i].link+'" target="ti:systembrowser" style="color:white"';
+			html += '<span style="text-decoration:underline;">' + a[i].title + '</span></a></div></div>';
+			html += '<div class="app_downloads">'+a[i].downloads +' downloads </div>';
+		    html += '<div class="app_rating" id="rating_'+a[i].app_id+'">';
+			html += '<img app_id="'+a[i].app_id+'" star="1" id="rating_'+a[i].app_id+'_1" guid="'+a[i].guid+'"';
+			html += 'class="rating rating_off" src="modules/apps/images/star.png"/>';
+			html += '<img app_id="'+a[i].app_id+'" star="2" id="rating_'+a[i].app_id+'_2" guid="'+a[i].guid+'"';
+			html += 'class="rating rating_off" src="modules/apps/images/star.png"/>'
+			html += '<img app_id="'+a[i].app_id+'" star="3" id="rating_'+a[i].app_id+'_3" guid="'+a[i].guid+'"';
+			html += 'class="rating rating_off" src="modules/apps/images/star.png"/>'
+			html += '<img app_id="'+a[i].app_id+'" star="4" id="rating_'+a[i].app_id+'_4" guid="'+a[i].guid+'"';
+			html += 'class="rating rating_off" src="modules/apps/images/star.png"/>'
+			html += '<img app_id="'+a[i].app_id+'" star="5" id="rating_'+a[i].app_id+'_5" guid="'+a[i].guid+'"';
+			html += 'class="rating rating_off" 	src="modules/apps/images/star.png"/>';
+			html += '</div>'
+			html += '<div class="rating_detail">'
+			html += '<span class="rating_string" id="rating_string_'+a[i].app_id+'" votes="'+a[i].votes+'"';
+			html += 'rating="'+a[i].value+'" hasVoted="'+a[i].hasVoted+'">';
+			html += a[i].value+' rating from '+a[i].votes+' votes';
+			html += '</span>';
+			html += '<span class="rating_string" id="already_voted_'+a[i].app_id+'" style="display:none">';
+			html += 'You have already voted!';
+			html += '</span>';
+			html += '<span class="rating_string" id="voted_success_'+a[i].app_id+'"'; 
+			html += 'style="display:none;font-size:11x;color:#809eb3">';
+			html += 'Thanks for your vote!';
+			html += '</span>';
+			html += '</div>';
+			html += '<div class="app_author">Published by'; 
+			html += '<a href="'+a[i].url+'" target="ti:systembrowser">'+a[i].author+'</a>'; 
+			html += '</div>';
+			html += '<div class="app_pubdate">Last updated on: '+a[i].pubdate+'</div>'
+			html += '<div class="app_url"><a target="ti:systembrowser"" href="'+a[i].app_page+'">App Download Page (all platforms)</a></div>';
+			html +=  '<div class="app_description">'+a[i].desc+'</div></div></div></div>';
+			
+		}
 
 		// send message
 		$MQ('l:tidev.app.list',{'rows':a,count:count});
 
+		// set html
+		$('#app_list_iterator').html(html);
+		
 		// show iterator div
 		$('#app_list_iterator').css('display','block')
 
@@ -294,21 +388,21 @@ Apps.formatAppRows = function(json)
 	
 };
 
-$MQL('l:track_app_download',function(msg)
-{
-	TiDev.track('app-download-click',{url:msg.payload.val});
-	
-})
-$MQL('l:track_app_author',function(msg)
-{
-	TiDev.track('app-website-click',{url:msg.payload.val});
-	
-});
-$MQL('l:track_app_all',function(msg)
-{
-	TiDev.track('app-weblinks-click',{url:msg.payload.val});
-	
-});
+// $MQL('l:track_app_download',function(msg)
+// {
+// 	TiDev.track('app-download-click',{url:msg.payload.val});
+// 	
+// })
+// $MQL('l:track_app_author',function(msg)
+// {
+// 	TiDev.track('app-website-click',{url:msg.payload.val});
+// 	
+// });
+// $MQL('l:track_app_all',function(msg)
+// {
+// 	TiDev.track('app-weblinks-click',{url:msg.payload.val});
+// 	
+// });
 
 // register module
 TiDev.registerModule({

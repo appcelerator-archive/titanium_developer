@@ -495,6 +495,15 @@
 														id="android_alias"/>
 												</div>
 												<div style="clear:both;height:10px"></div>
+
+												<div class="label" style="width:165px">Android Version:</div>
+												<div class="input">
+													<select class="android_package"
+														id="android_version">
+														<option>loading...</option>
+													</select>
+												</div>
+												<div style="clear:both;height:10px"></div>
 												
 											</div>
 											<div id="android_package_button" 
@@ -676,11 +685,18 @@
 									<div id="mobile_device_content_android" style="display:none">
 										<!-- PROJECT HAS ANDROID -->
 										<div class="project_has_android_true" style="display:none">
-											<div class="help_text">
+											<div class="help_text" style="margin-bottom:10px">
 												Click the button below to install your app on 
 												your connected Android device.
 											</div>
-
+											<div class="label" style="width:165px">Android Version:</div>
+											<div class="input">
+												<select  
+													id="android_version_device">
+													<option>loading...</option>
+												</select>
+											</div>
+											<div style="clear:both"></div>
 											<div id="android_install_on_device_button" 
 												style="width:120px;margin-top:10px;">
 												Install Now
@@ -698,12 +714,22 @@
 							<!-- DEBUG OUTPUT FOR IPHONE EMULATOR -->
 							<div id="mobile_iphone_emulator_container" style="display:none;">
 								<div id="mobile_iphone_emulator_viewer" class="debug_console"></div>
-
 								<!--EMULATOR SDK VERSION -->
 								<div style="float:left;margin-top:20px">
-									<span class="help_text" style="position:relative;top:-3px">Select SDK Version:</span>
-									<select style="width:50px" id="iphone_emulator_sdk"> 			
+									<span class="help_text">
+										SDK:</span>
+									<select style="width:55px" id="iphone_emulator_sdk"> 			
 										<option>loading...</option>
+									</select>
+								</div>
+								<!-- FILTER LEVEL -->
+								<div style="margin-left:10px;float:left;">
+									<span class="help_text" >Filter:</span>
+									<select style="width:60px;margin-top:20px;" id="iphone_log_filter">
+										<option value="debug">Debug</option>
+										<option value="info" selected>Info</option>
+										<option value="warn">Warn</option>
+										<option value="error">Error</option>
 									</select>
 								</div>
 								
@@ -712,7 +738,7 @@
 									style="width:120px;margin-top:20px;float:left;margin-left:10px">
 									Launch App
 								</div> 
-
+								
 								<!-- CLEAR BUTTON -->
 								<!-- <div id="iphone_clear_button" 
 									style="width:120px;margin-top:20px;float:left;margin-left:10px">
@@ -724,24 +750,43 @@
 									Stop Emulator
 								</div> 
 								
-								<div style="margin-right:10px;float:right;">
-									<span class="help_text">Filter:</span>
-									<select style="width:60px;margin-top:20px;" id="iphone_log_filter">
+							</div>
+
+							<!-- DEBUG OUTPUT  FOR ANDROID EMULATOR -->
+							<div id="mobile_android_emulator_container" style="display:none;">
+								<div id="mobile_android_emulator_viewer" class="debug_console"></div>
+								
+								<!--EMULATOR SDK VERSION -->
+								<div style="float:left;margin-top:20px">
+									<span class="help_text">
+										 SDK:</span>
+									<select style="width:160px" id="android_emulator_sdk"> 			
+										<option>loading...</option>
+									</select>
+								</div>
+
+								<!--EMULATOR SKIN -->
+								<div style="float:left;margin-top:20px;margin-left:10px">
+									<span class="help_text" >Screen:</span>
+									<select style="width:58px" id="android_emulator_skins"> 			
+										<option>loading...</option>
+									</select>
+								</div>
+								<!-- FILTER LEVEL -->
+								<div style="margin-left:10px;margin-right:10px;float:left;">
+									<span class="help_text" >Filter:</span>
+									<select style="width:50px;margin-top:20px;" id="android_log_filter">
+										<option value="trace">Trace</option>
 										<option value="debug">Debug</option>
 										<option value="info" selected>Info</option>
 										<option value="warn">Warn</option>
 										<option value="error">Error</option>
 									</select>
 								</div>
-							</div>
-
-							<!-- DEBUG OUTPUT  FOR ANDROID EMULATOR -->
-							<div id="mobile_android_emulator_container" style="display:none;">
-								<div id="mobile_android_emulator_viewer" class="debug_console"></div>
-
+								
 								<!-- START BUTTON -->
-								<div id="android_launch_button" style="width:120px;margin-top:20px;float:left">
-									Launch App
+								<div id="android_launch_button" style="width:70px;margin-top:20px;float:left">
+									Launch
 								</div> 
 
 								<!-- CLEAR BUTTON -->
@@ -751,20 +796,10 @@
 								</div>  -->
 								<!-- KILL -->
 								<div id="android_kill_button" 
-									style="width:120px;margin-top:20px;float:left;margin-left:10px">
-									Stop Emulator
+									style="width:70px;margin-top:20px;float:left;margin-left:10px">
+									Stop 
 								</div> 
 
-								<div style="margin-right:10px;float:right;">
-									<span class="help_text">Filter:</span>
-									<select style="width:60px;margin-top:20px;" id="android_log_filter">
-										<option value="trace">Trace</option>
-										<option value="debug">Debug</option>
-										<option value="info" selected>Info</option>
-										<option value="warn">Warn</option>
-										<option value="error">Error</option>
-									</select>
-								</div>
 							</div>
 
 						</div>

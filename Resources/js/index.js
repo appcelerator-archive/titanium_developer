@@ -1148,6 +1148,10 @@ TiDev.launchPython = function(args)
 	if (Titanium.platform == "win32") {
 		args.unshift("python.exe");
 	}
+	else
+	{
+		args.unshift('python')
+	}
 	return Titanium.Process.createProcess(args);
 };
 

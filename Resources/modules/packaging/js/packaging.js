@@ -11,6 +11,14 @@ PackageProject.publishStatusURL = "publish-status";
 PackageProject.isAndroidEmulatorRunning = false;
 PackageProject.iPhoneDevPrereqs = {};
 
+//Android vars
+PackageProject.androidSDKs = [
+ {'skins': ['VGA', 'HVGA-L', 'HVGA-P', 'QVGA-L', 'QVGA-P'], 'name': 'Android 1.5', 'id': '1'},
+ {'skins': ['VGA', 'QVGA', 'WVGA800', 'WVGA854'], 'name': 'Android 1.6', 'id': '2'},
+ {'skins': ['VGA', 'QVGA', 'WQVGA400', 'WQVGA432', 'WVGA800', 'WVGA854'], 'name': 'Android 2.0', 'id': '3'},
+ {'skins': ['VGA-P', 'HVGA-L', 'HVGA', 'QVGA-L', 'HVGA-P'], 'name': 'Google APIs Android 1.5', 'id': '4'},
+ {'skins': ['VGA854', 'HVGA', 'WVGA800', 'QVGA'], 'name': 'Google APIs Android 1.6', 'id': '5'}, {'skins': ['VGA854', 'WQVGA400', 'HVGA', 'WQVGA432', 'WVGA800', 'QVGA'], 'name': 'Google APIs Android 2.0', 'id': '6'}
+];
 
 // Mobile Script vars
 PackageProject.iPhoneEmulatorPath = null;
@@ -19,6 +27,7 @@ PackageProject.iPhonePrereqPath = null;
 PackageProject.AndroidPrereqPath = null;
 PackageProject.MobileProjectPath = null;
 PackageProject.iPhoneProvisioningPath = null;
+PackageProject.AndroidAvdPath = null;
 PackageProject.iphoneSDKs = null;
 
 // Desktop Script var
@@ -468,7 +477,9 @@ PackageProject.setupMobileView = function()
 	PackageProject.iPhoneProvisioningPath = Titanium.Filesystem.getFile(sdk.getPath(),'iphone/provisioner.py');
 	PackageProject.iPhonePrereqPath = Titanium.Filesystem.getFile(sdk.getPath(),'iphone/prereq.py');
 	PackageProject.AndroidPrereqPath = Titanium.Filesystem.getFile(sdk.getPath(),'android/prereq.py');
+	PackageProject.AndroidAvdPath = Titanium.Filesystem.getFile(sdk.getPath(),'android/avd.py');
 
+	
 	// show correct view
 	$('#mobile_packaging').css('display','block');
 	$('#desktop_packaging').css('display','none');
@@ -1107,10 +1118,8 @@ PackageProject.setupMobileView = function()
 		// handler iphone emulator start
 		$('#mobile_emulator_iphone').click(function()
 		{
-			$('#mobile_iphone_emulator_viewer').css('height','347px');
-
 			// set height
-			$('#mobile_iphone_emulator_viewer').css('height','347px');
+			$('#mobile_iphone_emulator_viewer').css('height','347x');
 			$('#mobile_package_detail').css('height','427px');
 
 			// set margin
@@ -1219,6 +1228,58 @@ PackageProject.setupMobileView = function()
 		{
 			TiDev.androidSDKDir = Projects.getAndroidSDKLoc();
 		}
+		var args = [Titanium.Filesystem.getFile(PackageProject.AndroidAvdPath).toString(),'"' + TiDev.androidSDKDir + '"'];
+		var avd = TiDev.launchPython(args);
+		avd.setOnRead(function(event)
+		{
+			try
+			{
+				var d = event.data.toString();
+				PackageProject.androidSDKs = swiss.evalJSON(d);
+				
+				// create select HTML for version
+				var versions = '';
+				for (var i=0;i<PackageProject.androidSDKs.length;i++)
+				{
+					versions += '<option value="'+PackageProject.androidSDKs[i].id+'">'
+						+PackageProject.androidSDKs[i].name + '</option>';
+				}
+				
+				// set differnt version selects
+				$('#android_version').html(versions);
+				$('#android_version_device').html(versions);
+				$('#android_emulator_sdk').html(versions);
+				
+				// set skins initially
+				$('#android_emulator_skins').html(setSkins(0));
+				
+				// version change handlder
+				$('#android_emulator_sdk').change(function(e)
+				{
+					var el = $(this).get(0);
+					$('#android_emulator_skins').html(setSkins(el.selectedIndex));
+					
+				});
+				
+				function setSkins(id)
+				{
+					var skins = '';
+					for (var i=0;i<PackageProject.androidSDKs[id].skins.length;i++)
+					{
+						skins += '<option value="'+PackageProject.androidSDKs[id].skins[i]+'">'
+							+PackageProject.androidSDKs[id].skins[i] + '</option>';
+					}
+					return skins;
+				};
+				
+			}
+			catch (e)
+			{
+				//
+			}
+			
+		});
+		avd.launch();
 		
 		// setup proper "device" view
 		$('.project_has_android_true').css('display','block');
@@ -1230,8 +1291,9 @@ PackageProject.setupMobileView = function()
 		{
 			TiDev.setConsoleMessage('Installing app on device...');
 			Titanium.Analytics.featureEvent('android.install',{name:PackageProject.currentProject.name,appid:PackageProject.currentProject.appid,guid:PackageProject.currentProject.guid});
-			
-			var args = [Titanium.Filesystem.getFile(PackageProject.AndroidEmulatorPath).toString(), "install", '"'+ PackageProject.currentProject.name+ '"','"' +TiDev.androidSDKDir+ '"', '"' + PackageProject.currentProject.dir + '"', '"'+PackageProject.currentProject.appid+'"'];
+			var sdkId = $('#android_version_device').val();			
+			var args = [Titanium.Filesystem.getFile(PackageProject.AndroidEmulatorPath).toString(), "install", '"'+ PackageProject.currentProject.name+ '"','"' +TiDev.androidSDKDir+ '"', '"' + PackageProject.currentProject.dir + '"', '"'+PackageProject.currentProject.appid+'"', '"'+sdkId+'"'];
+
 		 	var installAndroid = TiDev.launchPython(args);
 			var buffer = '';
 			installAndroid.setOnRead(function(event)
@@ -1291,7 +1353,9 @@ PackageProject.setupMobileView = function()
 			var keystore = $('#android_key_store').val();
 			var password = $('#android_key_store_password').val();
 			var alias = $('#android_alias').val();
-			var args = [Titanium.Filesystem.getFile(PackageProject.AndroidEmulatorPath).toString(), "distribute", '"'+ PackageProject.currentProject.name+ '"','"' +TiDev.androidSDKDir+ '"', '"' + PackageProject.currentProject.dir + '"', '"'+PackageProject.currentProject.appid+'"','"'+keystore+'"','"'+password+'"','"'+alias+'"', '"'+location+'"'];
+			var sdkId = $('#android_version').val();			
+			var args = [Titanium.Filesystem.getFile(PackageProject.AndroidEmulatorPath).toString(), "distribute", '"'+ PackageProject.currentProject.name+ '"','"' +TiDev.androidSDKDir+ '"', '"' + PackageProject.currentProject.dir + '"', '"'+PackageProject.currentProject.appid+'"','"'+keystore+'"','"'+password+'"','"'+alias+'"', '"'+location+'"', '"'+sdkId+'"'];
+
 		 	var  x = TiDev.launchPython(args);
 			var buffer = '';
 			x.setOnRead(function(event)
@@ -1435,8 +1499,10 @@ PackageProject.setupMobileView = function()
 			// install an android app
 			function installAndroidApp()
 			{
-				var args = [Titanium.Filesystem.getFile(PackageProject.AndroidEmulatorPath).toString(), "simulator", '"'+ PackageProject.currentProject.name+ '"','"' +TiDev.androidSDKDir+ '"', '"' + PackageProject.currentProject.dir + '"', '"'+PackageProject.currentProject.appid+'"'];
-			 	PackageProject.currentAndroidPID = TiDev.launchPython(args);
+				var sdkId = $('#android_emulator_sdk').val();		
+				var skin = $('#android_emulator_skins').val();	
+				var args = [Titanium.Filesystem.getFile(PackageProject.AndroidEmulatorPath).toString(), "simulator", '"'+ PackageProject.currentProject.name+ '"','"' +TiDev.androidSDKDir+ '"', '"' + PackageProject.currentProject.dir + '"', '"'+PackageProject.currentProject.appid+'"', '"'+sdkId+'"', '"'+skin+'"'];
+				PackageProject.currentAndroidPID = TiDev.launchPython(args);
 				PackageProject.currentAndroidPID.setOnExit(function(event)
 				{
 					PackageProject.removeReaderProcess('android','simulator');

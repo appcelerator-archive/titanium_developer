@@ -1606,9 +1606,11 @@ PackageProject.setupMobileView = function()
 			// first see if emulator is running
 			if (PackageProject.isAndroidEmulatorRunning == false)
 			{
+				var sdkId = $('#android_emulator_sdk').val();		
+				var skin = $('#android_emulator_skins').val();	
 				PackageProject.isAndroidEmulatorRunning = true;
 				PackageProject.androidEmulatorStartDate = new Date();
-				var args = [Titanium.Filesystem.getFile(PackageProject.AndroidEmulatorPath).toString(), "emulator", '"'+ PackageProject.currentProject.name+ '"','"' +TiDev.androidSDKDir+ '"', '"' + PackageProject.currentProject.dir + '"', '"'+PackageProject.currentProject.appid+'"'];
+				var args = [Titanium.Filesystem.getFile(PackageProject.AndroidEmulatorPath).toString(), "emulator", '"'+ PackageProject.currentProject.name+ '"','"' +TiDev.androidSDKDir+ '"', '"' + PackageProject.currentProject.dir + '"', '"'+PackageProject.currentProject.appid+'"', '"'+sdkId+'"', '"'+skin+'"'];
 				PackageProject.currentAndroidEmulatorPID = TiDev.launchPython(args);
 				
 				PackageProject.currentAndroidEmulatorPID.setOnExit(function(event)

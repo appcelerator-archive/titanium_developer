@@ -55,6 +55,7 @@ Projects.getProject = function()
 	if (Projects.selectedProjectIdx == -1  && Projects.projectList.length > 0)
 	{
 		 Projects.selectedProjectIdx = Projects.projectList[0].id;
+		TiDev.db.execute('update PROJECT_VIEW set ACTIVE = ?',Projects.selectedProjectIdx);
 	}
 	for (var i=0;i<Projects.projectList.length;i++)
 	{
@@ -731,6 +732,7 @@ Projects.showAuthenticatedView = function()
 			
 			if (Projects.selectedProjectIdx == Projects.projectList[i].id)
 			{
+				
 				classes += 'active';
 			}
 
@@ -1809,6 +1811,8 @@ Projects.createProject = function(options, createProjectFiles)
 		}
 
 		Projects.selectedProjectIdx = record.id
+		TiDev.db.execute('update PROJECT_VIEW set ACTIVE = ?',Projects.selectedProjectIdx);
+		
 
 		if (TiDev.activePerspective.name != 'projects')
 		{

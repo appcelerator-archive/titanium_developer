@@ -204,11 +204,12 @@
 	-webkit-border-bottom-right-radius: 10px;
 	background-color:#000;
 	font-family:'Courier';
-	height:300px;
+	height:260px;
 	color:#00ff00;
 	overflow:auto;
 	font-size:12px;
 	padding:20px;
+	min-width:557px !important;
 	-webkit-user-select:text;
 
 }

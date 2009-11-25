@@ -28,6 +28,7 @@ PackageProject.AndroidPrereqPath = null;
 PackageProject.MobileProjectPath = null;
 PackageProject.iPhoneProvisioningPath = null;
 PackageProject.AndroidAvdPath = null;
+PackageProject.sendAVD = false;
 PackageProject.iphoneSDKs = null;
 
 // Desktop Script var
@@ -1270,105 +1271,130 @@ PackageProject.setupMobileView = function()
 		{
 			TiDev.androidSDKDir = Projects.getAndroidSDKLoc();
 		}
-		var args = [Titanium.Filesystem.getFile(PackageProject.AndroidAvdPath).toString(),'"' + TiDev.androidSDKDir + '"'];
-		var avd = TiDev.launchPython(args);
-		avd.setOnRead(function(event)
+		var avdPath = Titanium.Filesystem.getFile(PackageProject.AndroidAvdPath);
+		
+		// if we have the avd script then show fields and get version info
+		if (avdPath.exists())
 		{
-			try
+			PackageProject.sendAVD = true;
+
+			// show version fields
+			$('#android_version_container').css('display','block');
+			$('#android_version_device_container').css('display','block');
+			$('#android_emulator_sdk_container').css('display','block');
+			$('#android_emulator_skins_container').css('display','block');			
+			
+			var args = [avdPath.toString(),'"' + TiDev.androidSDKDir + '"'];
+			var avd = TiDev.launchPython(args);
+			avd.setOnRead(function(event)
 			{
-				var d = event.data.toString();
-				PackageProject.androidSDKs = swiss.evalJSON(d);
-				
-				// create select HTML for version
-				var versions = '';
-				var verObj = PackageProject.getAndroidVersion();
-				var selSkin= null;
-				var selVer = null;
-				if (verObj != null)
+				try
 				{
-					selSkin = verObj.skin;
-					selVer = verObj.version;
-				}
-				for (var i=0;i<PackageProject.androidSDKs.length;i++)
-				{
-					if (selVer != null && selVer == PackageProject.androidSDKs[i].id)
+					var d = event.data.toString();
+					PackageProject.androidSDKs = swiss.evalJSON(d);
+
+					// create select HTML for version
+					var versions = '';
+					var verObj = PackageProject.getAndroidVersion();
+					var selSkin= null;
+					var selVer = null;
+					if (verObj != null)
 					{
-						versions += '<option value="'+PackageProject.androidSDKs[i].id+'" selected>'
-							+PackageProject.androidSDKs[i].name + '</option>';
+						selSkin = verObj.skin;
+						selVer = verObj.version;
 					}
-					else
+					for (var i=0;i<PackageProject.androidSDKs.length;i++)
 					{
-						versions += '<option value="'+PackageProject.androidSDKs[i].id+'">'
-							+PackageProject.androidSDKs[i].name + '</option>';						
-					}
-				}
-				
-				// set differnt version selects
-				$('#android_version').html(versions);
-				$('#android_version_device').html(versions);
-				$('#android_emulator_sdk').html(versions);
-				
-				// set skins initially
-				$('#android_emulator_skins').html(setSkins((selVer!=null)?(selVer-1):0));
-				
-				// version change handlder 1
-				$('#android_emulator_sdk').change(function(e)
-				{
-					var el = $(this).get(0);
-					selVer = el.selectedIndex;
-					$('#android_emulator_skins').html(setSkins(el.selectedIndex));
-					
-					// persist value
-					PackageProject.saveAndroidVersion($(this).val(), $('#android_emulator_skins').val());
-				});
-				// version change handlder 2
-				$('#android_version').change(function(e)
-				{
-					// persist value
-					PackageProject.saveAndroidVersion($(this).val(),$('#android_emulator_skins').val());
-				});
-				// version change handlder 3
-				$('#android_version_device').change(function(e)
-				{
-					// persist value
-					PackageProject.saveAndroidVersion($(this).val(),$('#android_emulator_skins').val());
-				});
-				// version change handlder 3
-				$('#android_emulator_skins').change(function(e)
-				{
-					// persist value
-					PackageProject.saveAndroidVersion($('#android_emulator_sdk').val(),$(this).val());
-					selSkin = $(this).val();
-				});
-				
-				function setSkins(id)
-				{
-					var skins = '';
-					for (var i=0;i<PackageProject.androidSDKs[id].skins.length;i++)
-					{
-						if (selSkin != null && selSkin == PackageProject.androidSDKs[id].skins[i])
+						if (selVer != null && selVer == PackageProject.androidSDKs[i].id)
 						{
-							skins += '<option value="'+PackageProject.androidSDKs[id].skins[i]+'" selected>'
-								+PackageProject.androidSDKs[id].skins[i] + '</option>';
+							versions += '<option value="'+PackageProject.androidSDKs[i].id+'" selected>'
+								+PackageProject.androidSDKs[i].name + '</option>';
 						}
 						else
 						{
-							skins += '<option value="'+PackageProject.androidSDKs[id].skins[i]+'">'
-								+PackageProject.androidSDKs[id].skins[i] + '</option>';
-							
+							versions += '<option value="'+PackageProject.androidSDKs[i].id+'">'
+								+PackageProject.androidSDKs[i].name + '</option>';						
 						}
 					}
-					return skins;
-				};
+
+					// set differnt version selects
+					$('#android_version').html(versions);
+					$('#android_version_device').html(versions);
+					$('#android_emulator_sdk').html(versions);
+
+					// set skins initially
+					$('#android_emulator_skins').html(setSkins((selVer!=null)?(selVer-1):0));
+
+					// version change handlder 1
+					$('#android_emulator_sdk').change(function(e)
+					{
+						var el = $(this).get(0);
+						selVer = el.selectedIndex;
+						$('#android_emulator_skins').html(setSkins(el.selectedIndex));
+
+						// persist value
+						PackageProject.saveAndroidVersion($(this).val(), $('#android_emulator_skins').val());
+					});
+					// version change handlder 2
+					$('#android_version').change(function(e)
+					{
+						// persist value
+						PackageProject.saveAndroidVersion($(this).val(),$('#android_emulator_skins').val());
+					});
+					// version change handlder 3
+					$('#android_version_device').change(function(e)
+					{
+						// persist value
+						PackageProject.saveAndroidVersion($(this).val(),$('#android_emulator_skins').val());
+					});
+					// version change handlder 3
+					$('#android_emulator_skins').change(function(e)
+					{
+						// persist value
+						PackageProject.saveAndroidVersion($('#android_emulator_sdk').val(),$(this).val());
+						selSkin = $(this).val();
+					});
+
+					function setSkins(id)
+					{
+						var skins = '';
+						for (var i=0;i<PackageProject.androidSDKs[id].skins.length;i++)
+						{
+							if (selSkin != null && selSkin == PackageProject.androidSDKs[id].skins[i])
+							{
+								skins += '<option value="'+PackageProject.androidSDKs[id].skins[i]+'" selected>'
+									+PackageProject.androidSDKs[id].skins[i] + '</option>';
+							}
+							else
+							{
+								skins += '<option value="'+PackageProject.androidSDKs[id].skins[i]+'">'
+									+PackageProject.androidSDKs[id].skins[i] + '</option>';
+
+							}
+						}
+						return skins;
+					};
+
+				}
+				catch (e)
+				{
+					// do nothing
+				}
 				
-			}
-			catch (e)
-			{
-				//
-			}
+			});
+			avd.launch();
+		}
+		else
+		{
+			PackageProject.sendAVD = false;
 			
-		});
-		avd.launch();
+			// hide version fields
+			$('#android_version_container').css('display','none');
+			$('#android_version_device_container').css('display','none');
+			$('#android_emulator_sdk_container').css('display','none');
+			$('#android_emulator_skins_container').css('display','none');			
+		}
+			
 		
 		// setup proper "device" view
 		$('.project_has_android_true').css('display','block');
@@ -1442,9 +1468,15 @@ PackageProject.setupMobileView = function()
 			var keystore = $('#android_key_store').val();
 			var password = $('#android_key_store_password').val();
 			var alias = $('#android_alias').val();
-			var sdkId = $('#android_version').val();			
-			var args = [Titanium.Filesystem.getFile(PackageProject.AndroidEmulatorPath).toString(), "distribute", '"'+ PackageProject.currentProject.name+ '"','"' +TiDev.androidSDKDir+ '"', '"' + PackageProject.currentProject.dir + '"', '"'+PackageProject.currentProject.appid+'"','"'+keystore+'"','"'+password+'"','"'+alias+'"', '"'+location+'"', '"'+sdkId+'"'];
-
+			var sdkId = $('#android_version').val();		
+			if (PackageProject.sendAVD==false)
+			{
+				var args = [Titanium.Filesystem.getFile(PackageProject.AndroidEmulatorPath).toString(), "distribute", '"'+ PackageProject.currentProject.name+ '"','"' +TiDev.androidSDKDir+ '"', '"' + PackageProject.currentProject.dir + '"', '"'+PackageProject.currentProject.appid+'"','"'+keystore+'"','"'+password+'"','"'+alias+'"', '"'+location+'"'];
+			}	
+			else
+			{
+				var args = [Titanium.Filesystem.getFile(PackageProject.AndroidEmulatorPath).toString(), "distribute", '"'+ PackageProject.currentProject.name+ '"','"' +TiDev.androidSDKDir+ '"', '"' + PackageProject.currentProject.dir + '"', '"'+PackageProject.currentProject.appid+'"','"'+keystore+'"','"'+password+'"','"'+alias+'"', '"'+location+'"', '"'+sdkId+'"'];
+			}
 		 	var  x = TiDev.launchPython(args);
 			var buffer = '';
 			x.setOnRead(function(event)

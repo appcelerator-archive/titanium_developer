@@ -495,13 +495,15 @@
 														id="android_alias"/>
 												</div>
 												<div style="clear:both;height:10px"></div>
-
-												<div class="label" style="width:165px">Android Version:</div>
-												<div class="input">
-													<select class="android_package"
-														id="android_version">
-														<option>loading...</option>
-													</select>
+												
+												<div id="android_version_container">
+													<div class="label" style="width:165px">Android Version:</div>
+													<div class="input">
+														<select class="android_package"
+															id="android_version">
+															<option id="">loading...</option>
+														</select>
+													</div>
 												</div>
 												<div style="clear:both;height:10px"></div>
 												
@@ -689,12 +691,14 @@
 												Click the button below to install your app on 
 												your connected Android device.
 											</div>
-											<div class="label" style="width:165px">Android Version:</div>
-											<div class="input">
-												<select  
-													id="android_version_device">
-													<option>loading...</option>
-												</select>
+											<div id="android_version_device_container">
+												<div class="label" style="width:165px">Android Version:</div>
+												<div class="input">
+													<select  
+														id="android_version_device">
+														<option id="">loading...</option>
+													</select>
+												</div>
 											</div>
 											<div style="clear:both"></div>
 											<div id="android_install_on_device_button" 
@@ -715,7 +719,7 @@
 							<div id="mobile_iphone_emulator_container" style="display:none;">
 								<div id="mobile_iphone_emulator_viewer" class="debug_console"></div>
 								<!--EMULATOR SDK VERSION -->
-								<div style="float:left;margin-top:20px">
+								<div style="float:left;margin-top:20px" >
 									<span class="help_text">
 										SDK:</span>
 									<select style="width:55px" id="iphone_emulator_sdk"> 			
@@ -757,19 +761,20 @@
 								<div id="mobile_android_emulator_viewer" class="debug_console"></div>
 								
 								<!--EMULATOR SDK VERSION -->
-								<div style="float:left;margin-top:20px">
+								<div style="float:left;margin-top:20px" id="android_emulator_sdk_container">
 									<span class="help_text">
 										 SDK:</span>
 									<select style="width:160px" id="android_emulator_sdk"> 			
-										<option>loading...</option>
+										<option id="">loading...</option>
 									</select>
 								</div>
 
 								<!--EMULATOR SKIN -->
-								<div style="float:left;margin-top:20px;margin-left:10px">
+								<div style="float:left;margin-top:20px;margin-left:10px"
+									id="android_emulator_skins_container">
 									<span class="help_text" >Screen:</span>
 									<select style="width:58px" id="android_emulator_skins"> 			
-										<option>loading...</option>
+										<option id="">loading...</option>
 									</select>
 								</div>
 								<!-- FILTER LEVEL -->

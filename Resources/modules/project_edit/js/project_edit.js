@@ -199,6 +199,8 @@ EditProject.setupView = function()
 						if (i==0)
 						{
 							Projects.selectedProjectIdx = Projects.projectList[i].id;
+							TiDev.db.execute('update PROJECT_VIEW set ACTIVE = ?',Projects.selectedProjectIdx);
+							
 						}
 						a.push(Projects.projectList[i]);
 					}

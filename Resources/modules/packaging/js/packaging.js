@@ -73,6 +73,41 @@ for (var c=0;c<PackageProject.worker_max;c++)
 	compiler.start();
 }
 
+//
+// Get Android Version
+//
+PackageProject.getAndroidVersion = function()
+{
+	try
+	{
+		var version = TiDev.db.execute('SELECT * FROM ANDROID_VERSION');
+		while(version.isValidRow())
+		{
+			return {'version':version.fieldByName('VERSION'), 'skin':version.fieldByName('SKIN')};
+		}
+	}
+	catch(e)
+	{
+		TiDev.db.execute('CREATE TABLE IF NOT EXISTS ANDROID_VERSION (VERSION TEXT, SKIN TEXT)');
+	}
+	return null;
+};
+//
+// Save Android Version
+//
+PackageProject.saveAndroidVersion = function(version, skin)
+{
+	try
+	{
+		TiDev.db.execute('DELETE FROM ANDROID_VERSION');
+		TiDev.db.execute('INSERT INTO ANDROID_VERSION VALUES(?, ?)', version, skin);
+	}
+	catch(e)
+	{
+		TiDev.db.execute('CREATE TABLE IF NOT EXISTS ANDROID_VERSION (VERSION TEXT, SKIN TEXT)');
+	}
+	return null;
+};
 PackageProject.compileResources = function(dir, progress_callback, progress_complete)
 {
 	var resources = Titanium.Filesystem.getFile(dir);
@@ -1239,10 +1274,26 @@ PackageProject.setupMobileView = function()
 				
 				// create select HTML for version
 				var versions = '';
+				var verObj = PackageProject.getAndroidVersion();
+				var selSkin= null;
+				var selVer = null;
+				if (verObj != null)
+				{
+					selSkin = verObj.skin;
+					selVer = verObj.version;
+				}
 				for (var i=0;i<PackageProject.androidSDKs.length;i++)
 				{
-					versions += '<option value="'+PackageProject.androidSDKs[i].id+'">'
-						+PackageProject.androidSDKs[i].name + '</option>';
+					if (selVer != null && selVer == PackageProject.androidSDKs[i].id)
+					{
+						versions += '<option value="'+PackageProject.androidSDKs[i].id+'" selected>'
+							+PackageProject.androidSDKs[i].name + '</option>';
+					}
+					else
+					{
+						versions += '<option value="'+PackageProject.androidSDKs[i].id+'">'
+							+PackageProject.androidSDKs[i].name + '</option>';						
+					}
 				}
 				
 				// set differnt version selects
@@ -1251,14 +1302,36 @@ PackageProject.setupMobileView = function()
 				$('#android_emulator_sdk').html(versions);
 				
 				// set skins initially
-				$('#android_emulator_skins').html(setSkins(0));
+				$('#android_emulator_skins').html(setSkins((selVer!=null)?(selVer-1):0));
 				
-				// version change handlder
+				// version change handlder 1
 				$('#android_emulator_sdk').change(function(e)
 				{
 					var el = $(this).get(0);
+					selVer = el.selectedIndex;
 					$('#android_emulator_skins').html(setSkins(el.selectedIndex));
 					
+					// persist value
+					PackageProject.saveAndroidVersion($(this).val(), $('#android_emulator_skins').val());
+				});
+				// version change handlder 2
+				$('#android_version').change(function(e)
+				{
+					// persist value
+					PackageProject.saveAndroidVersion($(this).val(),$('#android_emulator_skins').val());
+				});
+				// version change handlder 3
+				$('#android_version_device').change(function(e)
+				{
+					// persist value
+					PackageProject.saveAndroidVersion($(this).val(),$('#android_emulator_skins').val());
+				});
+				// version change handlder 3
+				$('#android_emulator_skins').change(function(e)
+				{
+					// persist value
+					PackageProject.saveAndroidVersion($('#android_emulator_sdk').val(),$(this).val());
+					selSkin = $(this).val();
 				});
 				
 				function setSkins(id)
@@ -1266,8 +1339,17 @@ PackageProject.setupMobileView = function()
 					var skins = '';
 					for (var i=0;i<PackageProject.androidSDKs[id].skins.length;i++)
 					{
-						skins += '<option value="'+PackageProject.androidSDKs[id].skins[i]+'">'
-							+PackageProject.androidSDKs[id].skins[i] + '</option>';
+						if (selSkin != null && selSkin == PackageProject.androidSDKs[id].skins[i])
+						{
+							skins += '<option value="'+PackageProject.androidSDKs[id].skins[i]+'" selected>'
+								+PackageProject.androidSDKs[id].skins[i] + '</option>';
+						}
+						else
+						{
+							skins += '<option value="'+PackageProject.androidSDKs[id].skins[i]+'">'
+								+PackageProject.androidSDKs[id].skins[i] + '</option>';
+							
+						}
 					}
 					return skins;
 				};

@@ -12,13 +12,7 @@ PackageProject.isAndroidEmulatorRunning = false;
 PackageProject.iPhoneDevPrereqs = {};
 
 //Android vars
-PackageProject.androidSDKs = [
- {'skins': ['VGA', 'HVGA-L', 'HVGA-P', 'QVGA-L', 'QVGA-P'], 'name': 'Android 1.5', 'id': '1'},
- {'skins': ['VGA', 'QVGA', 'WVGA800', 'WVGA854'], 'name': 'Android 1.6', 'id': '2'},
- {'skins': ['VGA', 'QVGA', 'WQVGA400', 'WQVGA432', 'WVGA800', 'WVGA854'], 'name': 'Android 2.0', 'id': '3'},
- {'skins': ['VGA-P', 'HVGA-L', 'HVGA', 'QVGA-L', 'HVGA-P'], 'name': 'Google APIs Android 1.5', 'id': '4'},
- {'skins': ['VGA854', 'HVGA', 'WVGA800', 'QVGA'], 'name': 'Google APIs Android 1.6', 'id': '5'}, {'skins': ['VGA854', 'WQVGA400', 'HVGA', 'WQVGA432', 'WVGA800', 'QVGA'], 'name': 'Google APIs Android 2.0', 'id': '6'}
-];
+PackageProject.androidSDKs = [];
 
 // Mobile Script vars
 PackageProject.iPhoneEmulatorPath = null;
@@ -1270,6 +1264,11 @@ PackageProject.setupMobileView = function()
 		if (TiDev.androidSDKDir == null)
 		{
 			TiDev.androidSDKDir = Projects.getAndroidSDKLoc();
+			if (TiDev.androidSDKDir == null)
+			{
+				alert('You need to specify your Android SDK location!\nPlease go to the Edit Profile tab under the Profile perspective to set this value.')
+				return;
+			}
 		}
 		var avdPath = Titanium.Filesystem.getFile(PackageProject.AndroidAvdPath);
 		
@@ -1278,9 +1277,11 @@ PackageProject.setupMobileView = function()
 		{
 			PackageProject.sendAVD = true;
 
-			// show version fields
-			$('#android_version_container').css('display','block');
-			$('#android_version_device_container').css('display','block');
+			// hide these two for now
+			$('#android_version_container').css('display','none');
+			$('#android_version_device_container').css('display','none');
+			
+			// show for emulator only
 			$('#android_emulator_sdk_container').css('display','block');
 			$('#android_emulator_skins_container').css('display','block');			
 			

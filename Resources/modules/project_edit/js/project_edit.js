@@ -332,11 +332,17 @@ EditProject.setupView = function()
 				newXML += '<version>' + version + '</version>\n';
 				continue;
 			}
-			if (line.indexOf('name') != -1)
+			if (line.indexOf('<name') != -1)
 			{
 				newXML += '<name>' + name + '</name>\n';
 				continue;
 			}
+			if (line.indexOf('<description') != -1)
+			{
+				newXML += '<description>' + desc + '</description>\n';
+				continue;
+			}
+
 			if (line.indexOf('<id') != -1 && inWindowSection == false)
 			{
 				newXML += '<id>' + appid + '</id>\n';
@@ -384,6 +390,7 @@ EditProject.setupView = function()
 				newXML += '<copyright>' + copyright + '</copyright>\n';
 				continue;
 			}
+			//Titanium.API.info('ADDING LINE ' + line)
 			newXML += line + '\n';
 		}
 		tiapp.open(Titanium.Filesystem.MODE_WRITE);

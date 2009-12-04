@@ -1293,7 +1293,8 @@ PackageProject.setupMobileView = function()
 				{
 					var d = event.data.toString();
 					PackageProject.androidSDKs = swiss.evalJSON(d);
-
+					
+					
 					// create select HTML for version
 					var versions = '';
 					var verObj = PackageProject.getAndroidVersion();
@@ -1323,8 +1324,16 @@ PackageProject.setupMobileView = function()
 					$('#android_version_device').html(versions);
 					$('#android_emulator_sdk').html(versions);
 
+					var tmpVersion = 0;
+					if (selVer!=null && selVer != '')
+					{
+						var intVer = parseInt(selVer);
+						if (intVer == 0)return;
+						else tmpVersion = intVer - 1;
+					}
+
 					// set skins initially
-					$('#android_emulator_skins').html(setSkins((selVer!=null)?(selVer-1):0));
+					$('#android_emulator_skins').html(setSkins(tmpVersion));
 
 					// version change handlder 1
 					$('#android_emulator_sdk').change(function(e)
@@ -1891,7 +1900,6 @@ PackageProject.uploadIPhoneProvisioningProfile = function(profileType,callback)
 		{
 			TiDev.setConsoleMessage('Loading new provisioning profile...');
 			
-
 		 	var x= TiDev.launchPython([Titanium.Filesystem.getFile(PackageProject.iPhoneProvisioningPath).toString(),'"'+f[0]+'"']);
 			x.setOnRead(function(event)
 			{

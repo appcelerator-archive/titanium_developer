@@ -141,6 +141,8 @@ Projects.createUser = function()
 			{
 				Projects.facebookSession.publishFeed('134879989930');
 			}
+			// open post registration page
+			Titanium.Desktop.openURL('http://api.appcelerator.net/p/pages/install-success/developer/'+ encodeURIComponent(Titanium.Platform.id));
 		}
 		// show error
 		else

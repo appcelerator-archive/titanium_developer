@@ -558,7 +558,10 @@ TiUI.MainTab = function()
 		}
 		this.html += '</div>';
 		$('#tiui_tabbar').html(this.html);
-		
+	
+		var stream = Titanium.App.getStreamURL().split('/')[3];
+		if(stream!='p') $('#tiui_tabbar').append('<div style="font-size:11px;color:black;float:right;padding:5px 12px"> Stream : ' + stream + '</div>');
+	
 		//
 		// listener for tab clicks
 		//

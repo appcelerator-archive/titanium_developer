@@ -103,7 +103,7 @@ Links.setPageData = function()
 		if (data.releases)
 		{
 			// get base data
-			linksArray = [];
+			linksArray = data.releases;
 			var releases = data.releases;
 			lastUpdatedDate = TiDev.formatPackagingDate(data.pubdate);
 			appPage = data.app_page;
@@ -115,12 +115,7 @@ Links.setPageData = function()
 			for (var i=0;i<releases.length;i++)
 			{
 				var r = releases[i]; 
-				var url = releases[i].url;
-				var label = releases[i].label;
-				var platform = releases[i].platform;
-
-				Links.addPackageToDatabase(p.guid, url, label, platform, data.version, lastUpdatedDate, appPage);
-				linksArray.push({'url':url,'label':label,'platform':platform});
+				Links.addPackageToDatabase(p.guid, r.url, r.label, r.platform, data.version, lastUpdatedDate, appPage);
 			}
 		}
 		loadData();

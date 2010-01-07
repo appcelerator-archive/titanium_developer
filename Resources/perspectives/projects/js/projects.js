@@ -48,14 +48,34 @@ Projects.facebookAppId = "9494e611f2a93b8d7bfcdfa8cefdaf9f";
 Projects.facebookSession = null;
 
 //
+//  Set the active project index and update the database.
+//
+Projects.setActiveProject = function(newIndex)
+{
+
+	Projects.selectedProjectIdx = newIndex;
+	try
+	{
+		TiDev.db.execute('update PROJECT_VIEW set ACTIVE = ?', newIndex);
+	}
+	catch (e)
+	{
+		// The database probably doesn't exist. Try this again. A failure here
+		// is a real failure and should throw an exception.
+		TiDev.db.execute('CREATE TABLE IF NOT EXISTS PROJECT_VIEW (ACTIVE INT)');
+		TiDev.db.execute('insert into PROJECT_VIEW VALUES(0)');
+		TiDev.db.execute('update PROJECT_VIEW set ACTIVE = ?', newIndex);
+	}
+}
+
+//
 //  Return current project object
 //
 Projects.getProject = function()
 {
 	if (Projects.selectedProjectIdx == -1  && Projects.projectList.length > 0)
 	{
-		 Projects.selectedProjectIdx = Projects.projectList[0].id;
-		TiDev.db.execute('update PROJECT_VIEW set ACTIVE = ?',Projects.selectedProjectIdx);
+		Projects.setActiveProject(Projects.projectList[0].id);
 	}
 	for (var i=0;i<Projects.projectList.length;i++)
 	{
@@ -769,7 +789,10 @@ Projects.showAuthenticatedView = function()
 			TiDev.subtabs.show();		
 			$('#tiui_content_left .child').removeClass('active');
 			$(this).addClass('active');
-			Projects.selectedProjectIdx = $(this).attr('project_id');	
+
+			var newProjectIndex = $(this).attr('project_id');
+			Projects.setActiveProject(newProjectIndex);
+
 			if (Projects.getProject().type == 'mobile')
 			{
 				TiDev.subtabs.hideTab(2);
@@ -783,8 +806,7 @@ Projects.showAuthenticatedView = function()
 			// 	// make sure edit is always selected if they are clicking a project from dashboard view
 			// 	TiDev.subtabChange(1);
 			// }
-			$MQ('l:tidev.projects.row_selected',{'project_id':Projects.selectedProjectIdx,'activeTab':TiDev.activeSubtab.name});
-			TiDev.db.execute('update PROJECT_VIEW set ACTIVE = ?',Projects.selectedProjectIdx);
+			$MQ('l:tidev.projects.row_selected',{'project_id':newProjectIndex,'activeTab':TiDev.activeSubtab.name});
 		});
 		
 	}
@@ -1812,10 +1834,7 @@ Projects.createProject = function(options, createProjectFiles)
 			result =  {success:false,message:'Unexpected SQL error inserting project, message ' + e};
 		}
 
-		Projects.selectedProjectIdx = record.id
-		TiDev.db.execute('update PROJECT_VIEW set ACTIVE = ?',Projects.selectedProjectIdx);
-		
-
+		Projects.setActiveProject(record.id);
 		if (TiDev.activePerspective.name != 'projects')
 		{
 			TiDev.perspectiveChange(0);

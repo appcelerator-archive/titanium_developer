@@ -208,7 +208,7 @@ EditProject.setupView = function()
 				// resetView
 				Projects.setupView();
 
-				TiDev.db.execute('DELETE FROM PROJECTPACKAGES WHERE GUID = ?', EditProject.currentProject.guid);
+				Links.deletePackagesForGUID(EditProject.currentProject.guid);
 				TiDev.db.execute('DELETE FROM PROJECTDOWNLOADS WHERE GUID = ?', EditProject.currentProject.guid);
 				TiDev.db.execute('DELETE FROM IPHONE_ATTRIBUTES WHERE ID = ?', EditProject.currentProject.id);
 			}

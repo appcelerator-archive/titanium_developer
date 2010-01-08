@@ -1105,7 +1105,7 @@ PackageProject.setupMobileView = function()
 			var certName = PackageProject.getIPhoneAttribute('dist_name');
 			var location = $('#iphone_dist_location').val();
 			var sdk = $('#iphone_distribution_sdk').val();
-			Titanium.Analytics.featureEvent('iphone.distribute',{sdk:sdk,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name,guid:uuid,certName:certName});
+			Titanium.Analytics.featureEvent('iphone.distribute',{sdk:sdk,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name,guid:PackageProject.currentProject.guid,certName:certName});
 			var x = TiDev.launchPython([Titanium.Filesystem.getFile(PackageProject.iPhoneEmulatorPath).toString(),'distribute','"'+sdk+'"', '"'+ PackageProject.currentProject.dir+ '"',PackageProject.currentProject.appid, '"' + PackageProject.currentProject.name+ '"', uuid,'"'+certName+'"','"'+location+'"']);
 			var buffer = '';
 			x.setOnRead(function(event)
@@ -1134,7 +1134,7 @@ PackageProject.setupMobileView = function()
 			if ($(this).hasClass('disabled')==false)
 			{
 				var sdk = $('#iphone_device_sdk').val();
-				Titanium.Analytics.featureEvent('iphone.install',{sdk:sdk,guid:uuid,devName:devName,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name});
+				Titanium.Analytics.featureEvent('iphone.install',{sdk:sdk,guid:PackageProject.currentProject.guid,devName:devName,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name});
 				var x = TiDev.launchPython([Titanium.Filesystem.getFile(PackageProject.iPhoneEmulatorPath).toString(),'install','"'+sdk+'"', '"'+ PackageProject.currentProject.dir+ '"',PackageProject.currentProject.appid, '"' + PackageProject.currentProject.name+ '"','"'+uuid+'"', '"'+devName + '"']);
 				var buffer = '';
 				x.setOnRead(function(event)

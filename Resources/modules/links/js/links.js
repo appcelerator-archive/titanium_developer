@@ -19,6 +19,53 @@ $MQL('l:tidev.projects.row_selected',function(msg)
 	}
 });
 
+Links.createPackagesTable = function()
+{
+	TiDev.db.execute('CREATE TABLE PROJECTPACKAGES (guid TEXT, label TEXT, url TEXT, platform TEXT, version TEXT, date TEXT,page_url TEXT)');
+};
+
+Links.deletePackagesForGUID = function(guid)
+{
+	try
+	{
+		TiDev.db.execute('DELETE from PROJECTPACKAGES WHERE guid = ?', guid);
+	}
+	catch (e)
+	{
+		Links.createPackagesTable();
+	}
+};
+
+Links.getPackagesForGUID = function(guid)
+{
+	var dbRows = null;
+	try
+	{
+		dbRows = TiDev.db.execute("SELECT url,page_url,label,platform,version,date from PROJECTPACKAGES WHERE guid = ?", guid);
+	}
+	catch (e)
+	{
+		Links.createPackagesTable();
+	}
+
+	return dbRows;
+};
+
+Links.addPackageToDatabase = function(guid, url, label, platform, version, lastUpdated, appPage)
+{
+	try
+	{
+		TiDev.db.execute("INSERT INTO PROJECTPACKAGES (guid,url,label,platform,version,date,page_url) values (?,?,?,?,?,?,?) ",
+			guid, url, label, platform, version, lastUpdated, appPage);
+	}
+	catch (e)
+	{
+		Links.createPackagesTable();
+		TiDev.db.execute("INSERT INTO PROJECTPACKAGES (guid,url,label,platform,version,date,page_url) values (?,?,?,?,?,?,?) ",
+			guid, url, label, platform, version, lastUpdated, appPage);
+	}
+};
+
 //
 // Set page data
 //
@@ -34,25 +81,18 @@ Links.setPageData = function()
 	var lastUpdatedDate = null;
 
 	// get data in cache, create table if not exists
-	try
-	{
-		dbRows = TiDev.db.execute("SELECT url, page_url,label,platform, version, date from PROJECTPACKAGES WHERE guid = ?",p.guid);
-	}
-	catch (e)
-	{
-		TiDev.db.execute('CREATE TABLE PROJECTPACKAGES (guid TEXT, label TEXT, url TEXT, platform TEXT, version TEXT, date TEXT,page_url TEXT)')
-	}
+	dbRows = Links.getPackagesForGUID(p.guid);
 
 	// get rows in db
-	while (dbRows.isValidRow())
+	while (dbRows !== null && dbRows.isValidRow())
 	{
 		appPage = dbRows.fieldByName('page_url');
-		lastUpdatedDate = dbRows.fieldByName('date')
+		lastUpdatedDate = dbRows.fieldByName('date');
 		var platform = dbRows.fieldByName('platform');
 		var url = dbRows.fieldByName('url');
 		var label = dbRows.fieldByName('label');
 
-		linksArray.push({url:url,label:label,platform:platform})
+		linksArray.push({url:url,label:label,platform:platform});
 		dbRows.next();
 	}
 
@@ -63,22 +103,19 @@ Links.setPageData = function()
 		if (data.releases)
 		{
 			// get base data
-			linksArray = [];
+			linksArray = data.releases;
 			var releases = data.releases;
 			lastUpdatedDate = TiDev.formatPackagingDate(data.pubdate);
-			appPage = data.app_page
+			appPage = data.app_page;
 			
 			// delete current rows
-			TiDev.db.execute('DELETE from PROJECTPACKAGES WHERE guid = ?',p.guid);
+			Links.deletePackagesForGUID(p.guid);
 
 			// insert new rows
 			for (var i=0;i<releases.length;i++)
 			{
-		        TiDev.db.execute("INSERT INTO PROJECTPACKAGES (guid,url, label,platform, version, date,page_url) values (?,?,?,?,?,?,?) ",p.guid,releases[i]['url'],releases[i]['label'],releases[i]['platform'],data['version'],lastUpdatedDate,appPage);
-				var url = releases[i]['url'];
-				var label = releases[i]['label'];
-				var platform = releases[i]['platform'];
-				linksArray.push({'url':url,'label':label,'platform':platform});
+				var r = releases[i]; 
+				Links.addPackageToDatabase(p.guid, r.url, r.label, r.platform, data.version, lastUpdatedDate, appPage);
 			}
 		}
 		loadData();
@@ -95,7 +132,7 @@ Links.setPageData = function()
 		TiUI.setBackgroundColor('#1c1c1c');
 
 		// if we have data show it, otherwise show no data page
-		if (linksArray.length != 0)
+		if (linksArray.length !== 0)
 		{
 			// set ui state
 			$('#links_view').css('display','block');
@@ -109,7 +146,7 @@ Links.setPageData = function()
 			for (var i=0;i<linksArray.length;i++)
 			{
 				var classes = 'row ';
-				if (i%2==0)
+				if (i%2===0)
 				{
 					classes += 'even';
 				}
@@ -117,7 +154,7 @@ Links.setPageData = function()
 				html += '<div class="platform"><img height="20" width="20" src="modules/links/images/' + linksArray[i].platform + '_small.png"/></div>';
 				html += '<div class="label">' + linksArray[i].label + '</div>';
 				html += '<div class="link"><a target="ti:systembrowser"  href="' + linksArray[i].url + '">'+linksArray[i].url+'</a></div>';	
-				html += '</div>'	
+				html += '</div>';
 			}
 			$('#links_view_rows').html(html);
 			$('#links_date').html(lastUpdatedDate);
@@ -128,7 +165,7 @@ Links.setPageData = function()
 			$('#no_links_view').css('display','block');
 
 		}
-	};
+	}
 	
 };
 
@@ -139,8 +176,8 @@ Links.setupView = function()
 {
 	TiDev.contentLeft.show();
 	TiDev.contentLeftHideButton.show();
-	TiDev.contentLeftShowButton.hide();		
-	Links.setPageData()
+	TiDev.contentLeftShowButton.hide();
+	Links.setPageData();
 };
 
 // setup event handler

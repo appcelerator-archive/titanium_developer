@@ -821,7 +821,6 @@ PackageProject.setupMobileView = function()
 			{
 				var d = event.data.toString();
 				var json = swiss.evalJSON(d);
-
 				// set prereq vars
 				PackageProject.iPhoneDevPrereqs['itunes'] = json['itunes'];
 				PackageProject.iPhoneDevPrereqs['wwdr'] = json['wwdr'];

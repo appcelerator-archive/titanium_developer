@@ -198,9 +198,7 @@ EditProject.setupView = function()
 						// set new selected index to first row
 						if (i==0)
 						{
-							Projects.selectedProjectIdx = Projects.projectList[i].id;
-							TiDev.db.execute('update PROJECT_VIEW set ACTIVE = ?',Projects.selectedProjectIdx);
-							
+							Projects.setActiveProject(Projects.projectList[i].id);
 						}
 						a.push(Projects.projectList[i]);
 					}
@@ -210,10 +208,9 @@ EditProject.setupView = function()
 				// resetView
 				Projects.setupView();
 
-				TiDev.db.execute('DELETE FROM PROJECTPACKAGES WHERE GUID = ?', EditProject.currentProject.guid);
+				Links.deletePackagesForGUID(EditProject.currentProject.guid);
 				TiDev.db.execute('DELETE FROM PROJECTDOWNLOADS WHERE GUID = ?', EditProject.currentProject.guid);
 				TiDev.db.execute('DELETE FROM IPHONE_ATTRIBUTES WHERE ID = ?', EditProject.currentProject.id);
-
 			}
 			catch(e)
 			{

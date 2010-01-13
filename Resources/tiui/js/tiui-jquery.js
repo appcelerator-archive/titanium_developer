@@ -558,7 +558,7 @@ TiUI.MainTab = function()
 		}
 		this.html += '</div>';
 		$('#tiui_tabbar').html(this.html);
-		
+	
 		//
 		// listener for tab clicks
 		//

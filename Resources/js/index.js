@@ -489,6 +489,46 @@ TiDev.init = function()
 	},50);
 };
 
+TiDev.needsTotalReinstall = function()
+{
+	if (Titanium.platform != "win32")
+		return false;
+
+	// If there is a runtime later than 0.7 installed, then the
+	// appropriate version of the CRT should be installed already.
+	var runtimes = Titanium.API.getInstalledRuntimes();
+	for (var i = 0; i < runtimes.length; i++)
+	{
+		var version = runtimes[i].getVersion();
+		if (!version)
+			continue;
+
+		var parts = version.split(".");
+		if (parts.length < 2)
+			continue;
+
+		if (parts[0] > "0")
+			return false;
+
+		// A number longer than "9" or larger than "7"
+		if (parts[1].length > 1 || parts[1] > "7")
+			return false;
+	}
+
+	return true;
+}
+
+TiDev.totalReinstall = function()
+{
+	if (confirm("Titanium needs to udpate some components " +
+		"on your system. A total reinstall is required. " +
+		"Exit Titanium Developer and go to the download page?"))
+	{
+		Titanium.Desktop.openURL("http://www.appcelerator.com/download/");
+		Titanium.App.exit();
+	}
+}
+
 //
 // Register for Titanium Developer Updates
 //
@@ -500,13 +540,18 @@ Titanium.UpdateManager.onupdate = function(details)
 	{
 		$('#sdk_download_link').click(function()
 		{
-			TiDev.messageArea.setMessage('Installing new Titanium Developer...');
-
-			// call this method to cause the app to restart and install
-			Titanium.UpdateManager.installAppUpdate(details, function()
+			if (!TiDev.needsTotalReinstall())
 			{
-				TiDev.showDefaultSystemMessage();
-			});
+				TiDev.messageArea.setMessage('Installing new Titanium Developer...');
+				Titanium.UpdateManager.installAppUpdate(details, function()
+				{
+					TiDev.showDefaultSystemMessage();
+				});
+			}
+			else
+			{
+				TiDev.totalReinstall();
+			}
 		});
 	});
 	TiDev.messageArea.showDefaultMessage();
@@ -547,6 +592,12 @@ TiDev.showSDKAvailableMessage = function(type,msg, details)
 		{
 			if (type == Titanium.API.SDK)
 			{
+				if (TiDev.needsTotalReinstall())
+				{
+					TiDev.totalReinstall();
+					return;
+				}
+
 				var children = details.children;
 				if (children)
 				{

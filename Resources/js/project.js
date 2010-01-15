@@ -131,6 +131,21 @@ Titanium.Project =
 		manifest+='#guid:'+project.guid+'\n';
 		manifest+='#desc:'+project.description+'\n';
 		manifest+='#type:'+project.type+'\n';
+		var stream = null;
+		var developerManifest = Titanium.API.getApplication().getManifest();
+		for (var i = 0; i < developerManifest.length; i++)
+		{
+			if (developerManifest[i][0] == "#stream")
+			{
+				stream = developerManifest[i][1];
+				break;
+			}
+		}
+
+		// copy developer's stream into the app if it's non-default
+		if (stream)
+			manifest += "#stream:"+stream+'\n';
+
 		manifest+='runtime:'+project.runtime+'\n';
 		
 		var hasAnalytics =this.hasAnalytics(project);

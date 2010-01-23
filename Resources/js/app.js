@@ -172,28 +172,3 @@ Titanium.createApp = function(runtime,destination,name,appid,install)
 	var fn = Titanium.AppCreator[platform];
 	return fn(runtime,destination,name,appid,install);
 };
-
-Titanium.linkLibraries = function(runtimeDir)
-{
-	if (Titanium.platform == 'osx')
-	{
-		var fw = ['WebKit','WebCore','JavaScriptCore'];
-		for (var c=0;c<fw.length;c++)
-		{
-			var fwn = fw[c];
-			var fwd = TFS.getFile(runtimeDir,fwn+'.framework');
-			var fwd_name = fwd.name();
-			var versions = TFS.getFile(fwd,'Versions');
-			var ver = TFS.getFile(versions,'A');
-			if (ver.exists()) continue; // skip if already linked
-			var current = TFS.getFile(fwd,'Versions','Current');
-			ver.createShortcut('Current',versions);
-			var hf = TFS.getFile(fwd,'Headers');
-			hf.createShortcut('Versions/Current/Headers',fwd);
-			var ph = TFS.getFile(fwd,'PrivateHeaders');
-			ph.createShortcut('Versions/Current/PrivateHeaders',fwd);
-			var rf = TFS.getFile(fwd,'Resources');
-			rf.createShortcut('Versions/Current/Resources',fwd);
-		}
-	}
-};

@@ -8,7 +8,6 @@ Titanium.Project =
 	requiredModulesList: ['api','tiapp','tifilesystem','tiplatform','tiui','javascript','tianalytics'],
 	requiredModules:[],
 	optionalModules:[],
-	runtimeDir:null,
 	runtimeVersion:null,
 
 	hasAnalytics: function(project)
@@ -51,42 +50,40 @@ Titanium.Project =
 		}
 		return ver;
 	},
-	setModules: function(dir, runtime)
+	setModules: function(project)
 	{
-		var result = this.getModulesAndRuntime(dir,runtime);
-
-		// set runtime DIR and VERSION
-		this.runtimeDir = result['runtime_basedir'];
-		this.runtimeVersion = runtime;
-		
 		this.requiredModules = [];
 		this.optionalModules = [];
-		
-		// set optional and required modules
-		for (var c=0;c<result.modules.length;c++)
-		{
-			var name = result.modules[c].name;
-			if (this.requiredModulesList.indexOf(name) == -1)
-			{
-				this.optionalModules.push({
-					name:name,
-					version:result.modules[c].version,
-					dir:result.modules[c].dir
-				});
-			}
-		}
 
-		// write out required modules in order
-		for (var i=0;i<this.requiredModulesList.length;i++)
+		// Read the application manifest for this application and
+		// find all the necessary components.
+		var app = Titanium.API.readApplicationManifest(project.dir +
+			Titanium.Filesystem.getSeparator() + 'manifest');
+		var components = app.getAvailableComponents();
+		for (var i = 0; i < components.length; i++)
 		{
-			for (var c=0;c<result.modules.length;c++)
+			var comp = components[i];
+			if (comp.type == Titanium.API.SDK)
 			{
-				if (result.modules[c].name == this.requiredModulesList[i])
-				{
+				this.runtimeComponent = comp;
+			}
+			else
+			{ // This is either a mobilesdk or a module
+				
+				if (this.requiredModulesList.indexOf(comp.name) == -1)
+				{ // Optional module
+					this.optionalModules.push({
+						name:comp.getName(),
+						version:comp.getVersion(),
+						dir:comp.getPath()
+					});
+				}
+				else
+				{ // Required module
 					this.requiredModules.push({
-						name:result.modules[c].name,
-						version:result.modules[c].version,
-						dir:result.modules[c].dir
+						name:comp.getName(),
+						version:comp.getVersion(),
+						dir:comp.getPath()
 					});
 				}
 			}
@@ -94,7 +91,9 @@ Titanium.Project =
 	},
 	writeManifest: function(project)
 	{
-		this.setModules(project.dir, project.runtime);
+		// TODO: There should really only need be one place to access this.
+		project.runtimeVersion = project.runtime;
+		this.setModules(project); //project.dir, project.runtime);
 
 		var resources = TFS.getFile(project.dir,'Resources');
 
@@ -216,8 +215,7 @@ Titanium.Project =
 			dist.createDirectory(true);
 
 			// create app
-			var runtime = TFS.getFile(this.runtimeDir);
-			var app = Titanium.createApp(runtime,dist,project.name,project.appid,install);
+			var app = Titanium.createApp(this.runtimeComponent,dist,project.name,project.appid,install);
 
 			// write out new manifest
 			var app_manifest = TFS.getFile(app.base,'manifest');
@@ -324,48 +322,6 @@ Titanium.Project =
 			}
 		}
 		return versions;
-	},
-
-	getModulesAndRuntime:function(appDir,runtime)
-	{
-		var os = Titanium.platform ;
-		var results = [];
-		var runtimeDir = null;
-
-		// get core runtime modules
-		var app = Titanium.API.readApplicationManifest(appDir + Titanium.Filesystem.getSeparator() + 'manifest');
-		var modules = app.getAvailableComponents();
-		var tracker = {};
-		if (modules)
-		{
-			for (var i=0;i<modules.length;i++)
-			{
-				var mod = modules[i];
-				if (mod.getVersion() == runtime || mod.getName()=='mobilesdk')
-				{
-					if (mod.getName()=='runtime')
-					{
-						runtimeDir = mod.getPath();
-					}
-					else
-					//else if (mod.getName() != 'mobilesdk')
-					{
-						if (!tracker[mod.getName()])
-						{
-		 					results.push({name:mod.getName(), version:String(mod.getVersion()), dir:mod.getPath()});
-							tracker[mod.getName()] = true;
-						}
-						
-					}
-				}
-			}
-		}
-		
-		return {
-			modules: results,
-			'runtime_basedir': runtimeDir
-		};
-		
 	},
 	parseEntry:function(entry)
 	{

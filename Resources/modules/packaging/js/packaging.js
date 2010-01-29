@@ -2180,7 +2180,15 @@ PackageProject.setupDesktopView = function()
 			PackageProject.desktopAppLaunchDate = new Date();
 			
 			// launch desktop app
-			PackageProject.currentAppPID = TiDev.launchPython([PackageProject.desktopPackage.toString(), "-d",dest.toString(),"-t", "bundle","-a",assets.toString(),appdir.toString(),"-n","-r","-v","-s",basePath.toString()]);
+			PackageProject.currentAppPID = TiDev.launchPython(
+				[PackageProject.desktopPackage.toString(),
+				"-d", dest.toString(), // Staging directory
+				"-a", assets.toString(), // Assets path
+				"-n", // Don't include the installer
+				"-r", // Run it!
+				"-v", // Verbose
+				"-s", basePath.toString(), // SDK path
+				appdir.toString()]);
 			
 		 	$('#desktop_launch_viewer').append('<div style="margin-bottom:3px">Preparing to package and launch desktop app. One moment...</div>');
 			console.log("process="+PackageProject.currentAppPID);

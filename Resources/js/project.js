@@ -429,7 +429,7 @@ Titanium.Project =
 		var resources = TFS.getFile(options.dir,options.name,'Resources');
 		
 		// create main index file;
-		this.createIndexFile(resources,options);
+		//this.createIndexFile(resources,options);
 		
 		// create manifest
 		this.writeInitialManifest(TFS.getFile(options.dir,options.name),options);

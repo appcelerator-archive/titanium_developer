@@ -165,35 +165,29 @@ Titanium.AppCreator = {
 };
 
 
-Titanium.createApp = function(runtime,destination,name,appid,install)
+Titanium.createApp = function(runtimeComponent,destination,name,appid,install)
 {
+	// Figure out where the asssets are. In older versions they were in
+	// <runtime>/template, but in later versions they can be found in the
+	// sdk directory.
+	var assetsDir = TFS.getFile(runtimeComponent.getPath(), "template");
+	if (!assetsDir.exists())
+	{
+		var components = Titanium.API.getApplication().getAvailableComponents();
+		for (var i = 0; i < components.length; i++)
+		{
+			var c = components[i];
+			if (c.getType() == Titanium.API.SDK &&
+				c.getVersion() == runtimeComponent.getVersion())
+			{
+				assetsDir = TFS.getFile(components[i].getPath());
+				break;
+			}
+		}
+	}
+
 	install = (typeof(install)=='undefined') ? true : install;
 	var platform = Titanium.platform;
 	var fn = Titanium.AppCreator[platform];
 	return fn(runtime,destination,name,appid,install);
-};
-
-Titanium.linkLibraries = function(runtimeDir)
-{
-	if (Titanium.platform == 'osx')
-	{
-		var fw = ['WebKit','WebCore','JavaScriptCore'];
-		for (var c=0;c<fw.length;c++)
-		{
-			var fwn = fw[c];
-			var fwd = TFS.getFile(runtimeDir,fwn+'.framework');
-			var fwd_name = fwd.name();
-			var versions = TFS.getFile(fwd,'Versions');
-			var ver = TFS.getFile(versions,'A');
-			if (ver.exists()) continue; // skip if already linked
-			var current = TFS.getFile(fwd,'Versions','Current');
-			ver.createShortcut('Current',versions);
-			var hf = TFS.getFile(fwd,'Headers');
-			hf.createShortcut('Versions/Current/Headers',fwd);
-			var ph = TFS.getFile(fwd,'PrivateHeaders');
-			ph.createShortcut('Versions/Current/PrivateHeaders',fwd);
-			var rf = TFS.getFile(fwd,'Resources');
-			rf.createShortcut('Versions/Current/Resources',fwd);
-		}
-	}
 };

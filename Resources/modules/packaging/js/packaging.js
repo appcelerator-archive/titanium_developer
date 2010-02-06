@@ -2380,7 +2380,7 @@ PackageProject.writeTiManifest = function(project)
 	timanifest.visibility = visibility;
 
 	timanifest.runtime = {};
-	timanifest.runtime.version = "" + Titanium.Project.runtimeVersion;
+	timanifest.runtime.version = "" + Titanium.Project.runtime;
 	timanifest.runtime.package = networkRuntime;
 
 	timanifest.guid = project.guid;

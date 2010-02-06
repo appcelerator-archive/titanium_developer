@@ -8,7 +8,6 @@ Titanium.Project =
 	requiredModulesList: ['api','tiapp','tifilesystem','tiplatform','tiui','javascript','tianalytics'],
 	requiredModules:[],
 	optionalModules:[],
-	runtimeVersion:null,
 
 	hasAnalytics: function(project)
 	{
@@ -66,6 +65,7 @@ Titanium.Project =
 			if (comp.type == Titanium.API.SDK)
 			{
 				this.runtimeComponent = comp;
+				this.runtime = comp.version;
 			}
 			else
 			{ // This is either a mobilesdk or a module
@@ -91,8 +91,6 @@ Titanium.Project =
 	},
 	writeManifest: function(project)
 	{
-		// TODO: There should really only need be one place to access this.
-		project.runtimeVersion = project.runtime;
 		this.setModules(project); //project.dir, project.runtime);
 
 		var resources = TFS.getFile(project.dir,'Resources');

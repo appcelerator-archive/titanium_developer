@@ -58,7 +58,8 @@ Titanium.Project =
 		// find all the necessary components.
 		var app = Titanium.API.readApplicationManifest(project.dir +
 			Titanium.Filesystem.getSeparator() + 'manifest');
-		var components = app.getAvailableComponents();
+		app.resolveDependencies();
+		var components = app.getComponents();
 		for (var i = 0; i < components.length; i++)
 		{
 			var comp = components[i];
@@ -67,7 +68,7 @@ Titanium.Project =
 				this.runtimeComponent = comp;
 				this.runtime = comp.version;
 			}
-			else
+			else if (comp.type != Titanium.API.RUNTIME)
 			{ // This is either a mobilesdk or a module
 				
 				if (this.requiredModulesList.indexOf(comp.name) == -1)

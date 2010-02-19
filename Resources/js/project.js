@@ -84,8 +84,11 @@ Titanium.Project =
 		this.sdkDependency = this.mobileSDKDependency = null;
 		for (var i = 0; i < deps.length; i++)
 		{
+			// If we have an SDK dependency, we always want it to match
+			// the version of the project runtime. Don't preserve any
+			// old version here.
 			if (deps[i].type == Titanium.API.SDK)
-				this.sdkDependency = deps[i].version;
+				this.sdkDependency = project.runtime;
 			if (deps[i].type == Titanium.API.MOBILESDK)
 				this.mobileSDKDependency = deps[i].version;
 		}

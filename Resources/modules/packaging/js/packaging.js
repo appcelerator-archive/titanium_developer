@@ -2380,7 +2380,7 @@ PackageProject.writeTiManifest = function(project)
 	timanifest.visibility = visibility;
 
 	timanifest.runtime = {};
-	timanifest.runtime.version = "" + Titanium.Project.runtime;
+	timanifest.runtime.version = "" + project.runtime;
 	timanifest.runtime.package = networkRuntime;
 
 	timanifest.guid = project.guid;
@@ -2558,9 +2558,9 @@ PackageProject.publishDesktopApp = function(destDir,project)
 				var json = swiss.evalJSON(this.responseText);
 				if (json.success == false)
 				{
-					TiDev.setConsoleMessage('Packaging failed. Error: ' + json.message, 5000);
 					$('#desktop_package_button').removeClass('disabled');
-					
+					alert('Packaging failed. Error: ' + json.message);
+					TiDev.resetConsole();
 				}
 				else
 				{
@@ -2569,9 +2569,9 @@ PackageProject.publishDesktopApp = function(destDir,project)
 			}
 			else
 			{
-				
-				TiDev.setConsoleMessage('Packaging failed. HTTP status: ' + this.status, 5000);
 				$('#desktop_package_button').removeClass('disabled');
+				alert('Packaging failed. HTTP status: ' + this.status);
+				TiDev.resetConsole();
 			}
 		}
 	};
@@ -2604,9 +2604,10 @@ PackageProject.pollPackagingRequest = function(ticket,guid)
 		}
 		else if (r.success == false)
 		{
-			TiDev.setConsoleMessage('Packaging failed with message: ' + r.message, 5000);
 			$('#desktop_package_button').removeClass('disabled');
-			return;			
+			alert('Packaging failed with message: ' + r.message);
+			TiDev.resetConsole();
+			return;
 		}
 		else
 		{

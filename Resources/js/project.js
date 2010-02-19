@@ -58,36 +58,36 @@ Titanium.Project =
 		// find all the necessary components.
 		var app = Titanium.API.readApplicationManifest(project.dir +
 			Titanium.Filesystem.getSeparator() + 'manifest');
-		app.resolveDependencies();
-		var components = app.getComponents();
-		for (var i = 0; i < components.length; i++)
+		var deps = app.getDependencies();
+
+		// Get all modules of the same version as the project runtime.
+		var names = [];
+		var modules = Titanium.API.getApplication().getAvailableModules();
+		for (var i = 0; i < modules.length; i++)
 		{
-			var comp = components[i];
-			if (comp.type == Titanium.API.SDK)
-			{
-				this.runtimeComponent = comp;
-				this.runtime = comp.version;
-			}
-			else if (comp.type != Titanium.API.RUNTIME)
-			{ // This is either a mobilesdk or a module
-				
-				if (this.requiredModulesList.indexOf(comp.name) == -1)
-				{ // Optional module
-					this.optionalModules.push({
-						name:comp.getName(),
-						version:comp.getVersion(),
-						dir:comp.getPath()
-					});
-				}
-				else
-				{ // Required module
-					this.requiredModules.push({
-						name:comp.getName(),
-						version:comp.getVersion(),
-						dir:comp.getPath()
-					});
-				}
-			}
+			var module = modules[i];
+
+			if (module.type != Titanium.API.MODULE)
+				continue;
+			// Don't include duplicates and modules of a different version.
+			if (module.version != project.runtime || names.indexOf(module.name) != -1)
+				continue;
+
+			names.push(module.name);
+			if (this.requiredModulesList.indexOf(module.name) == -1)
+				this.optionalModules.push(module);
+			else
+				this.requiredModules.push(module);
+		}
+
+		// Preserve SDK and MobileSDK dependencies.
+		this.sdkDependency = this.mobileSDKDependency = null;
+		for (var i = 0; i < deps.length; i++)
+		{
+			if (deps[i].type == Titanium.API.SDK)
+				this.sdkDependency = deps[i].version;
+			if (deps[i].type == Titanium.API.MOBILESDK)
+				this.mobileSDKDependency = deps[i].version;
 		}
 	},
 	writeManifest: function(project)
@@ -145,6 +145,10 @@ Titanium.Project =
 			manifest += "#stream:"+stream+'\n';
 
 		manifest+='runtime:'+project.runtime+'\n';
+		if (this.mobileSDKDependency)
+			manifest += "mobilesdk:" + this.mobileSDKDependency + "\n";
+		if (this.sdkDependency)
+			manifest += "sdk:" + this.sdkDependency + "\n";
 		
 		var hasAnalytics =this.hasAnalytics(project);
 		

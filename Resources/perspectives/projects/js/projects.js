@@ -1584,6 +1584,10 @@ Projects.importProject = function(f)
 		{
 			options.type = entry.value;
 		}
+		if (entry.key.indexOf('runtime') != -1)
+		{
+			options.runtime = entry.value;
+		}
 		else if (entry.key.indexOf('ruby') != -1)
 		{
 			options.ruby = 'on';
@@ -1621,6 +1625,7 @@ Projects.importProject = function(f)
 	}
 
 	// ensure sdk verison is available
+	var versions = null;
 	if (options.type == 'desktop')
 	{
 		var versions = Titanium.Project.getSDKVersions();
@@ -1629,7 +1634,6 @@ Projects.importProject = function(f)
 			alert('You are importing a desktop project, but no Desktop SDK versions exist on your system');
 			return;
 		}
-		options.runtime = versions[0];
 	}
 	else
 	{
@@ -1639,8 +1643,11 @@ Projects.importProject = function(f)
 			alert('You are importing a mobile project, but no Mobile SDK versions exist on your system');
 			return;
 		}
-		options.runtime = versions[0];
 	}
+
+	// Preserve the original runtime version if possible. If not, use the first available runtime.
+	if (options.runtime === undefined || versions.indexOf(options.runtime) == -1)
+		options.runtime = versions[0];
 
 	Projects.createProject(options);
 	Titanium.Analytics.featureEvent('project.import',options);

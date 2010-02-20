@@ -1541,83 +1541,83 @@ Projects.importProject = function(f)
 	
 	// read manifest values to create new db record
 	var line = file.readLine(true);
-	var entry = Titanium.Project.parseEntry(line);
-	for (var i=0;i<1000;i++)
+	while (line != null)
 	{
+		var entry = Titanium.Project.parseEntry(line);
+		var line = file.readLine(false);
 		if (entry == null)
-		{
-			line = file.readLine();
-			if (!line || line == null)break;
-			entry = Titanium.Project.parseEntry(line);
-		}
-		if (entry != null)
-		{
-			if (entry.key.indexOf('appname') != -1)
-			{
-				options.name = entry.value;
-			}
-			if (entry.key.indexOf('version') != -1)
-			{
-				options.version = entry.value;
-			}
-			else if (entry.key.indexOf('publisher') != -1)
-			{
-				options.publisher = entry.value;
-			}
-			else if (entry.key.indexOf('url') != -1)
-			{
-				options.url = entry.value;
-			}
-			else if (entry.key.indexOf('image') != -1)
-			{
-				options.image = entry.value;
-			}
-			else if (entry.key.indexOf('appid') != -1)
-			{
-				options.appid = entry.value;
-			}
-			else if (entry.key.indexOf('guid') != -1)
-			{
-				options.guid = entry.value;
-			}
-			else if (entry.key.indexOf('desc') != -1) // will pick up 'desc' or 'description'
-			{
-				options.description = entry.value;
-			}
-			else if (entry.key.indexOf('type') != -1)
-			{
-				options.type = entry.value;
-			}
-			else if (entry.key.indexOf('ruby') != -1)
-			{
-				options.ruby = 'on';
-			}
-			else if (entry.key.indexOf('python') != -1)
-			{
-				options.python = 'on';
-			}
-			else if (entry.key.indexOf('php') != -1)
-			{
-				options.php = 'on';
-			}
-			
-		}
+			continue;
 
-		entry = null;
-	}
-	// if no description, create
-	if (!options.description)
-	{
-		options.description = options.name + ' is a cool new app created by ' + options.publisher;
+		if (entry.key.indexOf('appname') != -1)
+		{
+			options.name = entry.value;
+		}
+		if (entry.key.indexOf('version') != -1)
+		{
+			options.version = entry.value;
+		}
+		else if (entry.key.indexOf('publisher') != -1)
+		{
+			options.publisher = entry.value;
+		}
+		else if (entry.key.indexOf('url') != -1)
+		{
+			options.url = entry.value;
+		}
+		else if (entry.key.indexOf('image') != -1)
+		{
+			options.image = entry.value;
+		}
+		else if (entry.key.indexOf('appid') != -1)
+		{
+			options.appid = entry.value;
+		}
+		else if (entry.key.indexOf('guid') != -1)
+		{
+			options.guid = entry.value;
+		}
+		else if (entry.key.indexOf('desc') != -1) // will pick up 'desc' or 'description'
+		{
+			options.description = entry.value;
+		}
+		else if (entry.key.indexOf('type') != -1)
+		{
+			options.type = entry.value;
+		}
+		if (entry.key.indexOf('runtime') != -1)
+		{
+			options.runtime = entry.value;
+		}
+		else if (entry.key.indexOf('ruby') != -1)
+		{
+			options.ruby = 'on';
+		}
+		else if (entry.key.indexOf('python') != -1)
+		{
+			options.python = 'on';
+		}
+		else if (entry.key.indexOf('php') != -1)
+		{
+			options.php = 'on';
+		}
 	}
 
-	// if no guid, create
-	if (!options.guid)
+	// Settings in tiapp.xml always override the manifest.
+	var xmlDocument = (new DOMParser()).parseFromString(
+		TFS.getFile(dir, 'tiapp.xml').read(), "text/xml");
+	var get_element_innards = function(tagName, property)
 	{
-		options.guid = Titanium.Platform.createUUID();
+		var elems = xmlDocument.getElementsByTagName(tagName);
+		if (elems.length > 0)
+			options[property] = elems[0].textContent;
 	}
-	
-	
+	get_element_innards('version', 'version');
+	get_element_innards('description', 'description');
+	get_element_innards('publisher', 'publisher');
+	get_element_innards('url', 'url');
+	get_element_innards('icon', 'image');
+	get_element_innards('copyright', 'copyright');
+
 	// if not type - default to desktop
 	if (!options.type)
 	{
@@ -1625,6 +1625,7 @@ Projects.importProject = function(f)
 	}
 
 	// ensure sdk verison is available
+	var versions = null;
 	if (options.type == 'desktop')
 	{
 		var versions = Titanium.Project.getSDKVersions();
@@ -1633,7 +1634,6 @@ Projects.importProject = function(f)
 			alert('You are importing a desktop project, but no Desktop SDK versions exist on your system');
 			return;
 		}
-		options.runtime = versions[0];
 	}
 	else
 	{
@@ -1643,16 +1643,15 @@ Projects.importProject = function(f)
 			alert('You are importing a mobile project, but no Mobile SDK versions exist on your system');
 			return;
 		}
-		options.runtime = versions[0];
 	}
-	
-	Projects.createProject(options);
 
+	// Preserve the original runtime version if possible. If not, use the first available runtime.
+	if (options.runtime === undefined || versions.indexOf(options.runtime) == -1)
+		options.runtime = versions[0];
+
+	Projects.createProject(options);
 	Titanium.Analytics.featureEvent('project.import',options);
-	
-	// show message
-	TiDev.setConsoleMessage('Your project has been imported',2000);
-	
+	TiDev.setConsoleMessage('Your project has been imported', 2000);
 };
 
 //
@@ -1663,15 +1662,23 @@ Projects.createProject = function(options, createProjectFiles)
 	// create project object
 	var date = new Date();
 	options.date = (date.getMonth()+1)+"/"+date.getDate()+"/"+date.getFullYear();
-	options.publisher = (options.publisher)?options.publisher:Titanium.Platform.username;
-	options.url = (options.url)?options.url:'';
-	options.image = (options.image)?options.image:'default_app_logo.png';
-	options.guid = (options.guid)?options.guid:Titanium.Platform.createUUID();
-	options.description = (options.description)?options.description:'No description provided';
+
 	options.id = options.appid;
-	options.version = "1.0";
-	options.copyright = date.getFullYear() + ' by ' + options.publisher;
-	
+	if (options.url === undefined)
+		options.url = '';
+	if (options.publisher === undefined)
+		options.publisher = Titanium.Platform.username;
+	if (options.image === undefined)
+		options.image = 'default_app_logo.png';
+	if (options.guid === undefined)
+		options.guid = Titanium.Platform.createUUID();
+	if (options.description === undefined)
+		options.description = 'No description provided';
+	if (options.version === undefined)
+		options.version = '1.0';
+	if (options.copyright === undefined)
+		options.copyright = date.getFullYear() + ' by ' + options.publisher;
+
 	// normal names 
 	var normalizedName = options.name.replace(/[^a-zA-Z0-9]/g,'_').toLowerCase();
 	normalizedName = normalizedName.replace(/ /g,'_').toLowerCase();

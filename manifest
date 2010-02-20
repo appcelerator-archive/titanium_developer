@@ -1,12 +1,12 @@
 #appname:Titanium Developer
 #appid:com.appcelerator.titanium.developer
 #publisher:Appcelerator
-#image:titanium_beta.png
+#image:default_app_logo.png
 #url:http://www.appcelerator.com
 #guid:2adec37f-e394-479f-8cbb-ac54209818a6
 #desc:Titanium Developer is a cool new app created by Appcelerator
 #type:desktop
-runtime:0.8.1
+runtime:0.8.4
 api:0.8.1
 tiapp:0.8.1
 tifilesystem:0.8.1

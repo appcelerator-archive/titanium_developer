@@ -1,9 +1,7 @@
-Titanium.App.getStreamURL = function(name)
-{
-	return 'https://api.appcelerator.net/d/v1/' + name;
-};
-
-
+// Titanium.App.getStreamURL = function(name)
+// {
+// 	return 'https://api.appcelerator.net/d/v1/' + name;
+// };
 
 // define global object
 TiDev = {};
@@ -62,15 +60,6 @@ TiDev.setDashboardContent = false;
 TiDev.setAdURLs = function()
 {
 	var index = (TiDev.isCommunity)?0:1;
-	
-	Titanium.API.info('dashboard URL ' + TiDev.baseAdURL + TiDev.dashboardAd[index]);
-	Titanium.API.info('newProject URL ' + TiDev.baseAdURL + TiDev.newProjectAd[index]);
-	Titanium.API.info('mobileEmulator URL ' + TiDev.baseAdURL + TiDev.mobileEmulatorAd[index]);
-	Titanium.API.info('mobileDevice URL ' + TiDev.baseAdURL + TiDev.mobileDeviceAd[index]);
-	Titanium.API.info('mobileDist URL ' + TiDev.baseAdURL + TiDev.mobilePackageAd[index]);
-	Titanium.API.info('desktopLaunch URL ' + TiDev.baseAdURL + TiDev.desktopLaunchAd[index]);
-	Titanium.API.info('desktopPackage URL ' + TiDev.baseAdURL + TiDev.desktopPackageAd[index]);
-	Titanium.API.info('desktopLinks URL ' + TiDev.baseAdURL + TiDev.desktopLinksAd[index]);
 	
 	// dashboard content
 	$.get(TiDev.baseAdURL + TiDev.dashboardAd[index], function(d)
@@ -453,6 +442,7 @@ TiDev.subtabChange = function(idx, lognav)
 	}
 
 	var file = Titanium.Filesystem.getFile(Titanium.App.appURLToPath('modules/' + TiDev.activeSubtab.name + '/' +TiDev.activeSubtab.html));
+	
 	$('#tiui_content_right').get(0).innerHTML = file.read();
 	
 	if (fireLoad==true && TiDev.viewedModules[TiDev.activeSubtab.name]!=true)

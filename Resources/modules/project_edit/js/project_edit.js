@@ -215,6 +215,7 @@ EditProject.setupView = function()
 			}
 			catch(e)
 			{
+				// do nothing
 			}
 			
 		}

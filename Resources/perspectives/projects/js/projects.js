@@ -667,13 +667,13 @@ Projects.showAuthenticatedView = function(options)
 			TiDev.db.execute('insert into PROJECT_VIEW VALUES(0)');
 		}
 		// if we have projects and no tab is selected, select edit
-		if (TiDev.subtabs.activeIndex == -1)
+		if (options && options.showEditProjectTab == true)
 		{
-			if (options && options.showEditProjectTab == true)
-			{
-				TiDev.subtabChange(1);
-			}
-			else
+			TiDev.subtabChange(1);
+		}
+		else
+		{
+			if (TiDev.subtabs.activeIndex == -1)
 			{
 				if (Projects.modulesLoaded == true)
 				{
@@ -681,7 +681,6 @@ Projects.showAuthenticatedView = function(options)
 				}
 			}
 		}
-
 		// paint tree
 		var html = '<div class="parent">PROJECTS</div>';
 		for (var i=0;i<Projects.projectList.length;i++)

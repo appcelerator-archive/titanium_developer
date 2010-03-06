@@ -2738,6 +2738,6 @@ TiDev.registerModule({
 	displayName: 'Test & Package',
 	perspectives:['projects'],
 	html:'packaging.html',
-	idx:1,
+	idx:2,
 	callback:PackageProject.eventHandler
 });

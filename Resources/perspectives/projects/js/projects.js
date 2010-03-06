@@ -696,7 +696,7 @@ Projects.showAuthenticatedView = function(options)
 		// if we have projects and no tab is selected, select edit
 		if (TiDev.subtabs.activeIndex = -1)
 		{
-			if (options.showEditTab==true)
+			if (options && options.showEditTab==true)
 			{
 				TiDev.subtabChange(1);
 			}
@@ -715,21 +715,7 @@ Projects.showAuthenticatedView = function(options)
 			
 			if (Projects.selectedProjectIdx == Projects.projectList[i].id)
 			{
-				
 				classes += 'active';
-			}
-
-			// if we are active and mobile - don't show links
-			if (classes.indexOf('active') != -1)
-			{
-				if (Projects.projectList[i].type == 'mobile')
-				{
-					TiDev.subtabs.hideTab(2)
-				}
-				else
-				{
-					TiDev.subtabs.showTab(2)
-				}
 			}
 			html += '<div class="'+classes+'" project_id="'+Projects.projectList[i].id+'">';
 			html += '<div>' + Projects.projectList[i].name + '</div></div>';
@@ -754,19 +740,6 @@ Projects.showAuthenticatedView = function(options)
 			var newProjectIndex = $(this).attr('project_id');
 			Projects.setActiveProject(newProjectIndex);
 
-			if (Projects.getProject().type == 'mobile')
-			{
-				TiDev.subtabs.hideTab(2);
-			}		
-			else
-			{
-				TiDev.subtabs.showTab(2);
-			}
-			// if (TiDev.getActiveSubTab()==0)
-			// {
-			// 	// make sure edit is always selected if they are clicking a project from dashboard view
-			// 	TiDev.subtabChange(1);
-			// }
 			$MQ('l:tidev.projects.row_selected',{'project_id':newProjectIndex,'activeTab':TiDev.activeSubtab.name});
 		});
 		
@@ -774,26 +747,7 @@ Projects.showAuthenticatedView = function(options)
 	
 };
 
-//
-// When all modules are loaded check to see selected project type
-// mobile projects don't have a links tab
-// we need this check in two places because of timing issues
-//
-$MQL('l:tidev.modules.loaded',function()
-{
-	var p = Projects.getProject();
-	if (p)
-	{
-		if (p.type == 'mobile')
-		{
-			TiDev.subtabs.hideTab(2)
-		}
-		else
-		{
-			TiDev.subtabs.showTab(2)
-		}
-	}
-});
+
 //
 // Handle UI events
 //

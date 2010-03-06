@@ -1,292 +1,40 @@
 <div id="packaging">
-	<div style="margin-top:10px">
-		
-		
-		<!-- DESKTOP PACKAGING OPTIONS -->
-		<div id="desktop_packaging" style="display:none">
+	<div style="margin-top:10px;min-width:800px">
 
-			<table width="100%">
-				<tr>
-					<td width="340px" valign="top">
-						
-						<!-- HELP -->
-						<div class="option active" id="desktop_help">
-							<div class="image">		
-								<img src="modules/packaging/images/desktop_help.png"/>
-							</div>
-							<div class="text">
-								<span class="title">Learn</span>
-								<div class="desc">Learn more about desktop packaging</div>
-							</div>
-						</div>
-						
-						<!-- PACKAGE FOR DISTRIBUTION -->
-						<div class="option" id="desktop_package">
-							<div class="image">
-								<img src="modules/packaging/images/desktop_package.png"/>
-							</div>
-							<div class="text">
-								<span class="title">Package</span>
-								<div class="desc" id="desktop_package_desc">
-									Create installation distributions for Mac, Windows and Linux
-								</div>
-							</div>
-						</div>
-						<!-- RUN LOCALLY -->
-						<div class="option" id="desktop_launch">
-							<div class="image">
-								<img src="modules/packaging/images/desktop_launch.png"/>
-							</div>
-							<div class="text">
-								<span class="title">Launch</span>
-								<div class="desc">Run your project locally in debug mode</div>
-							</div>
-						</div>
-						
-					</td>
-					
-					<td valign="top">
-						
-						<div class="detail" id="desktop_package_detail" style="display:block;height:410px;width:360px">
-							<!-- DEBUG OUTPUT -->
-							<div id="desktop_launch_detail" style="display:none;">
-								<div id="desktop_launch_viewer" class="debug_console"></div>
-
-								<!-- LAUNCH BUTTON -->
-								<div id="launch_app_button" 
-									style="width:120px;margin-top:20px;float:left">
-									Launch App
-								</div> 
-
-								<!-- CLEAR BUTTON -->
-								<!-- <div id="launch_clear_button" 
-									style="width:120px;margin-top:20px;float:left;margin-left:10px">
-									Clear Console
-								</div>  -->
-								<!-- KILL -->
-								<div id="launch_kill_button" style="width:120px;margin-top:20px;float:left;margin-left:10px">
-									Kill App
-								</div> 
-
-							</div>
-
-							<!-- DESKTOP LEARN MORE -->
-							<div id="desktop_packaging_overview" style="display:block;overflow:auto">
-								<div class="help_header" style="margin-top:-2px">Overview</div>
-
-								<div class="help_text">
-									Titanium desktop apps are packaged in the cloud.  This enables us 
-									to create distributions for each of our supported
-									operating systems (Mac, Windows, and Linux).  To package your 
-									app, we need four pieces of information.  
-								</div>
-								<div class="help_header">Platforms</div>
-								<div class="help_text">
-									The operating systems you want your app to run on. 
-								</div>
-								<div class="help_header">Installer Type</div>
-								<div class="help_text">
-									Titanium allows you to bundle all of your files plus the Titanium
-									Runtime with your application installer, or you can choose to have the
-									Titanium Runtime downloaded from the network at install time.  The latter
-									results in a smaller download, plus the runtime is only downloaded if 
-									it's not already installed on the user's computer. 
-								</div>
-								<div class="help_header">Publish Privacy</div>
-								<div class="help_text">
-									This setting determines if your app is available to be downloaded in the
-									"Apps" section of Titanium Developer.  
-								</div>
-								<div class="help_header">Release to Users</div>
-								<div class="help_text">
-									This setting determines if your existing users will receive the updates
-									to your app.  
-								</div>
-
-
-							</div>
-							
-							<!-- DESKTOP PACKAGE -->							
-							<div id="desktop_packaging_options" style="display:none">
-								<div class="detail_header">Select Packaging Options</div>
-								<!-- COL 1 -->
-								<div style="float:left;width:130px;margin-right:35px;height:260px">
-
-									<!-- SELECT PLATFORMS -->
-									<div align="center" class="option_header">Platforms</div>
-									<div class="optiongroup operating_system top divider" id="mac_packaging">
-										Mac
-									</div>
-									<div class="optiongroup operating_system  divider" id="win_packaging">
-										Windows
-									</div>
-									<div class="optiongroup operating_system  bottom" id="linux_packaging">
-										Linux
-									</div>
-
-									<!-- SELECT PRIVACY -->
-									<div style="margin-top:20px"></div>
-									<div align="center" class="option_header">Publish Privacy</div>
-									<div class="optiongroup top divider" id="public_packaging">
-										Public
-									</div>
-									<div class="optiongroup bottom active_option" id="private_packaging">
-										Private
-									</div>
-
-								</div>
-
-								<!-- COL 2 -->
-								<div style="float:left;width:130px;height:260px">
-
-									<!-- SELECT INSTALL TYPE -->
-									<div align="center" class="option_header">Installer Type</div>
-									<div class="optiongroup top active_option divider" id="network_packaging">
-										Network
-									</div>
-									<div class="optiongroup  bottom" id="bundled_packaging">
-										Bundled
-									</div>
-
-									<!-- RELEASE TO EXISTING USERS -->
-									<div style="margin-top:54px"></div>
-									<div align="center" class="option_header">Release to Users</div>
-									<div class="optiongroup top divider" id="release_yes_packaging">
-										Yes
-									</div>
-									<div class="optiongroup bottom active_option" id="release_no_packaging">
-										No
-									</div>
-
-								</div>
-								<div style="clear:both"></div>
-								<div id="desktop_packaging_divider"></div>
-								<div id="desktop_package_button"  
-									align="center" style="width:120px;margin-top:20px">
-									Package Project
-								</div>
-
-							</div>
-						</div>
-						
-					</td>
-				</tr>
-			</table>
-			
-		</div>
-		
-		
 		<!-- MOBILE PACKAGING OPTIONS -->
 		<div id="mobile_packaging" style="display:none">
-			
-			<table width="100%">
+			<table width="100%" border="0">
 				<tr>
-					<td width="340px" valign="top">
-
-						<!-- MOBILE HELP -->
-						<div class="option active" id="mobile_help" >
-							<div class="image">
-								<img src="modules/packaging/images/mobile_help.png"/>
-							</div>
-							<div class="text">
-								<span class="title">Learn</span>
-								<div class="desc">
-									Learn more about Titanium Mobile
-								</div>
-							</div>
+					<td valign="top" width="70%">
+						<div class="option active" id="mobile_emulator" style="margin-left:20px">
+							<img src="images/emulator.png"/>
+							<span class="title">Run Emulator</span>
+						</div>
+						<div class="option" id="mobile_device">
+							<img src="images/device.png"/>
+							<span class="title">Run on Device</span>
 						</div>
 
-						<!-- RUN IPHONE EMULATOR -->
-						<div class="option" id="mobile_emulator_iphone">
-							<div class="image">
-								<img src="images/iphone_emu.png"/>
-							</div>
-							<div class="text">
-								<span class="title">Run iPhone Emulator</span>
-								<div class="desc">
-									Launch the iPhone emulator and test your app
-								</div>
-							</div>
-						</div>
-						<!-- RUN ANDROID EMULATOR -->
-						<div class="option" id="mobile_emulator_android">
-							<div class="image">
-								<img src="images/android_emu.png"/>
-							</div>
-							<div class="text">
-								<span class="title">Run Android Emulator</span>
-								<div class="desc" >
-									Launch the Android emulator and test your app
-								</div>
-
-							</div>
-						</div>
-						<!-- RUN ON DEVICE -->
-						<div class="option" id="mobile_device" >
-							<div class="image">
-								<img src="images/run_on_device.png"/>
-							</div>
-							<div class="text">
-								<span class="title">Run on Device</span>
-								<div class="desc">Install and run your app on device</div>
-							</div>
-						</div>
-						<!-- PACKAGE FOR DISTRIBUTION -->
 						<div class="option" id="mobile_package">
-							<div class="image">		
-								<img src="modules/packaging/images/mobile_appstore.png"/>
-							</div>
-							<div class="text">
-								<span class="title">Distribution</span>
-								<div class="desc">Package your app for distribution</div>
-							</div>
+							<img src="images/packaging.png"/>
+							<span class="title" style="position:relative;top:2px">Distribute</span>
 						</div>
-						
-					</td>
-					
-					<td valign="top">
-						
-						<!-- MOBILE PACKAGING DETAIL -->
-						<div class="detail" id="mobile_package_detail" style="display:block;height:428px">
-							<!-- MOBILE HELP -->
-							<div id="mobile_help_detail" style="display:block">
-								<div class="help_header" style="margin-top:-4px">Resources</div>
-								<div class="help_text">
-									We have several resources that will help you to start building, testing
-									and distributing mobile apps for iPhone and Android.  
-								</div>
-								<div class="help_header">Sign Up</div>
-								<div class="help_text">
-									If you want to either test iPhone apps on your device and/or disitribute
-									them via the Apple App Store, you will need to sign-up for 
-									<a href="http://developer.apple.com/iphone/program/" target="ti:systembrowser">Apple's iPhone Developer Program</a>.
-								</div>
-								<div class="help_header">Screencasts</div>
-								<div class="help_text">
-									We have a screencast or two to help you get started with mobile development. 
-										<a href="http://www.appcelerator.com/community/screencasts/" target="ti:systembrowser">Click here to view</a>.
-								</div>
-								<div class="help_header">Documentation</div>
-								<div class="help_text">
-									Check out our Mobile API 
-									<a href="http://codestrong.com/timobile/" target="ti:systembrowser">documentation</a>.
-								</div>
 
-							</div>
-							
+						<div class="detail" id="mobile_package_detail" style="display:block;height:428px">
+
 							<!-- PACKAGE FOR DISTRIBUTION DETAIL -->
 							<div id ="mobile_distribution_detail" style="display:none">
-								<div class="help_header" style="margin-top:0">Packaging your App for Distribution</div>
+								<!-- TABS -->
+								<div 
+								style="border-top:1px solid #414141;border-bottom:1px solid #7e7e7e;margin-left:-20px;margin-right:-20px"></div>
+								<div class="help_header tab active packaging" id="tab_iphone_package">iPhone</div>
+								<div class="help_header tab packaging" id="tab_android_package">Android</div>
+								<div style="clear:both"></div>
 
 								<div class="help_text">
 									Titanium Mobile allows you to package your project for distribution
 									to the Apple App Store and to the Android Marketplace.
 								</div>
-								<!-- TABS -->
-								<div class="help_header tab active packaging" id="tab_iphone_package">iPhone</div>
-								<div class="help_header tab packaging" id="tab_android_package">Android</div>
-								<div style="clear:both;border-top:2px solid #333; 
-								      position:relative;top:-5px;height:1px"></div>
 								
 								<!-- TAB CONTENT -->
 								<div id="mobile_packaging_content" style="margin-top:5px">
@@ -458,11 +206,12 @@
 									<div id="mobile_packaging_content_android" style="display:none">
 										<!-- PROJECT HAS ANDROID -->
 										<div class="project_has_android_true" style="display:none">
-											<div class="help_text">
+											<div class="help_text" style="width:460px">
 												To package your Android app, we need a few pieces of information:
 											</div>
 											<div style="margin-top:10px">
-												<div class="label" style="width:165px">Select Distribution Location:</div>
+												<div class="label android" style="width:165px">
+													Select Distribution Location:</div>
 												<div class="input">
 													<input type="text" class="android_package required"
 														id="android_location"/>
@@ -472,7 +221,7 @@
 												</div>
 												<div style="clear:both;height:10px"></div>
 
-												<div class="label" style="width:165px">Key Store Location:</div>
+												<div class="label android" style="width:165px">Key Store Location:</div>
 												<div class="input">
 													<input type="text" class="android_package required"
 														id="android_key_store"/>
@@ -482,14 +231,14 @@
 												</div>
 												<div style="clear:both;height:10px"></div>
 												
-												<div class="label " style="width:165px">Key Store Password:</div>
+												<div class="label android " style="width:165px">Key Store Password:</div>
 												<div class="input">
 													<input type="password" class="android_package required" 
 														id="android_key_store_password"/>
 												</div>
 												<div style="clear:both;height:10px"></div>
 												
-												<div class="label" style="width:165px">Alias:</div>
+												<div class="label android " style="width:165px">Alias:</div>
 												<div class="input">
 													<input type="text" class="android_package required"
 														id="android_alias"/>
@@ -497,7 +246,7 @@
 												<div style="clear:both;height:10px"></div>
 												
 												<div id="android_version_container">
-													<div class="label" style="width:165px">Android Version:</div>
+													<div class="label android " style="width:165px">Android Version:</div>
 													<div class="input">
 														<select class="android_package"
 															id="android_version">
@@ -525,18 +274,18 @@
 
 							<!-- RUN ON DEVICE DETAIL -->
 							<div id ="mobile_device_detail" style="display:none">
-								<div class="help_header" style="margin-top:0">Running your App on a Device</div>
+								<!-- TABS -->
+								<div 
+								style="border-top:1px solid #414141;border-bottom:1px solid #7e7e7e;margin-left:-20px;margin-right:-20px"></div>
+								<div class="help_header tab active device" id="tab_iphone_dev">iPhone</div>
+								<div class="help_header tab device" id="tab_android_dev">Android</div>
+								<div style="clear:both"></div>
 
 								<div class="help_text">
 									If your phone is connected to your computer via USB, you can
 									install and run your app on your Android and/or your iPhone Device.
 								</div>
-								<!-- TABS -->
-								<div class="help_header tab active device" id="tab_iphone_dev">iPhone</div>
-								<div class="help_header tab device" id="tab_android_dev">Android</div>
-								<div style="clear:both;border-top:2px solid #333; 
-								      position:relative;top:-5px;height:1px"></div>
-								
+									
 								<!-- TAB CONTENT -->
 								<div id="mobile_device_content" style="margin-top:5px">
 									<div id="mobile_device_content_iphone">
@@ -687,7 +436,7 @@
 									<div id="mobile_device_content_android" style="display:none">
 										<!-- PROJECT HAS ANDROID -->
 										<div class="project_has_android_true" style="display:none">
-											<div class="help_text" style="margin-bottom:10px">
+											<div class="help_text" style="margin-bottom:10px;width:460px">
 												Click the button below to install your app on 
 												your connected Android device.
 											</div>
@@ -715,26 +464,51 @@
 								</div>
 							</div>
 
-							<!-- DEBUG OUTPUT FOR IPHONE EMULATOR -->
-							<div id="mobile_iphone_emulator_container" style="display:none;">
-								<div id="mobile_iphone_emulator_viewer" class="debug_console"></div>
-								<!--EMULATOR SDK VERSION -->
-								<div style="float:left;margin-top:20px" >
-									<span class="help_text">
-										SDK:</span>
-									<select style="width:55px" id="iphone_emulator_sdk"> 			
-										<option>loading...</option>
-									</select>
+							<!-- EMULATOR -->
+							<div id="mobile_emulator_container" style="display:none;">
+								
+								<div 
+								style="border-top:1px solid #414141;border-bottom:1px solid #7e7e7e;margin-left:-20px;margin-right:-20px">
 								</div>
-								<!-- FILTER LEVEL -->
-								<div style="margin-left:10px;float:left;">
-									<span class="help_text" >Filter:</span>
-									<select style="width:60px;margin-top:20px;" id="iphone_log_filter">
-										<option value="debug">Debug</option>
-										<option value="info" selected>Info</option>
-										<option value="warn">Warn</option>
-										<option value="error">Error</option>
-									</select>
+							
+								<div class="help_header tab active emulator" id="mobile_emulator_iphone">iPhone</div>
+								<div class="help_header tab emulator" id="mobile_emulator_android">Android</div>
+								
+								<!-- IPHONE EMULATOR -->
+								<div id="mobile_iphone_emulator_container" style="display:none">
+									<div id="mobile_iphone_emulator_viewer" class="debug_console"></div>
+
+									<!--EMULATOR SDK VERSION -->
+									<div style="float:left;margin-top:20px" >
+										<span class="help_text">
+											SDK:
+										</span>
+										<select style="width:55px" id="iphone_emulator_sdk"> 			
+											<option>loading...</option>
+										</select>
+									</div>
+									<!-- FILTER LEVEL -->
+									<div style="margin-left:10px;float:left;">
+										<span class="help_text" >Filter:</span>
+										<select style="width:60px;margin-top:20px;" id="iphone_log_filter">
+											<option value="debug">Debug</option>
+											<option value="info" selected>Info</option>
+											<option value="warn">Warn</option>
+											<option value="error">Error</option>
+										</select>
+									</div>
+
+									<!-- START BUTTON -->
+									<div id="iphone_launch_button" 
+										style="width:70px;margin-top:20px;float:left;margin-left:10px">
+										Launch
+									</div> 
+
+									<!-- KILL -->
+									<div id="iphone_kill_button" 
+										style="width:70px;margin-top:20px;float:left;margin-left:10px">
+										Stop
+									</div> 
 								</div>
 								
 								<!-- ANDROID EMULATOR -->
@@ -829,71 +603,126 @@
 									style="width:120px;margin-top:16px;float:left">
 									Launch App
 								</div> 
-								
-								<!-- CLEAR BUTTON -->
-								<!-- <div id="iphone_clear_button" 
-									style="width:120px;margin-top:20px;float:left;margin-left:10px">
-									Clear Console
-								</div>  -->
+
 								<!-- KILL -->
-								<div id="iphone_kill_button" 
-									style="width:120px;margin-top:20px;float:left;margin-left:10px">
-									Stop Emulator
-								</div> 
-								
-							</div>
-
-							<!-- DEBUG OUTPUT  FOR ANDROID EMULATOR -->
-							<div id="mobile_android_emulator_container" style="display:none;">
-								<div id="mobile_android_emulator_viewer" class="debug_console"></div>
-								
-								<!--EMULATOR SDK VERSION -->
-								<div style="float:left;margin-top:20px" id="android_emulator_sdk_container">
-									<span class="help_text">
-										 SDK:</span>
-									<select style="width:160px" id="android_emulator_sdk"> 			
-										<option id="">loading...</option>
-									</select>
-								</div>
-
-								<!--EMULATOR SKIN -->
-								<div style="float:left;margin-top:20px;margin-left:10px"
-									id="android_emulator_skins_container">
-									<span class="help_text" >Screen:</span>
-									<select style="width:58px" id="android_emulator_skins"> 			
-										<option id="">loading...</option>
-									</select>
-								</div>
-								<!-- FILTER LEVEL -->
-								<div style="margin-left:10px;margin-right:10px;float:left;">
-									<span class="help_text" >Filter:</span>
-									<select style="width:50px;margin-top:20px;" id="android_log_filter">
-										<option value="trace">Trace</option>
-										<option value="debug">Debug</option>
-										<option value="info" selected>Info</option>
-										<option value="warn">Warn</option>
-										<option value="error">Error</option>
-									</select>
-								</div>
-								
-								<!-- START BUTTON -->
-								<div id="android_launch_button" style="width:70px;margin-top:20px;float:left">
-									Launch
-								</div> 
-
-								<!-- CLEAR BUTTON -->
-								<!-- <div id="android_clear_button" 
-									style="width:120px;margin-top:20px;float:left;margin-left:10px">
-									Clear Console
-								</div>  -->
-								<!-- KILL -->
-								<div id="android_kill_button" 
-									style="width:70px;margin-top:20px;float:left;margin-left:10px">
-									Stop 
+								<div id="launch_kill_button" style="width:120px;margin-top:16px;float:left;margin-left:10px">
+									Kill App
 								</div> 
 
 							</div>
+							<!-- DESKTOP LINKS -->							
+							<div id="desktop_links_detail" style="display:none">
+								<div id="links_view" style="display:none">
+									<p>Packages created on <span id="links_date"></span></p>
+									<div id="links_view_rows">
+									</div>
+									<div style="margin-top:10px">
+										<img 
+										src="modules/packaging/images/public_link.png" 
+											style="position:relative;top:11px"/>
+										<span style="font-size:12px;color:#fff;margin-right:10px">Public link</span>
+										<a id="public_links_anchor" target="ti:systembrowser"></a>
+									</div>
+								</div>							
+								<div id="no_links_view" style="display:none">
+									<img src="modules/packaging/images/no_links.png"/>
+									<div class="header">
+										Links not available.
+									</div>
+									<div class="text">
+										This app has not been packaged yet.
+									</div>
+								</div>							
+							</div>
+							
+							<!-- DESKTOP PACKAGE -->							
+							<div id="desktop_packaging_options" style="display:none">
+								<div style="text-align:center;margin-left:0px;position:relative">
 
+									<!-- COL 1 -->
+									<table width="100%">
+										<tr>
+											<td colspan="3" valign="top" align="center">
+												<div class="detail_header">Select Options for Cloud Packaging</div>
+											</td>
+										<tr>
+											<td width="150px" valign="top" align="center">
+												<!-- SELECT PLATFORMS -->
+												<div align="center" class="option_header">Platforms</div>
+												<div class="optiongroup operating_system top divider" id="mac_packaging">
+													Mac
+												</div>
+												<div class="optiongroup operating_system  divider" id="win_packaging">
+													Windows
+												</div>
+												<div class="optiongroup operating_system  bottom" id="linux_packaging">
+													Linux
+												</div>
+
+												<!-- SELECT PRIVACY -->
+												<div style="margin-top:20px"></div>
+												<div align="center" class="option_header">Publish Privacy</div>
+												<div class="optiongroup top divider" id="public_packaging">
+													Public
+												</div>
+												<div class="optiongroup bottom active_option" id="private_packaging">
+													Private
+												</div>
+											</td>
+											<td width="150px" valign="top" align="center">
+												<!-- SELECT INSTALL TYPE -->
+												<div align="center" class="option_header">Installer Type</div>
+												<div class="optiongroup top active_option divider" id="network_packaging">
+													Network
+												</div>
+												<div class="optiongroup  bottom" id="bundled_packaging">
+													Bundled
+												</div>
+
+												<!-- RELEASE TO EXISTING USERS -->
+												<div style="margin-top:54px"></div>
+												<div align="center" class="option_header">Release to Users</div>
+												<div class="optiongroup top divider" id="release_yes_packaging">
+													Yes
+												</div>
+												<div class="optiongroup bottom active_option" id="release_no_packaging">
+													No
+												</div>
+												<div id="desktop_package_button"  
+												style="width:120px;margin-top:35px;position:relative;right:80px">
+													Package Project
+												</div>
+																							
+												
+											</td>
+											<td  valign="top">
+												<div class="help_header">Platforms</div>
+												<div class="help_text" style="margin-bottom:10px">
+													The operating systems you want your app to run on. 
+												</div>
+												<div class="help_header">Installer Type</div>
+												<div class="help_text" style="margin-bottom:10px">
+													"Bundle" all of your files plus the Titanium
+													Runtime with your application, or have the
+													Titanium Runtime downloaded from the "Network" at install time.  
+													
+												</div>
+												<div class="help_header">Publish Privacy</div>
+												<div class="help_text" style="margin-bottom:10px">
+													Make your app available in the "Apps" section of Titanium Developer.  
+												</div>
+												<div class="help_header">Release to Users</div>
+												<div class="help_text" style="margin-bottom:10px">
+													Send updated app to your users. 
+												</div>	
+												
+											</td>
+										</tr>
+									</table>
+
+								</div>
+
+							</div>
 						</div>
 						
 					</td>
@@ -905,7 +734,9 @@
 					</td>
 				</tr>
 			</table>
+
+
+
 		</div>
 	</div>
-	
 </div>

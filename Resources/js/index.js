@@ -61,17 +61,19 @@ TiDev.setDashboardContent = false;
 
 TiDev.setAdURLs = function()
 {
-	Titanium.API.info('dashboard URL ' + TiDev.baseAdURL + TiDev.dashboardAd[(TiDev.isCommunity==true)?0:1]);
-	Titanium.API.info('newProject URL ' + TiDev.baseAdURL + TiDev.newProjectAd[(TiDev.isCommunity==true)?0:1]);
-	Titanium.API.info('mobileEmulator URL ' + TiDev.baseAdURL + TiDev.mobileEmulatorAd[(TiDev.isCommunity==true)?0:1]);
-	Titanium.API.info('mobileDevice URL ' + TiDev.baseAdURL + TiDev.mobileDeviceAd[(TiDev.isCommunity==true)?0:1]);
-	Titanium.API.info('mobileDist URL ' + TiDev.baseAdURL + TiDev.mobilePackageAd[(TiDev.isCommunity==true)?0:1]);
-	Titanium.API.info('desktopLaunch URL ' + TiDev.baseAdURL + TiDev.desktopLaunchAd[(TiDev.isCommunity==true)?0:1]);
-	Titanium.API.info('desktopPackage URL ' + TiDev.baseAdURL + TiDev.desktopPackageAd[(TiDev.isCommunity==true)?0:1]);
-	Titanium.API.info('desktopLinks URL ' + TiDev.baseAdURL + TiDev.desktopLinksAd[(TiDev.isCommunity==true)?0:1]);
+	var index = (TiDev.isCommunity)?0:1;
+	
+	Titanium.API.info('dashboard URL ' + TiDev.baseAdURL + TiDev.dashboardAd[index]);
+	Titanium.API.info('newProject URL ' + TiDev.baseAdURL + TiDev.newProjectAd[index]);
+	Titanium.API.info('mobileEmulator URL ' + TiDev.baseAdURL + TiDev.mobileEmulatorAd[index]);
+	Titanium.API.info('mobileDevice URL ' + TiDev.baseAdURL + TiDev.mobileDeviceAd[index]);
+	Titanium.API.info('mobileDist URL ' + TiDev.baseAdURL + TiDev.mobilePackageAd[index]);
+	Titanium.API.info('desktopLaunch URL ' + TiDev.baseAdURL + TiDev.desktopLaunchAd[index]);
+	Titanium.API.info('desktopPackage URL ' + TiDev.baseAdURL + TiDev.desktopPackageAd[index]);
+	Titanium.API.info('desktopLinks URL ' + TiDev.baseAdURL + TiDev.desktopLinksAd[index]);
 	
 	// dashboard content
-	$.get(TiDev.baseAdURL + TiDev.dashboardAd[(TiDev.isCommunity==true)?0:1], function(d)
+	$.get(TiDev.baseAdURL + TiDev.dashboardAd[index], function(d)
 	{
 		var parser = new DOMParser();
 		var doc = parser.parseFromString(d, "text/xml");
@@ -85,7 +87,7 @@ TiDev.setAdURLs = function()
 	});
 
 	// new project content
-	$.get(TiDev.baseAdURL + TiDev.newProjectAd[(TiDev.isCommunity==true)?0:1], function(d)
+	$.get(TiDev.baseAdURL + TiDev.newProjectAd[index], function(d)
 	{
 		var parser = new DOMParser();
 		var doc = parser.parseFromString(d, "text/xml");
@@ -93,42 +95,42 @@ TiDev.setAdURLs = function()
 	});
 	 
 	// mobile emulator content
-	$.get(TiDev.baseAdURL + TiDev.mobileEmulatorAd[(TiDev.isCommunity==true)?0:1] , function(d)
+	$.get(TiDev.baseAdURL + TiDev.mobileEmulatorAd[index] , function(d)
 	{
 		var parser = new DOMParser();
 		var doc = parser.parseFromString(d, "text/xml");
 		TiDev.mobileEmulatorContent = doc.body.innerHTML;
 	});
 	// mobile device content
-	$.get(TiDev.baseAdURL + TiDev.mobileDeviceAd[(TiDev.isCommunity==true)?0:1] , function(d)
+	$.get(TiDev.baseAdURL + TiDev.mobileDeviceAd[index] , function(d)
 	{
 		var parser = new DOMParser();
 		var doc = parser.parseFromString(d, "text/xml");
 		TiDev.mobileDeviceContent = doc.body.innerHTML;
 	});
 	// mobile package content
-	$.get(TiDev.baseAdURL + TiDev.mobilePackageAd[(TiDev.isCommunity==true)?0:1] , function(d)
+	$.get(TiDev.baseAdURL + TiDev.mobilePackageAd[index] , function(d)
 	{
 		var parser = new DOMParser();
 		var doc = parser.parseFromString(d, "text/xml");
 		TiDev.mobilePackageContent = doc.body.innerHTML;
 	});
 	// desktop launch content
-	$.get(TiDev.baseAdURL + TiDev.desktopLaunchAd[(TiDev.isCommunity==true)?0:1] , function(d)
+	$.get(TiDev.baseAdURL + TiDev.desktopLaunchAd[index] , function(d)
 	{
 		var parser = new DOMParser();
 		var doc = parser.parseFromString(d, "text/xml");
 		TiDev.desktopLaunchContent = doc.body.innerHTML;
 	});
 	// desktop package content
-	$.get(TiDev.baseAdURL + TiDev.desktopPackageAd[(TiDev.isCommunity==true)?0:1] , function(d)
+	$.get(TiDev.baseAdURL + TiDev.desktopPackageAd[index] , function(d)
 	{
 		var parser = new DOMParser();
 		var doc = parser.parseFromString(d, "text/xml");
 		TiDev.desktopPackageContent = doc.body.innerHTML;
 	});
 	// desktop links content
-	$.get(TiDev.baseAdURL + TiDev.desktopLinksAd[(TiDev.isCommunity==true)?0:1] , function(d)
+	$.get(TiDev.baseAdURL + TiDev.desktopLinksAd[index] , function(d)
 	{
 		var parser = new DOMParser();
 		var doc = parser.parseFromString(d, "text/xml");

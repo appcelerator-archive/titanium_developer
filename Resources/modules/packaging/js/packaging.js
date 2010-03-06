@@ -39,6 +39,58 @@ PackageProject.desktopAppLaunchDate = null;
 // number of concurrent worker threads to create
 PackageProject.worker_max = 5;
 
+PackageProject.adURL = 'http://www.appcelerator.com/banner/';
+PackageProject.mobileEmulatorAd = ['2.html?a=b','16.html?a=b'];
+PackageProject.mobileDeviceAd = ['3.html?a=b','17.html?a=b'];
+PackageProject.mobilePackageAd = ['4.html?a=b','18.html?a=b'];
+PackageProject.desktopLaunchAd = ['5.html?a=b','20.html?a=b'];
+PackageProject.desktopPackageAd = ['6.html?a=b','19.html?a=b'];
+PackageProject.desktopLinksAd = ['7.html?a=b','21.html?a=b'];
+
+// mobile emulator content
+$.get(PackageProject.adURL + PackageProject.mobileEmulatorAd[(TiDev.accountType=='community')?0:1] , function(d)
+{
+	var parser = new DOMParser();
+	var doc = parser.parseFromString(d, "text/xml");
+	PackageProject.mobileEmulatorContent = doc.body.innerHTML;
+});
+// mobile device content
+$.get(PackageProject.adURL + PackageProject.mobileDeviceAd[(TiDev.accountType=='community')?0:1] , function(d)
+{
+	var parser = new DOMParser();
+	var doc = parser.parseFromString(d, "text/xml");
+	PackageProject.mobileDeviceContent = doc.body.innerHTML;
+});
+// mobile package content
+$.get(PackageProject.adURL + PackageProject.mobilePackageAd[(TiDev.accountType=='community')?0:1] , function(d)
+{
+	var parser = new DOMParser();
+	var doc = parser.parseFromString(d, "text/xml");
+	PackageProject.mobilePackageContent = doc.body.innerHTML;
+});
+// desktop launch content
+$.get(PackageProject.adURL + PackageProject.desktopLaunchAd[(TiDev.accountType=='community')?0:1] , function(d)
+{
+	var parser = new DOMParser();
+	var doc = parser.parseFromString(d, "text/xml");
+	PackageProject.desktopLaunchContent = doc.body.innerHTML;
+});
+// desktop package content
+$.get(PackageProject.adURL + PackageProject.desktopPackageAd[(TiDev.accountType=='community')?0:1] , function(d)
+{
+	var parser = new DOMParser();
+	var doc = parser.parseFromString(d, "text/xml");
+	PackageProject.desktopPackageContent = doc.body.innerHTML;
+});
+// desktop links content
+$.get(PackageProject.adURL + PackageProject.desktopLinksAd[(TiDev.accountType=='community')?0:1] , function(d)
+{
+	var parser = new DOMParser();
+	var doc = parser.parseFromString(d, "text/xml");
+	PackageProject.desktopLinksContent = doc.body.innerHTML;
+});
+
+
 //
 // called by the worker thread when a job is complete
 //
@@ -182,7 +234,6 @@ $MQL('l:tidev.projects.row_selected',function(msg)
 		if (PackageProject.currentProject.type == 'mobile')
 		{
 			PackageProject.setupMobileView();
-			
 		}
 		else
 		{
@@ -515,6 +566,9 @@ PackageProject.setupMobileView = function()
 	PackageProject.iPhonePrereqPath = Titanium.Filesystem.getFile(sdk.getPath(),'iphone/prereq.py');
 	PackageProject.AndroidPrereqPath = Titanium.Filesystem.getFile(sdk.getPath(),'android/prereq.py');
 	PackageProject.AndroidAvdPath = Titanium.Filesystem.getFile(sdk.getPath(),'android/avd.py');
+
+	// initialize ad
+	$('#mobile_ads').html(PackageProject.mobileEmulatorContent);
 
 	
 	// show correct view
@@ -1150,7 +1204,21 @@ PackageProject.setupMobileView = function()
 				x.launch();
 			}
 		});
-		
+		$('#mobile_emulator').click(function()
+		{
+			$('#mobile_emulator_container').css('display','block');
+			$('#mobile_device_detail').css('display','none');	
+			$('#mobile_distribution_detail').css('display','none');	
+			$('#packaging .option').removeClass('active');
+			
+			$('#packaging .tab.emulator.active').click();
+			
+			$('#mobile_ads').html(PackageProject.mobileEmulatorContent);
+			
+			$(this).addClass('active');
+			
+		});
+
 		// handler iphone emulator start
 		$('#mobile_emulator_iphone').click(function()
 		{
@@ -1705,6 +1773,8 @@ PackageProject.setupMobileView = function()
 		$('#packaging .option').removeClass('active');
 		$(this).addClass('active');
 		
+		$("#mobile_ads").html(PackageProject.mobileDeviceContent)
+		
 		PackageProject.initializeConsoleWidth();
 	});
 	
@@ -1746,6 +1816,8 @@ PackageProject.setupMobileView = function()
 		// set classes
 		$('#packaging .option').removeClass('active');
 		$(this).addClass('active');
+		
+		$("#mobile_ads").html(PackageProject.mobilePackageContent)
 		
 		PackageProject.initializeConsoleWidth();
 	});
@@ -1983,6 +2055,15 @@ PackageProject.setupDesktopView = function()
 	// show correct view
 	$('#mobile_packaging').css('display','none');
 	$('#desktop_packaging').css('display','block');
+
+	// initialize launch view
+	$('#desktop_launch_viewer').css('height','347px');
+	$('#desktop_package_detail').css('height','420px');
+	$('#desktop_launch_detail').css('display','block');
+	$('#desktop_package_detail').css('marginLeft','-4px');
+
+	// setup desktop ad
+	$('#desktop_ads').html(PackageProject.desktopLaunchContent);
 	
 	// setup option handlers
 	$('.optiongroup').click(function()
@@ -2138,6 +2219,8 @@ PackageProject.setupDesktopView = function()
 		$('#desktop_packaging_overview').css('display','none');
 		$('#desktop_packaging_options').css('display','none');
 		$('#desktop_launch_detail').css('display','block');
+
+		$('#desktop_ads').html(PackageProject.desktopLaunchContent);
 		
 		PackageProject.initializeConsoleWidth();
 	});
@@ -2250,6 +2333,9 @@ PackageProject.setupDesktopView = function()
 		$('#desktop_package').removeClass('active');
 		$('#desktop_launch').removeClass('active');
 
+		$('#desktop_ads').html(PackageProject.desktopLinksContent);
+		
+		Links.setPageData();
 		PackageProject.initializeConsoleWidth();
 	});
 
@@ -2275,6 +2361,8 @@ PackageProject.setupDesktopView = function()
 		$('#desktop_help').removeClass('active');
 		$('#desktop_launch').removeClass('active');
 
+		$('#desktop_ads').html(PackageProject.desktopPackageContent);
+
 		PackageProject.initializeConsoleWidth();
 	});
 	
@@ -2291,9 +2379,22 @@ PackageProject.initializeConsoleWidth = function()
 	var windowHeight = Titanium.UI.currentWindow.getHeight();
 	var leftWidth = $('#tiui_content_left').width();
 	var rightWidth = windowWidth - leftWidth;	
-	var height = $("#tiui_content_right").height() - 160;
-	$('.debug_console').css('width',(rightWidth-250) + 'px').css('height',height + 'px');
-	$(".detail").css('height',(height+80)+'px');
+	var height = $("#tiui_content_right").height() - 170;
+
+	if (PackageProject.currentProject == null) return;
+	
+	// set container height
+	if (PackageProject.currentProject.type == 'mobile')
+	{
+		$(".detail").css('height',(height+94)+'px');
+		$('.debug_console').css('width',(rightWidth-320) + 'px').css('height',(height - 26) + 'px');
+	}
+	else
+	{
+		$(".detail").css('height',(height+79)+'px');
+		$('.debug_console').css('width',(rightWidth-320) + 'px').css('height',(height) + 'px');
+	}
+
 };
 
 // resize console when the window resizes

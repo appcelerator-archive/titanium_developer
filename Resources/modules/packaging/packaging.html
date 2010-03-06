@@ -737,9 +737,96 @@
 									</select>
 								</div>
 								
-								<!-- START BUTTON -->
-								<div id="iphone_launch_button" 
-									style="width:120px;margin-top:20px;float:left;margin-left:10px">
+								<!-- ANDROID EMULATOR -->
+								<div id="mobile_android_emulator_container" style="display:none;">
+									<div id="mobile_android_emulator_viewer" class="debug_console"></div>
+
+									<!--EMULATOR SDK VERSION -->
+									<div style="float:left;margin-top:20px" id="android_emulator_sdk_container">
+										<span class="help_text">
+											 SDK:
+										</span>
+										<select style="width:59px" id="android_emulator_sdk"> 			
+											<option id="">loading...</option>
+										</select>
+									</div>
+
+									<!--EMULATOR SKIN -->
+									<div style="float:left;margin-top:20px;margin-left:10px"
+										id="android_emulator_skins_container">
+										<span class="help_text" >Screen:</span>
+										<select style="width:78px" id="android_emulator_skins"> 			
+											<option id="">loading...</option>
+										</select>
+									</div>
+									<!-- FILTER LEVEL -->
+									<div style="margin-left:10px;margin-right:10px;float:left;">
+										<span class="help_text" >Filter:</span>
+										<select style="width:50px;margin-top:20px;" id="android_log_filter">
+											<option value="trace">Trace</option>
+											<option value="debug">Debug</option>
+											<option value="info" selected>Info</option>
+											<option value="warn">Warn</option>
+											<option value="error">Error</option>
+										</select>
+									</div>
+
+									<!-- START BUTTON -->
+									<div id="android_launch_button" style="width:70px;margin-top:20px;float:left">
+										Launch
+									</div> 
+
+									<!-- KILL -->
+									<div id="android_kill_button" 
+										style="width:70px;margin-top:20px;float:left;margin-left:10px">
+										Stop 
+									</div> 
+
+								</div>
+
+							</div>
+						</div>
+
+					</td>
+					<!-- MOBILE ADS -->
+					<td valign="top" width="30%" style="padding:0px">
+						<div style="background-color:#1e1e1e">
+							<div id="mobile_ads" style="height:450px;width:200px;margin-left:15px"></div>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		
+		<!-- DESKTOP PACKAGING OPTIONS -->
+		<div id="desktop_packaging" style="display:none">
+
+			<table width="100%" border="0">
+				<tr>
+					<td valign="top" width="70%">
+						<div class="option active" id="desktop_launch" style="margin-left:20px">
+							<img src="images/emulator.png"/>
+							<span class="title">Launch</span>
+						</div>
+						<div class="option" id="desktop_package">
+							<img src="images/packaging.png"/>
+							<span class="title">Package</span>
+						</div>
+
+						<div class="option" id="desktop_links">
+							<img src="images/links.png"/>
+							<span class="title" style="position:relative;top:4px">Links</span>
+						</div>
+
+						<div class="detail" id="desktop_package_detail" 
+							style="display:block;margin-left:-4px;heigth:420px;width:auto">
+							<!-- DEBUG OUTPUT -->
+							<div id="desktop_launch_detail" style="display:none;">
+								<div id="desktop_launch_viewer" class="debug_console"></div>
+
+								<!-- LAUNCH BUTTON -->
+								<div id="launch_app_button" 
+									style="width:120px;margin-top:16px;float:left">
 									Launch App
 								</div> 
 								
@@ -809,6 +896,12 @@
 
 						</div>
 						
+					</td>
+					<!-- DESKTOP ADS -->
+					<td valign="top" width="30%">
+						<div style="background-color:#1e1e1e">
+							<div id="desktop_ads" style="height:450px;width:200px;margin-left:15px"></div>
+						</div>
 					</td>
 				</tr>
 			</table>

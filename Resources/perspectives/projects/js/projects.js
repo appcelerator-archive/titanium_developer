@@ -47,6 +47,18 @@ Projects.needLogin = false;
 Projects.facebookAppId = "9494e611f2a93b8d7bfcdfa8cefdaf9f";
 Projects.facebookSession = null;
 
+// setup ads for new project
+Projects.newProjectAdPages = ['1.html?a=b','15.html?a=b'];
+Projects.newProjectAdURL = 'http://www.appcelerator.com/banner/' + ((TiDev.accountType == 'community')?Projects.newProjectAdPages[0]:Projects.newProjectAdPages[1]);
+
+$.get(Projects.newProjectAdURL, function(d)
+{
+	var parser = new DOMParser();
+	var doc = parser.parseFromString(d, "text/xml");
+	Projects.newProjectAdContent = doc.body.innerHTML;
+})
+
+
 //
 //  Set the active project index and update the database.
 //
@@ -533,7 +545,7 @@ Projects.showLogin = function()
 //
 //  Initialize UI
 //
-Projects.setupView = function()
+Projects.setupView = function(options)
 {
 	TiUI.setBackgroundColor('#1c1c1c');
 	// see if user has registered
@@ -605,7 +617,7 @@ Projects.setupView = function()
 		}
 		else
 		{
-			Projects.showAuthenticatedView();
+			Projects.showAuthenticatedView(options);
 		}
 	}
 	catch (e)
@@ -614,27 +626,13 @@ Projects.setupView = function()
 	}
 };
 
-Projects.welcomeScreenShown = false;
-
-Projects.loadVideoWindow = function()
-{
-	var win = Titanium.UI.createWindow({
-		url:'app://welcome/welcome.html',
-		width:950,
-		height:580,
-		resizable:false,
-		maximizable:false,
-		minimizable:false,
-		closeable:false
-	});
-	win.open();
-};
 
 //
 //  Show authenticated view
 //
-Projects.showAuthenticatedView = function()
+Projects.showAuthenticatedView = function(options)
 {
+	
 	// set default UI state
 	TiDev.contentLeftShowButton.hide();
 	TiDev.contentLeftHideButton.show();
@@ -646,45 +644,6 @@ Projects.showAuthenticatedView = function()
 	{
 		Projects.initDB();
 	}
-	
-	// var show = true;
-	// 
-	// if (!Projects.welcomeScreenShown)
-	// {
-	// 	var found = false;
-	// 	try
-	// 	{
-	// 		var rs = TiDev.db.execute("select SHOW from WELCOME");
-	// 		while (rs.isValidRow())
-	// 		{
-	// 			show = rs.field(0);
-	// 			found = true;
-	// 			break;
-	// 		}
-	// 		rs.close();
-	// 
-	// 	}
-	// 	catch(e)
-	// 	{
-	// 		TiDev.db.execute('CREATE TABLE IF NOT EXISTS WELCOME (SHOW INT)');
-	// 	}
-	// 
-	// 	Projects.welcomeScreenShown=true;
-	// 
-	// 	if (!found)
-	// 	{
-	// 		TiDev.db.execute('insert into WELCOME values (1)');
-	// 	}
-	// }
-	// else
-	// {
-	// 	show=false;
-	// }
-	// 
-	// if (show)
-	// {
-	// 	Projects.loadVideoWindow();
-	// }
 	
 	// show no project view
 	if (Projects.projectList.length == 0)
@@ -737,10 +696,12 @@ Projects.showAuthenticatedView = function()
 		// if we have projects and no tab is selected, select edit
 		if (TiDev.subtabs.activeIndex = -1)
 		{
-			//Projects.selectInitialTab = true;
-
+			if (options.showEditTab==true)
+			{
+				TiDev.subtabChange(1);
+			}
 			// if all modules are loaded, select first tab
-			if (Projects.modulesLoaded == true)
+			else if (Projects.modulesLoaded == true)
 			{
 				TiDev.subtabChange(0);
 			}
@@ -1144,6 +1105,9 @@ Projects.handleNewProjectClick = function()
 	
 	var file = Titanium.Filesystem.getFile(Titanium.App.appURLToPath('perspectives/projects/new_project.html'));
 	$('#tiui_content_right').get(0).innerHTML = file.read();
+
+	// setup ads
+	$('#new_project_ads').html(Projects.newProjectAdContent);
 
 	// see if we have a mobile sdk
 	var sdks = Titanium.Project.getMobileSDKVersions();
@@ -1846,7 +1810,7 @@ Projects.createProject = function(options, createProjectFiles)
 		{
 			TiDev.perspectiveChange(0);
 		}
-		Projects.setupView();
+		Projects.setupView({showEditTab:true});
 		return result;
 
 	};

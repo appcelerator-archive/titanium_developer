@@ -1,3 +1,10 @@
+Titanium.App.getStreamURL = function(name)
+{
+	return 'https://api.appcelerator.net/d/v1/' + name;
+};
+
+
+
 // define global object
 TiDev = {};
 
@@ -36,6 +43,9 @@ TiDev.permissions = {}
 
 // user attributes
 TiDev.attributes = {};
+
+// account type
+TiDev.accountType = 'community'; 
 
 //
 // Helper function for loading module and perspective JS and CSS

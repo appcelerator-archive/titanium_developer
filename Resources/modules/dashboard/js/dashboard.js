@@ -1,27 +1,23 @@
 Dashboard = {};
-Dashboard.pages = ['23.html','25.html'];
-Dashboard.url = 'http://www.appcelerator.com/banner/' + ((TiDev.accountType == 'community')?Dashboard.pages[0]:Dashboard.pages[1]);
-Dashboard.content = null;
 
 // setup event handler
 Dashboard.eventHandler = function(event)
 {
+	if (!TiDev.dashboardAdContent)
+	{
+		TiDev.setDashboardContent = true;
+		return;
+	}
 	if (event == 'focus')
 	{
-		$('#dashboard').html(Dashboard.content);
+		$('#dashboard').html(TiDev.dashboardAdContent);
 	}
 	else if (event == 'load')
 	{
-		$('#dashboard').html(Dashboard.content);
+		$('#dashboard').html(TiDev.dashboardAdContent);
 	}
 };
 
-$.get(Dashboard.url, function(d)
-{
-	var parser = new DOMParser();
-	var doc = parser.parseFromString(d, "text/xml");
-	Dashboard.content = doc.body.innerHTML;
-});
 
 
 // register module

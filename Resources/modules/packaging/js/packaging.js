@@ -41,57 +41,6 @@ PackageProject.desktopAppLaunchDate = null;
 // number of concurrent worker threads to create
 PackageProject.worker_max = 5;
 
-PackageProject.adURL = 'http://www.appcelerator.com/banner/';
-PackageProject.mobileEmulatorAd = ['2.html?a=b','16.html?a=b'];
-PackageProject.mobileDeviceAd = ['3.html?a=b','17.html?a=b'];
-PackageProject.mobilePackageAd = ['4.html?a=b','18.html?a=b'];
-PackageProject.desktopLaunchAd = ['5.html?a=b','20.html?a=b'];
-PackageProject.desktopPackageAd = ['6.html?a=b','19.html?a=b'];
-PackageProject.desktopLinksAd = ['7.html?a=b','21.html?a=b'];
-
-// mobile emulator content
-$.get(PackageProject.adURL + PackageProject.mobileEmulatorAd[(TiDev.accountType=='community')?0:1] , function(d)
-{
-	var parser = new DOMParser();
-	var doc = parser.parseFromString(d, "text/xml");
-	PackageProject.mobileEmulatorContent = doc.body.innerHTML;
-});
-// mobile device content
-$.get(PackageProject.adURL + PackageProject.mobileDeviceAd[(TiDev.accountType=='community')?0:1] , function(d)
-{
-	var parser = new DOMParser();
-	var doc = parser.parseFromString(d, "text/xml");
-	PackageProject.mobileDeviceContent = doc.body.innerHTML;
-});
-// mobile package content
-$.get(PackageProject.adURL + PackageProject.mobilePackageAd[(TiDev.accountType=='community')?0:1] , function(d)
-{
-	var parser = new DOMParser();
-	var doc = parser.parseFromString(d, "text/xml");
-	PackageProject.mobilePackageContent = doc.body.innerHTML;
-});
-// desktop launch content
-$.get(PackageProject.adURL + PackageProject.desktopLaunchAd[(TiDev.accountType=='community')?0:1] , function(d)
-{
-	var parser = new DOMParser();
-	var doc = parser.parseFromString(d, "text/xml");
-	PackageProject.desktopLaunchContent = doc.body.innerHTML;
-});
-// desktop package content
-$.get(PackageProject.adURL + PackageProject.desktopPackageAd[(TiDev.accountType=='community')?0:1] , function(d)
-{
-	var parser = new DOMParser();
-	var doc = parser.parseFromString(d, "text/xml");
-	PackageProject.desktopPackageContent = doc.body.innerHTML;
-});
-// desktop links content
-$.get(PackageProject.adURL + PackageProject.desktopLinksAd[(TiDev.accountType=='community')?0:1] , function(d)
-{
-	var parser = new DOMParser();
-	var doc = parser.parseFromString(d, "text/xml");
-	PackageProject.desktopLinksContent = doc.body.innerHTML;
-});
-
 
 //
 // called by the worker thread when a job is complete
@@ -307,6 +256,7 @@ PackageProject.mobileCompile = function(dir,platform,callback)
 //
 PackageProject.setupView = function()
 {
+
 	TiUI.setBackgroundColor('#1c1c1c');
 
 	TiDev.contentLeft.show();
@@ -571,7 +521,7 @@ PackageProject.setupMobileView = function()
 	PackageProject.AndroidAvdPath = Titanium.Filesystem.getFile(sdk.getPath(),'android/avd.py');
 
 	// initialize ad
-	$('#mobile_ads').html(PackageProject.mobileEmulatorContent);
+	$('#mobile_ads').html(TiDev.mobileEmulatorContent);
 
 	
 	// show correct view
@@ -1239,7 +1189,7 @@ PackageProject.setupMobileView = function()
 			
 			$('#packaging .tab.emulator.active').click();
 			
-			$('#mobile_ads').html(PackageProject.mobileEmulatorContent);
+			$('#mobile_ads').html(TiDev.mobileEmulatorContent);
 			
 			$(this).addClass('active');
 			
@@ -1817,7 +1767,7 @@ PackageProject.setupMobileView = function()
 		$('#packaging .option').removeClass('active');
 		$(this).addClass('active');
 		
-		$("#mobile_ads").html(PackageProject.mobileDeviceContent)
+		$("#mobile_ads").html(TiDev.mobileDeviceContent)
 		
 		PackageProject.initializeConsoleWidth();
 	});
@@ -1841,7 +1791,7 @@ PackageProject.setupMobileView = function()
 		$('#packaging .option').removeClass('active');
 		$(this).addClass('active');
 		
-		$("#mobile_ads").html(PackageProject.mobilePackageContent)
+		$("#mobile_ads").html(TiDev.mobilePackageContent)
 		
 		PackageProject.initializeConsoleWidth();
 	});
@@ -2088,7 +2038,7 @@ PackageProject.setupDesktopView = function()
 	$('#desktop_package_detail').css('marginLeft','-4px');
 
 	// setup desktop ad
-	$('#desktop_ads').html(PackageProject.desktopLaunchContent);
+	$('#desktop_ads').html(TiDev.desktopLaunchContent);
 	
 	// setup option handlers
 	$('.optiongroup').click(function()
@@ -2236,7 +2186,7 @@ PackageProject.setupDesktopView = function()
 		$('#desktop_links_detail').css('display','none');
 		$('#desktop_launch_detail').css('display','block');
 
-		$('#desktop_ads').html(PackageProject.desktopLaunchContent);
+		$('#desktop_ads').html(TiDev.desktopLaunchContent);
 		
 		PackageProject.initializeConsoleWidth();
 		
@@ -2341,7 +2291,7 @@ PackageProject.setupDesktopView = function()
 		$('#packaging .active').removeClass('active');
 		$(this).addClass('active');
 
-		$('#desktop_ads').html(PackageProject.desktopLinksContent);
+		$('#desktop_ads').html(TiDev.desktopLinksContent);
 		
 		Links.setPageData();
 		PackageProject.initializeConsoleWidth();
@@ -2365,7 +2315,7 @@ PackageProject.setupDesktopView = function()
 		$('#packaging .active').removeClass('active');
 		$(this).addClass('active');
 
-		$('#desktop_ads').html(PackageProject.desktopPackageContent);
+		$('#desktop_ads').html(TiDev.desktopPackageContent);
 
 		PackageProject.initializeConsoleWidth();
 

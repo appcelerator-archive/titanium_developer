@@ -45,7 +45,97 @@ TiDev.permissions = {}
 TiDev.attributes = {};
 
 // account type
-TiDev.accountType = 'community'; 
+TiDev.isCommunity = true; 
+
+TiDev.baseAdURL = 'http://www.appcelerator.com/banner/';
+TiDev.mobileEmulatorAd = ['2.html?a=b','16.html?a=b'];
+TiDev.mobileDeviceAd = ['3.html?a=b','17.html?a=b'];
+TiDev.mobilePackageAd = ['4.html?a=b','18.html?a=b'];
+TiDev.desktopLaunchAd = ['5.html?a=b','20.html?a=b'];
+TiDev.desktopPackageAd = ['6.html?a=b','19.html?a=b'];
+TiDev.desktopLinksAd = ['7.html?a=b','21.html?a=b'];
+TiDev.newProjectAd = ['1.html?a=b','15.html?a=b'];
+TiDev.dashboardAd = ['23.html','25.html'];
+
+TiDev.setDashboardContent = false;
+
+TiDev.setAdURLs = function()
+{
+	Titanium.API.info('dashboard URL ' + TiDev.baseAdURL + TiDev.dashboardAd[(TiDev.isCommunity==true)?0:1]);
+	Titanium.API.info('newProject URL ' + TiDev.baseAdURL + TiDev.newProjectAd[(TiDev.isCommunity==true)?0:1]);
+	Titanium.API.info('mobileEmulator URL ' + TiDev.baseAdURL + TiDev.mobileEmulatorAd[(TiDev.isCommunity==true)?0:1]);
+	Titanium.API.info('mobileDevice URL ' + TiDev.baseAdURL + TiDev.mobileDeviceAd[(TiDev.isCommunity==true)?0:1]);
+	Titanium.API.info('mobileDist URL ' + TiDev.baseAdURL + TiDev.mobilePackageAd[(TiDev.isCommunity==true)?0:1]);
+	Titanium.API.info('desktopLaunch URL ' + TiDev.baseAdURL + TiDev.desktopLaunchAd[(TiDev.isCommunity==true)?0:1]);
+	Titanium.API.info('desktopPackage URL ' + TiDev.baseAdURL + TiDev.desktopPackageAd[(TiDev.isCommunity==true)?0:1]);
+	Titanium.API.info('desktopLinks URL ' + TiDev.baseAdURL + TiDev.desktopLinksAd[(TiDev.isCommunity==true)?0:1]);
+	
+	// dashboard content
+	$.get(TiDev.baseAdURL + TiDev.dashboardAd[(TiDev.isCommunity==true)?0:1], function(d)
+	{
+		var parser = new DOMParser();
+		var doc = parser.parseFromString(d, "text/xml");
+		TiDev.dashboardAdContent = doc.body.innerHTML;
+		
+		if (TiDev.setDashboardContent==true)
+		{
+			TiDev.setDashboardContent = false;
+			$('#dashboard').html(TiDev.dashboardAdContent);
+		}
+	});
+
+	// new project content
+	$.get(TiDev.baseAdURL + TiDev.newProjectAd[(TiDev.isCommunity==true)?0:1], function(d)
+	{
+		var parser = new DOMParser();
+		var doc = parser.parseFromString(d, "text/xml");
+		TiDev.newProjectAdContent = doc.body.innerHTML;
+	});
+	 
+	// mobile emulator content
+	$.get(TiDev.baseAdURL + TiDev.mobileEmulatorAd[(TiDev.isCommunity==true)?0:1] , function(d)
+	{
+		var parser = new DOMParser();
+		var doc = parser.parseFromString(d, "text/xml");
+		TiDev.mobileEmulatorContent = doc.body.innerHTML;
+	});
+	// mobile device content
+	$.get(TiDev.baseAdURL + TiDev.mobileDeviceAd[(TiDev.isCommunity==true)?0:1] , function(d)
+	{
+		var parser = new DOMParser();
+		var doc = parser.parseFromString(d, "text/xml");
+		TiDev.mobileDeviceContent = doc.body.innerHTML;
+	});
+	// mobile package content
+	$.get(TiDev.baseAdURL + TiDev.mobilePackageAd[(TiDev.isCommunity==true)?0:1] , function(d)
+	{
+		var parser = new DOMParser();
+		var doc = parser.parseFromString(d, "text/xml");
+		TiDev.mobilePackageContent = doc.body.innerHTML;
+	});
+	// desktop launch content
+	$.get(TiDev.baseAdURL + TiDev.desktopLaunchAd[(TiDev.isCommunity==true)?0:1] , function(d)
+	{
+		var parser = new DOMParser();
+		var doc = parser.parseFromString(d, "text/xml");
+		TiDev.desktopLaunchContent = doc.body.innerHTML;
+	});
+	// desktop package content
+	$.get(TiDev.baseAdURL + TiDev.desktopPackageAd[(TiDev.isCommunity==true)?0:1] , function(d)
+	{
+		var parser = new DOMParser();
+		var doc = parser.parseFromString(d, "text/xml");
+		TiDev.desktopPackageContent = doc.body.innerHTML;
+	});
+	// desktop links content
+	$.get(TiDev.baseAdURL + TiDev.desktopLinksAd[(TiDev.isCommunity==true)?0:1] , function(d)
+	{
+		var parser = new DOMParser();
+		var doc = parser.parseFromString(d, "text/xml");
+		TiDev.desktopLinksContent = doc.body.innerHTML;
+	});
+	
+};
 
 //
 // Helper function for loading module and perspective JS and CSS
@@ -862,10 +952,6 @@ Titanium.Network.addConnectivityListener(function(online)
 //
 TiDev.invokeCloudService = function(name,data,type,sCallback,fCallback)
 {	
-	// TODONWW
-	$('#tiui_happy_on').css('display','none');
-	$('#tiui_happy_off').css('display','inline');
-	
 	// if offline, don't attempt
 	if (Titanium.Network.online == false)
 	{
@@ -1002,7 +1088,8 @@ TiDev.invokeCloudService = function(name,data,type,sCallback,fCallback)
 					Projects.userToken = resp.token;
 					Projects.userUID = resp.uid;
 					Projects.userUIDT = resp.uidt;
-					
+					TiDev.isCommunity = resp.community;
+					TiDev.setAdURLs();
 					TiDev.setPermissions(resp.permissions);
 					TiDev.attributes = resp.attributes;	
 					

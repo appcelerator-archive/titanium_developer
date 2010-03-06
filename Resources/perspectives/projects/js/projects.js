@@ -47,17 +47,6 @@ Projects.needLogin = false;
 Projects.facebookAppId = "9494e611f2a93b8d7bfcdfa8cefdaf9f";
 Projects.facebookSession = null;
 
-// setup ads for new project
-Projects.newProjectAdPages = ['1.html?a=b','15.html?a=b'];
-Projects.newProjectAdURL = 'http://www.appcelerator.com/banner/' + ((TiDev.accountType == 'community')?Projects.newProjectAdPages[0]:Projects.newProjectAdPages[1]);
-
-$.get(Projects.newProjectAdURL, function(d)
-{
-	var parser = new DOMParser();
-	var doc = parser.parseFromString(d, "text/xml");
-	Projects.newProjectAdContent = doc.body.innerHTML;
-})
-
 
 //
 //  Set the active project index and update the database.
@@ -146,7 +135,6 @@ Projects.createUser = function()
 			Projects.userToken = resp.token;
 			Projects.userUID = resp.uid;
 			Projects.userUIDT = resp.uidt;
-
 			// create user record
 			try
 			{
@@ -388,7 +376,8 @@ Projects.showLogin = function()
 				Projects.userToken = resp.token;
 				Projects.userUID = resp.uid;
 				Projects.userUIDT = resp.uidt;
-				
+				TiDev.isCommunity = resp.community;
+				TiDev.setAdURLs();
 				TiDev.setPermissions(resp.permissions);				
 				
 				// we have NO local data - so create record
@@ -548,6 +537,7 @@ Projects.showLogin = function()
 Projects.setupView = function(options)
 {
 	TiUI.setBackgroundColor('#1c1c1c');
+	
 	// see if user has registered
  	try
 	{
@@ -581,7 +571,8 @@ Projects.setupView = function(options)
 					Projects.userToken = resp.token;
 					Projects.userUID = resp.uid;
 					Projects.userUIDT = resp.uidt;
-
+					TiDev.isCommunity = resp.community;
+					TiDev.setAdURLs();
 					TiDev.setPermissions(resp.permissions);
 					
 					TiDev.attributes = resp.attributes;
@@ -1044,7 +1035,7 @@ Projects.handleNewProjectClick = function()
 	$('#tiui_content_right').get(0).innerHTML = file.read();
 
 	// setup ads
-	$('#new_project_ads').html(Projects.newProjectAdContent);
+	$('#new_project_ads').html(TiDev.newProjectAdContent);
 
 	// see if we have a mobile sdk
 	var sdks = Titanium.Project.getMobileSDKVersions();

@@ -622,7 +622,7 @@ Projects.setupView = function(options)
 	}
 	catch (e)
 	{
-		Projects.showLogin();
+		Projects.showLogin(options);
 	}
 };
 
@@ -650,22 +650,6 @@ Projects.showAuthenticatedView = function(options)
 	{
 		TiDev.contentLeft.setContent('<div class="parent">PROJECTS</div><div class="child"><div>No Projects</div></div>');
 
-		var file = Titanium.Filesystem.getFile(Titanium.App.appURLToPath('perspectives/projects/projects.html'));
-		$('#tiui_content_right').get(0).innerHTML = file.read();
-		$('#projects').css('display','block')	
-		
-		$('#import_project_button').click(function()
-		{
-			Projects.handleImportClick();
-		});
-		//
-		// New project click listener
-		//
-		$('#new_project_button_2').click(function()
-		{
-			Projects.handleNewProjectClick();
-		});
-		
 	}
 	
 	// show project view
@@ -674,7 +658,6 @@ Projects.showAuthenticatedView = function(options)
 		// set base UI stuff
 		$('#no_project_view').css('display','none');
 		TiDev.subtabs.show();			
-		TiDev.subtabs.setLeftPadding(200);
 
 		// remember the last project we selected
 		try
@@ -692,21 +675,22 @@ Projects.showAuthenticatedView = function(options)
 			TiDev.db.execute('CREATE TABLE IF NOT EXISTS PROJECT_VIEW (ACTIVE INT)');
 			TiDev.db.execute('insert into PROJECT_VIEW VALUES(0)');
 		}
-
 		// if we have projects and no tab is selected, select edit
-		if (TiDev.subtabs.activeIndex = -1)
+		if (TiDev.subtabs.activeIndex == -1)
 		{
-			if (options && options.showEditTab==true)
+			if (options && options.showEditProjectTab == true)
 			{
 				TiDev.subtabChange(1);
 			}
-			// if all modules are loaded, select first tab
-			else if (Projects.modulesLoaded == true)
+			else
 			{
-				TiDev.subtabChange(0);
+				if (Projects.modulesLoaded == true)
+				{
+					TiDev.subtabChange(0);
+				}
 			}
 		}
-		
+
 		// paint tree
 		var html = '<div class="parent">PROJECTS</div>';
 		for (var i=0;i<Projects.projectList.length;i++)
@@ -717,6 +701,7 @@ Projects.showAuthenticatedView = function(options)
 			{
 				classes += 'active';
 			}
+
 			html += '<div class="'+classes+'" project_id="'+Projects.projectList[i].id+'">';
 			html += '<div>' + Projects.projectList[i].name + '</div></div>';
 		}
@@ -747,7 +732,6 @@ Projects.showAuthenticatedView = function(options)
 	
 };
 
-
 //
 // Handle UI events
 //
@@ -760,7 +744,6 @@ Projects.eventHandler = function(event)
 	else if (event == 'focus')
 	{
 		Projects.setupView();
-		TiDev.subtabs.setLeftPadding(200);
 	}
 }
 
@@ -1764,7 +1747,7 @@ Projects.createProject = function(options, createProjectFiles)
 		{
 			TiDev.perspectiveChange(0);
 		}
-		Projects.setupView({showEditTab:true});
+		Projects.setupView({showEditProjectTab:true});
 		return result;
 
 	};

@@ -21,7 +21,7 @@ $.get(Dashboard.url, function(d)
 	var parser = new DOMParser();
 	var doc = parser.parseFromString(d, "text/xml");
 	Dashboard.content = doc.body.innerHTML;
-})
+});
 
 
 // register module

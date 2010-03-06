@@ -206,6 +206,7 @@ EditProject.setupView = function()
 				Projects.projectList = a;
 
 				// resetView
+				TiDev.subtabs.activeIndex = 1;
 				Projects.setupView();
 
 				Links.deletePackagesForGUID(EditProject.currentProject.guid);
@@ -459,14 +460,11 @@ EditProject.eventHandler = function(event)
 	if (event == 'focus')
 	{
 		EditProject.setupView();
+
 	}
 	else if (event == 'load')
 	{
 		EditProject.setupView();
-	}
-	else
-	{
-		
 	}
 };
 

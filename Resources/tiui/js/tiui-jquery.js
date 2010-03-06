@@ -600,8 +600,9 @@ TiUI.ContentLeft = function()
 	//
 	this.hide = function(animate)
 	{
-		$('.tiui-tree .body').css('display','none');
-
+		//$('.tiui-tree .body').css('display','none');
+		$('#tiui_content_left_body').css('display','none');
+		
 		if (animate ==true)
 		{
 			// animate
@@ -626,14 +627,18 @@ TiUI.ContentLeft = function()
 			$('#tiui_content_right').animate({width:'80%'});
 			$('#tiui_content_left').animate({width:'20%'},function()
 			{
-				$('.tiui-tree .body').css('display','block');
+//				$('.tiui-tree .body').css('display','block');
+				$('#tiui_content_left_body').css('display','block');
+				
 			})
 		}
 		else
 		{
 			$('#tiui_content_right').css('width','80%');
 			$('#tiui_content_left').css('width','20%')			
-			$('.tiui-tree .body').css('display','block');
+//			$('.tiui-tree .body').css('display','block');
+			$('#tiui_content_left_body').css('display','block');
+			
 		}
 		$('#tiui_content_left_body').css('borderRight','1px solid #404040');
 

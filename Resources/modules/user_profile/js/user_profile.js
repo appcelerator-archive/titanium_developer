@@ -314,6 +314,7 @@ UserProfile.eventHandler = function(event)
 	{
 		UserProfile.setupView();
 	}
+	
 };
 
 // register module

@@ -14,6 +14,8 @@ PackageProject.iPhoneDevPrereqs = {};
 //Android vars
 PackageProject.androidSDKs = [];
 
+PackageProject.inConsoleMode = true;
+
 // Mobile Script vars
 PackageProject.iPhoneEmulatorPath = null;
 PackageProject.AndroidEmulatorPath = null;
@@ -239,6 +241,7 @@ $MQL('l:tidev.projects.row_selected',function(msg)
 		{
 			PackageProject.setupDesktopView();
 		}
+		PackageProject.initializeConsoleWidth()
 	}
 });
 
@@ -574,6 +577,29 @@ PackageProject.setupMobileView = function()
 	// show correct view
 	$('#mobile_packaging').css('display','block');
 	$('#desktop_packaging').css('display','none');
+	$('#mobile_emulator_container').css('display','block');
+	$('#mobile_device_detail').css('display','none');	
+	$('#mobile_distribution_detail').css('display','none');	
+	$('#packaging .tab.emulator.active').click();
+	
+
+	// setup tabs for "emulator"
+	$('#tab_iphone_emulator').click(function()
+	{
+		$('.help_header.tab.emulator').removeClass('active');
+		$(this).addClass('active');
+		$('#mobile_iphone_emulator_container').css('display','block');
+		$('#mobile_android_emulator_container').css('display','none');
+		PackageProject.initializeConsoleWidth();
+	});
+	$('#tab_android_emulator').click(function()
+	{
+		$('.help_header.tab.emulator').removeClass('active')
+		$(this).addClass('active')
+		$('#mobile_iphone_emulator_container').css('display','none');
+		$('#mobile_android_emulator_container').css('display','block');
+		PackageProject.initializeConsoleWidth();
+	});
 	
 	// setup tabs for "device"
 	$('#tab_iphone_dev').click(function()
@@ -1222,25 +1248,27 @@ PackageProject.setupMobileView = function()
 		// handler iphone emulator start
 		$('#mobile_emulator_iphone').click(function()
 		{
+			PackageProject.inConsoleMode = true;
+
 			// set height
-			$('#mobile_iphone_emulator_viewer').css('height','347x');
+			$('#mobile_iphone_emulator_viewer').css('height','315px');
 			$('#mobile_package_detail').css('height','427px');
 
 			// set margin
-			$('#mobile_package_detail').css('marginLeft','-280px');
+			$('#mobile_package_detail').css('marginLeft','-4px');
 
 			// set width
 			$('#mobile_package_detail').css('width','auto');
 
 
-			$('#packaging .option').removeClass('active');
+			$('#packaging .tab.emulator').removeClass('active');
 			$(this).addClass('active');
 			
 			$('#mobile_android_emulator_container').css('display','none');	
 			$('#mobile_iphone_emulator_container').css('display','block');
 			$('#mobile_device_detail').css('display','none');	
 			$('#mobile_distribution_detail').css('display','none');	
-			$('#mobile_help_detail').css('display','none');
+
 
 			PackageProject.initializeConsoleWidth();
 		});
@@ -1257,6 +1285,8 @@ PackageProject.setupMobileView = function()
 			
 			// clear viewer
 			$('#mobile_iphone_emulator_viewer').empty();
+
+			PackageProject.inConsoleMode = true;
 			
 			var sdk = $('#iphone_emulator_sdk').val();
 			Titanium.Analytics.featureEvent('iphone.simulator',{sdk:sdk,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name,guid:PackageProject.currentProject.guid});
@@ -1295,11 +1325,6 @@ PackageProject.setupMobileView = function()
 		// show emulator tab and configure listeners
 		$('#mobile_emulator_iphone').css('display','block');
 
-		//TiUI.GreyButton({id:'iphone_clear_button'});
-		// $('#iphone_clear_button').click(function()
-		// {
-		// 	$('#mobile_iphone_emulator_viewer').empty();
-		// });
 
 		$('#iphone_kill_button').click(function()
 		{
@@ -1315,11 +1340,16 @@ PackageProject.setupMobileView = function()
 			}
 		});
 		
+		// initialize tab
+		$('#mobile_emulator_iphone').click();
+		
 	}
 	else
 	{
 		// otherwise setup non-iphone state
 		$('#mobile_emulator_iphone').css('display','none');
+		$('#mobile_emulator_iphone').removeClass('active');
+	
 		$('.project_has_iphone_true').css('display','none');
 		$('.project_has_iphone_false').css('display','block');
 
@@ -1337,6 +1367,7 @@ PackageProject.setupMobileView = function()
 				return;
 			}
 		}
+		
 		var avdPath = Titanium.Filesystem.getFile(PackageProject.AndroidAvdPath);
 		
 		// if we have the avd script then show fields and get version info
@@ -1374,15 +1405,18 @@ PackageProject.setupMobileView = function()
 					}
 					for (var i=0;i<PackageProject.androidSDKs.length;i++)
 					{
+						var name = PackageProject.androidSDKs[i].name.replace('Android','');
+						name = name.replace('Google','');
+
 						if (selVer != null && selVer == PackageProject.androidSDKs[i].id)
 						{
 							versions += '<option value="'+PackageProject.androidSDKs[i].id+'" selected>'
-								+PackageProject.androidSDKs[i].name + '</option>';
+								+name + '</option>';
 						}
 						else
 						{
 							versions += '<option value="'+PackageProject.androidSDKs[i].id+'">'
-								+PackageProject.androidSDKs[i].name + '</option>';						
+								+name+ '</option>';						
 						}
 					}
 
@@ -1588,12 +1622,14 @@ PackageProject.setupMobileView = function()
 		// handle android emulator start
 		$('#mobile_emulator_android').click(function()
 		{
+			PackageProject.inConsoleMode = true;
+
 			// set height
-			$('#mobile_android_emulator_viewer').css('height','347px');
+			$('#mobile_android_emulator_viewer').css('height','315px');
 			$('#mobile_package_detail').css('height','427px');
 
 			// set margin
-			$('#mobile_package_detail').css('marginLeft','-280px');
+			$('#mobile_package_detail').css('marginLeft','-4px');
 
 			// set width
 			$('#mobile_package_detail').css('width','auto');
@@ -1601,7 +1637,7 @@ PackageProject.setupMobileView = function()
 			// clear viewer
 			$('#mobile_android_emulator_viewer').empty();
 
-			$('#packaging .option').removeClass('active');
+			$('#packaging .tab.emulator').removeClass('active');
 			$(this).addClass('active');
 
 			$('#mobile_iphone_emulator_container').css('display','none');
@@ -1655,6 +1691,8 @@ PackageProject.setupMobileView = function()
 			Titanium.Analytics.featureEvent('android.simulator',{name:PackageProject.currentProject.name,appid:PackageProject.currentProject.appid,guid:PackageProject.currentProject.guid});
 			
 			$('#android_kill_button').removeClass('disabled');
+
+			PackageProject.inConsoleMode = true;
 			
 			$('#mobile_android_emulator_viewer').empty();
 			
@@ -1743,6 +1781,13 @@ PackageProject.setupMobileView = function()
 			
 		});
 		
+		// initialize tab
+		if ($('.project_has_iphone_true').css('display') == 'none')
+		{
+			$('#mobile_emulator_android').click();
+		}
+		
+		
 	}
 	else
 	{
@@ -1758,15 +1803,14 @@ PackageProject.setupMobileView = function()
 	// handle install on device click
 	$('#mobile_device').click(function()
 	{
+		PackageProject.inConsoleMode = false;
+
 		// show right view
-		$('#mobile_iphone_emulator_container').css('display','none');
-		$('#mobile_android_emulator_container').css('display','none');
+		$('#mobile_emulator_container').css('display','none');
 		$('#mobile_distribution_detail').css('display','none');	
-		$('#mobile_help_detail').css('display','none');
 		$('#mobile_device_detail').css('display','block');	
 
-		$('#mobile_package_detail').css('height','427px');
-		$('#mobile_package_detail').css('marginLeft','-280px');
+		$('#mobile_package_detail').css('marginLeft','-4px');
 		$('#mobile_package_detail').css('width','auto');
 		
 		// set classes
@@ -1778,39 +1822,19 @@ PackageProject.setupMobileView = function()
 		PackageProject.initializeConsoleWidth();
 	});
 	
-	// mobile help tab
-	$('#mobile_help').click(function()
-	{
-		// show right view
-		$('#mobile_iphone_emulator_container').css('display','none');
-		$('#mobile_android_emulator_container').css('display','none');
-		$('#mobile_device_detail').css('display','none');	
-		$('#mobile_distribution_detail').css('display','none');	
-		$('#mobile_help_detail').css('display','block');
-		
-		$('#mobile_package_detail').css('height','428px');
-		$('#mobile_package_detail').css('marginLeft','-21px');
-		$('#mobile_package_detail').css('width','auto');
-		
-		// set classes
-		$('#packaging .option').removeClass('active');
-		$(this).addClass('active');
-		
-		PackageProject.initializeConsoleWidth();
-	});
+
 	
 	// handle install on device click
 	$('#mobile_package').click(function()
 	{
+		PackageProject.inConsoleMode = false;
+		
 		// show right view
-		$('#mobile_iphone_emulator_container').css('display','none');
-		$('#mobile_android_emulator_container').css('display','none');
+		$('#mobile_emulator_container').css('display','none');
 		$('#mobile_device_detail').css('display','none');	
 		$('#mobile_distribution_detail').css('display','block');	
-		$('#mobile_help_detail').css('display','none');
 		
-		$('#mobile_package_detail').css('height','450px');
-		$('#mobile_package_detail').css('marginLeft','-280px');
+		$('#mobile_package_detail').css('marginLeft','-4px');
 		$('#mobile_package_detail').css('width','auto');
 		
 		// set classes
@@ -1823,6 +1847,7 @@ PackageProject.setupMobileView = function()
 	});
 	
 };
+
 
 //
 // check iphone dev prereqs - enable/disable button based on this
@@ -2127,17 +2152,10 @@ PackageProject.setupDesktopView = function()
 	
 	// setup buttons
 	TiUI.GreyButton({id:'launch_kill_button'});
-	TiUI.GreyButton({id:'launch_kill_button'});
 	TiUI.GreyButton({id:'launch_app_button'});
 
 	TiUI.GreyButton({id:'desktop_package_button'});
 
-	// setup button listeners
-	// TiUI.GreyButton({id:'launch_clear_button'});
-	// $('#launch_clear_button').click(function()
-	// {
-	// 	$('#desktop_launch_viewer').empty();
-	// });
 
 	$('#launch_kill_button').click(function()
 	{
@@ -2174,7 +2192,7 @@ PackageProject.setupDesktopView = function()
 		$(this).addClass('disabled');
 		
 		// set margin
-		$('#desktop_package_detail').css('marginLeft','-21px');
+//		$('#desktop_package_detail').css('marginLeft','-21px');
 
 		// write out manifest
 		Titanium.Project.writeManifest(PackageProject.currentProject);
@@ -2202,27 +2220,26 @@ PackageProject.setupDesktopView = function()
 	{
 		// set height
 		$('#desktop_launch_viewer').css('height','347px');
-		$('#desktop_package_detail').css('height','427px');
+		$('#desktop_package_detail').css('height','420px');
 
 		// set margin
-		$('#desktop_package_detail').css('marginLeft','-280px');
+		$('#desktop_package_detail').css('marginLeft','-4px');
 
-		// set width
-		$('#desktop_package_detail').css('width','auto');
+		PackageProject.inConsoleMode = true;
 
 		// set classes
+		$('#packaging .active').removeClass('active');
 		$(this).addClass('active');
-		$('#desktop_package').removeClass('active');
-		$('#desktop_help').removeClass('active');
 
 		// set display
-		$('#desktop_packaging_overview').css('display','none');
 		$('#desktop_packaging_options').css('display','none');
+		$('#desktop_links_detail').css('display','none');
 		$('#desktop_launch_detail').css('display','block');
 
 		$('#desktop_ads').html(PackageProject.desktopLaunchContent);
 		
 		PackageProject.initializeConsoleWidth();
+		
 	});
 	
 	//
@@ -2310,60 +2327,48 @@ PackageProject.setupDesktopView = function()
 		}
 		
 	});
-	
-	// setup desktop help handler
-	$('#desktop_help').click(function()
+	// setup desktop links handler
+	$('#desktop_links').click(function()
 	{
-		// set display
-		$('#desktop_packaging_overview').css('display','block');
 		$('#desktop_packaging_options').css('display','none');
 		$('#desktop_launch_detail').css('display','none');
+		$('#desktop_links_detail').css('display','block');
 
-		// set width
-		$('#desktop_package_detail').css('width','360px');
+		PackageProject.inConsoleMode = false;
 
-		// set margin
-		$('#desktop_package_detail').css('marginLeft','-21px');
-
-		// set height
-		$('#desktop_package_detail').css('height','410px');
-
+		
 		// set classes
+		$('#packaging .active').removeClass('active');
 		$(this).addClass('active');
-		$('#desktop_package').removeClass('active');
-		$('#desktop_launch').removeClass('active');
 
 		$('#desktop_ads').html(PackageProject.desktopLinksContent);
 		
 		Links.setPageData();
 		PackageProject.initializeConsoleWidth();
+	
 	});
 
 	// setup desktop package handler
 	$('#desktop_package').click(function()
 	{
 		// set display
-		$('#desktop_packaging_overview').css('display','none');
 		$('#desktop_packaging_options').css('display','block');
 		$('#desktop_launch_detail').css('display','none');
+		$('#desktop_links_detail').css('display','none');
 
-		// set width
-		$('#desktop_package_detail').css('width','300px');
-
-		// set margin
-		$('#desktop_package_detail').css('marginLeft','-21px');
+		PackageProject.inConsoleMode = false;
 		
-		// set height
-		$('#desktop_package_detail').css('height','340px');
-
+		// set margin
+		$('#desktop_package_detail').css('marginLeft','-4px');
+		
 		// set classes
+		$('#packaging .active').removeClass('active');
 		$(this).addClass('active');
-		$('#desktop_help').removeClass('active');
-		$('#desktop_launch').removeClass('active');
 
 		$('#desktop_ads').html(PackageProject.desktopPackageContent);
 
 		PackageProject.initializeConsoleWidth();
+
 	});
 	
 	
@@ -2380,8 +2385,6 @@ PackageProject.initializeConsoleWidth = function()
 	var leftWidth = $('#tiui_content_left').width();
 	var rightWidth = windowWidth - leftWidth;	
 	var height = $("#tiui_content_right").height() - 170;
-
-	if (PackageProject.currentProject == null) return;
 	
 	// set container height
 	if (PackageProject.currentProject.type == 'mobile')
@@ -2407,13 +2410,11 @@ PackageProject.eventHandler = function(event)
 	if (event == 'focus')
 	{
 		PackageProject.setupView();
+
 	}
 	else if (event == 'load')
 	{
 		PackageProject.setupView();
-	}
-	else if (event == 'blur')
-	{
 	}
 };
 
@@ -2696,7 +2697,8 @@ PackageProject.pollPackagingRequest = function(ticket,guid)
 			TiDev.setConsoleMessage('Packaging was successful!', 2000);	
 			
 			//show links subtab
-			TiDev.subtabChange(2);
+			//TiDev.subtabChange(2);
+			$('#desktop_links').click();
 			
 			// enable packaging button
 			$('#desktop_package_button').removeClass('disabled');
@@ -2741,3 +2743,178 @@ TiDev.registerModule({
 	idx:2,
 	callback:PackageProject.eventHandler
 });
+
+
+Links = {};
+Links.url = 'app-list';
+
+//
+// Setup row selection listener
+//
+$MQL('l:tidev.projects.row_selected',function(msg)
+{
+	if (msg.payload.activeTab == 'links' )
+	{
+		if (Projects.getProject().type !='mobile')
+		{
+			Links.setPageData();
+		}
+		else
+		{
+			TiDev.subtabChange(0);
+		}
+	}
+});
+
+Links.createPackagesTable = function()
+{
+	TiDev.db.execute('CREATE TABLE PROJECTPACKAGES (guid TEXT, label TEXT, url TEXT, platform TEXT, version TEXT, date TEXT,page_url TEXT)');
+};
+
+Links.deletePackagesForGUID = function(guid)
+{
+	try
+	{
+		TiDev.db.execute('DELETE from PROJECTPACKAGES WHERE guid = ?', guid);
+	}
+	catch (e)
+	{
+		Links.createPackagesTable();
+	}
+};
+
+Links.getPackagesForGUID = function(guid)
+{
+	var dbRows = null;
+	try
+	{
+		dbRows = TiDev.db.execute("SELECT url,page_url,label,platform,version,date from PROJECTPACKAGES WHERE guid = ?", guid);
+	}
+	catch (e)
+	{
+		Links.createPackagesTable();
+	}
+
+	return dbRows;
+};
+
+Links.addPackageToDatabase = function(guid, url, label, platform, version, lastUpdated, appPage)
+{
+	try
+	{
+		TiDev.db.execute("INSERT INTO PROJECTPACKAGES (guid,url,label,platform,version,date,page_url) values (?,?,?,?,?,?,?) ",
+			guid, url, label, platform, version, lastUpdated, appPage);
+	}
+	catch (e)
+	{
+		Links.createPackagesTable();
+		TiDev.db.execute("INSERT INTO PROJECTPACKAGES (guid,url,label,platform,version,date,page_url) values (?,?,?,?,?,?,?) ",
+			guid, url, label, platform, version, lastUpdated, appPage);
+	}
+};
+
+//
+// Set page data
+//
+Links.setPageData = function()
+{
+	// get current project
+	var p = Projects.getProject();
+
+	// declare vars
+	var linksArray = [];
+	var dbRows = {};
+	var appPage = null;
+	var lastUpdatedDate = null;
+
+	// get data in cache, create table if not exists
+	dbRows = Links.getPackagesForGUID(p.guid);
+
+	// get rows in db
+	while (dbRows !== null && dbRows.isValidRow())
+	{
+		appPage = dbRows.fieldByName('page_url');
+		lastUpdatedDate = dbRows.fieldByName('date');
+		var platform = dbRows.fieldByName('platform');
+		var url = dbRows.fieldByName('url');
+		var label = dbRows.fieldByName('label');
+
+		linksArray.push({url:url,label:label,platform:platform});
+		dbRows.next();
+	}
+
+	// now try to load remote stats
+	TiDev.invokeCloudService(Links.url,{guid:p.guid},'GET',function(data)
+	{
+		// if we have data, process
+		if (data.releases)
+		{
+			// get base data
+			linksArray = data.releases;
+			var releases = data.releases;
+			lastUpdatedDate = TiDev.formatPackagingDate(data.pubdate);
+			appPage = data.app_page;
+			
+			// delete current rows
+			Links.deletePackagesForGUID(p.guid);
+
+			// insert new rows
+			for (var i=0;i<releases.length;i++)
+			{
+				var r = releases[i]; 
+				Links.addPackageToDatabase(p.guid, r.url, r.label, r.platform, data.version, lastUpdatedDate, appPage);
+			}
+		}
+		loadData();
+		
+	},
+	function()
+	{
+		loadData();
+	}
+	);
+	
+	function loadData()
+	{
+		TiUI.setBackgroundColor('#1c1c1c');
+
+		// if we have data show it, otherwise show no data page
+		if (linksArray.length !== 0)
+		{
+			// set ui state
+			$('#links_view').css('display','block');
+			$('#no_links_view').css('display','none');
+
+			// public link
+			$('#public_links_anchor').get(0).href = appPage;
+			$('#public_links_anchor').html(appPage);
+
+			var html = '';
+			for (var i=0;i<linksArray.length;i++)
+			{
+				var classes = 'row  even';
+				// if (i%2===0)
+				// {
+				// 	classes += 'even';
+				// }
+				html += '<div class="'+classes+'">';
+				html += '<div class="platform"><img height="20" width="20" src="modules/packaging/images/' + linksArray[i].platform + '_small.png"/></div>';
+				html += '<div class="label">' + linksArray[i].label + '</div>';
+				html += '<div class="link"><a target="ti:systembrowser"  href="' + linksArray[i].url + '">'+linksArray[i].url+'</a></div>';	
+				html += '</div>';
+			}
+			$('#links_view_rows').html(html);
+			$('#links_date').html(lastUpdatedDate);
+		}
+		else
+		{
+			$('#links_view').css('display','none');
+			$('#no_links_view').css('display','block');
+
+		}
+	}
+	
+};
+
+
+

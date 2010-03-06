@@ -282,14 +282,15 @@ TiDev.perspectiveChange = function(idx)
 			TiDev.subtabChange(idx, true);
 		});	
 
-		// show subtabs	
-		TiDev.subtabs.show();
-
 	}
-	// otherwise hide subtabs
-	else
+	
+	if (TiDev.activePerspective.hideTabs == true)
 	{
 		TiDev.subtabs.hide();
+	}
+	else
+	{
+		TiDev.subtabs.show();
 	}
 
 	// show start page if exists
@@ -861,6 +862,10 @@ Titanium.Network.addConnectivityListener(function(online)
 //
 TiDev.invokeCloudService = function(name,data,type,sCallback,fCallback)
 {	
+	// TODONWW
+	$('#tiui_happy_on').css('display','none');
+	$('#tiui_happy_off').css('display','inline');
+	
 	// if offline, don't attempt
 	if (Titanium.Network.online == false)
 	{

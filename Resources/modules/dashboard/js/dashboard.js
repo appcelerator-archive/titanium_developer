@@ -3,19 +3,21 @@ Dashboard = {};
 // setup event handler
 Dashboard.eventHandler = function(event)
 {
-	if (!TiDev.dashboardAdContent)
+	if (!TiDev.dashboardAdContent && TiDev.isCommunity != null)
 	{
 		TiDev.setDashboardContent = true;
 		return;
 	}
-	if (event == 'focus')
+	else if (TiDev.isCommunity == null)
+	{
+		$('#dashboard_offline').css('display','block');
+		return;
+	}
+	if (event == 'focus' || event == 'load')
 	{
 		$('#dashboard').html(TiDev.dashboardAdContent);
 	}
-	else if (event == 'load')
-	{
-		$('#dashboard').html(TiDev.dashboardAdContent);
-	}
+
 };
 
 

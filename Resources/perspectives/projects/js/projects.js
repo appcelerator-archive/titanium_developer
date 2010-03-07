@@ -679,6 +679,10 @@ Projects.showAuthenticatedView = function(options)
 				{
 					TiDev.subtabChange(0);
 				}
+				else
+				{
+					Projects.selectInitialTab = true;
+				}
 			}
 		}
 		// paint tree

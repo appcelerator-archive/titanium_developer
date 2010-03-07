@@ -38,7 +38,7 @@ TiDev.permissions = {}
 TiDev.attributes = {};
 
 // account type
-TiDev.isCommunity = true; 
+TiDev.isCommunity = null; 
 
 TiDev.baseAdURL = 'http://www.appcelerator.com/banner/';
 TiDev.mobileEmulatorAd = ['2.html?a=b','16.html?a=b'];
@@ -54,7 +54,7 @@ TiDev.setDashboardContent = false;
 
 TiDev.setAdURLs = function()
 {
-	var index = (TiDev.isCommunity==true)?0:1;
+	var index = (TiDev.isCommunity===true || TiDev.isCommunity=="true")?0:1;
 
 	// dashboard content
 	$.get(TiDev.baseAdURL + TiDev.dashboardAd[index], function(d)
@@ -336,7 +336,6 @@ TiDev.perspectiveChange = function(idx)
 		{
 			Titanium.Analytics.navEvent(analytics_event_from, analytics_event_to);		
 		}
-
 		// add subtabs tabs
 		if (activeIdx != -1)
 		{
@@ -348,7 +347,8 @@ TiDev.perspectiveChange = function(idx)
 		else
 		{
 			TiDev.subtabs.configure({
-				tabs:subtabs
+				tabs:subtabs,
+				active:0
 			});
 		}
 

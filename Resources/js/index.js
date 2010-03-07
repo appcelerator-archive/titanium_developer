@@ -1,8 +1,3 @@
-// Titanium.App.getStreamURL = function(name)
-// {
-// 	return 'https://api.appcelerator.net/d/v1/' + name;
-// };
-
 // define global object
 TiDev = {};
 
@@ -59,8 +54,8 @@ TiDev.setDashboardContent = false;
 
 TiDev.setAdURLs = function()
 {
-	var index = (TiDev.isCommunity)?0:1;
-	
+	var index = (TiDev.isCommunity==true)?0:1;
+
 	// dashboard content
 	$.get(TiDev.baseAdURL + TiDev.dashboardAd[index], function(d)
 	{

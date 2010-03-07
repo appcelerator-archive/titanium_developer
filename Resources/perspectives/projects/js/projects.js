@@ -1147,7 +1147,7 @@ Projects.handleNewProjectClick = function()
 						// no 3.0 SDK
 						else if (e == 2)
 						{
-							alert('You must have iPhone SDK 2.2.1 or 3.0.');
+							alert('You must have iPhone SDK installed.  We cannot find it.');
 							TiDev.setConsoleMessage('Checking for Android prerequisites...');
 							checkAndroid();
 							

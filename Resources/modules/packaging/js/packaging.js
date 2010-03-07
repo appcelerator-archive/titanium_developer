@@ -2337,7 +2337,6 @@ PackageProject.initializeConsoleWidth = function()
 	var height = $("#tiui_content_right").height() - 170;
 	
 	if (PackageProject.currentProject==null)return;
-	
 	// set container height
 	if (PackageProject.currentProject.type == 'mobile')
 	{

@@ -1139,7 +1139,11 @@ PackageProject.setupMobileView = function()
 			var buffer = '';
 			x.setOnRead(function(event)
 			{
-				buffer += event.data.toString();
+				var row = event.data.toString();
+				if (row.indexOf('[ERROR]') != -1 && row.indexOf('** BUILD FAILED **') == -1)
+				{
+					buffer+= row.replace('[ERROR]','');
+				}
 			});
 			x.setOnExit(function(event)
 			{
@@ -1168,7 +1172,11 @@ PackageProject.setupMobileView = function()
 				var buffer = '';
 				x.setOnRead(function(event)
 				{
-					buffer += event.data.toString();
+					var row = event.data.toString();
+					if (row.indexOf('[ERROR]') != -1 && row.indexOf('** BUILD FAILED **') == -1)
+					{
+						buffer+= row.replace('[ERROR]','');
+					}
 				});
 				x.setOnExit(function(event)
 				{
@@ -1472,15 +1480,18 @@ PackageProject.setupMobileView = function()
 
 		 	var installAndroid = TiDev.launchPython(args);
 			var buffer = '';
+
 			installAndroid.setOnRead(function(event)
 			{
-				buffer += event.data.toString();
+				var row = event.data.toString();
+				if (row.indexOf('[ERROR]') != -1 && row.indexOf('** BUILD FAILED **') == -1)
+				{
+					buffer+= row.replace('[ERROR]','');
+				}
 			});
 			installAndroid.setOnExit(function(event)
 			{
-				TiDev.messageArea.showDefaultMessage();
-				
-				if (installAndroid.getExitCode() !=0 )
+				if (installAndroid.getExitCode() != 0)
 				{
 					alert('Install Error\n\n' + buffer);
 				}
@@ -1542,18 +1553,20 @@ PackageProject.setupMobileView = function()
 			var buffer = '';
 			x.setOnRead(function(event)
 			{
-				buffer += event.data.toString();
+				var row = event.data.toString();
+				if (row.indexOf('[ERROR]') != -1 && row.indexOf('** BUILD FAILED **') == -1)
+				{
+					buffer+= row.replace('[ERROR]','');
+				}
 			});
 			x.setOnExit(function(event)
 			{
 				TiDev.messageArea.showDefaultMessage();
-
 				if (x.getExitCode() != 0)
 				{
-					alert('Distribution Error\n\n' + buffer);
+					alert('Packaging Error\n\n' + buffer);
 				}
 			});
-			
 			x.launch();
 				
 			Titanium.Analytics.featureEvent('android.distribute',{name:PackageProject.currentProject.name,guid:PackageProject.currentProject.guid,appid:PackageProject.currentProject.appid});

@@ -1083,7 +1083,7 @@ Projects.handleNewProjectClick = function()
 	$('#new_project_type').val('desktop');
 	
 	// set library dropdown
-	$('#new_project_js').html('<option value="jquery">JQuery</option><option value="entourage">Entourage</option><option value="mootools">Mootools</option><option value="prototype">Prototype</option><option value="scriptaculous">Scriptaculous</option><option value="dojo">Dojo</option><option value="yui">Yahoo YUI</option><option value="swf">SWF Object</option>');
+	//$('#new_project_js').html('<option value="jquery">JQuery</option><option value="entourage">Entourage</option><option value="mootools">Mootools</option><option value="prototype">Prototype</option><option value="scriptaculous">Scriptaculous</option><option value="dojo">Dojo</option><option value="yui">Yahoo YUI</option><option value="swf">SWF Object</option>');
 
 	// project type listener
 	$('#new_project_type').change(function()
@@ -1091,7 +1091,7 @@ Projects.handleNewProjectClick = function()
 		if ($(this).val() == 'mobile')
 		{
 			// set library dropdown
-			$('#new_project_js').html('<option value="jquery">JQuery</option><option value="entourage">Entourage</option><option value="mootools">Mootools</option><option value="prototype">Prototype</option><option value="scriptaculous">Scriptaculous</option><option value="dojo">Dojo</option><option value="yui">Yahoo YUI</option>');
+			//$('#new_project_js').html('<option value="jquery">JQuery</option><option value="entourage">Entourage</option><option value="mootools">Mootools</option><option value="prototype">Prototype</option><option value="scriptaculous">Scriptaculous</option><option value="dojo">Dojo</option><option value="yui">Yahoo YUI</option>');
 			
 			var sdkVers = Titanium.Project.getMobileSDKVersions();
 			var sdk = Titanium.Project.getMobileSDKVersions(sdkVers[0]);
@@ -1242,7 +1242,7 @@ Projects.handleNewProjectClick = function()
 			$('#mobile_platforms').css('display','none');
 			$('#desktop_language_modules').css('display','block');
 			// set library dropdown
-			$('#new_project_js').html('<option value="jquery">JQuery</option><option value="entourage">Entourage</option><option value="mootools">Mootools</option><option value="prototype">Prototype</option><option value="scriptaculous">Scriptaculous</option><option value="dojo">Dojo</option><option value="yui">Yahoo YUI</option><option value="swf">SWF Object</option>');
+			//$('#new_project_js').html('<option value="jquery">JQuery</option><option value="entourage">Entourage</option><option value="mootools">Mootools</option><option value="prototype">Prototype</option><option value="scriptaculous">Scriptaculous</option><option value="dojo">Dojo</option><option value="yui">Yahoo YUI</option><option value="swf">SWF Object</option>');
 			
 		}
 	})
@@ -1267,7 +1267,7 @@ Projects.handleNewProjectClick = function()
 		options.name = $('#new_project_name').val();
 		options.runtime = $('#new_project_runtime').val();
 		options.dir = $('#new_project_location').val();
-		options.jsLibs = $('#new_project_js').val();
+		//options.jsLibs = $('#new_project_js').val();
 		options.type = $('#new_project_type').val();
 		options.url = $('#new_project_url').val();
 		options.appid = $('#new_project_appid').val();

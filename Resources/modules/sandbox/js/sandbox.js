@@ -180,6 +180,6 @@ TiDev.registerModule({
 	displayName: 'Sandbox',
 	perspectives:['community'],
 	html:'sandbox.html',
-	idx:3,
+	idx:1,
 	callback:Sandbox.eventHandler
 });

@@ -105,6 +105,7 @@ Feeds.sendTweet = function()
 //
 Feeds.setupView = function()
 {
+	alert('in here');
 	// set default UI state
 	TiUI.setBackgroundColor('#161616');
 	TiDev.contentLeft.hide();
@@ -434,6 +435,6 @@ TiDev.registerModule({
 	displayName: 'Feeds',
 	perspectives:['community'],
 	html:'feeds.html',
-	idx:1,
+	idx:0,
 	callback:Feeds.eventHandler
 });

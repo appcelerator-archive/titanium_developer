@@ -1504,6 +1504,8 @@ PackageProject.setupMobileView = function()
 			});
 			installAndroid.setOnExit(function(event)
 			{
+				TiDev.messageArea.showDefaultMessage();
+
 				if (installAndroid.getExitCode() != 0)
 				{
 					alert('Install Error\n\n' + buffer);

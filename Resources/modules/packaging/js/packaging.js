@@ -601,7 +601,7 @@ PackageProject.setupMobileView = function()
 		PackageProject.initializeConsoleWidth();
 	});
 
-	if (Titanium.platform == "win32")
+	if (Titanium.platform != "osx")
 	{
 		$('#tab_iphone_emulator').hide();
 		$('#tab_iphone_dev').hide();

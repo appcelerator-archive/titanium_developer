@@ -1292,10 +1292,12 @@ PackageProject.setupMobileView = function()
 		TiUI.GreyButton({id:'iphone_kill_button'});
 
 		// show emulator tab and configure listeners
-		//$('#mobile_emulator_iphone').css('display','block');
-		// initialize tab
-		//$('#mobile_emulator_iphone').click();
-
+		// activate android tab if not osx
+		if (Titanium.platform == "osx")
+		{
+			$('#mobile_emulator_iphone').css('display','block');
+			$('#mobile_emulator_iphone').click();
+		}
 
 		$('#iphone_kill_button').click(function()
 		{
@@ -1623,6 +1625,11 @@ PackageProject.setupMobileView = function()
 			PackageProject.initializeConsoleWidth();
 		});
 
+		// activate android tab if not osx
+		if (Titanium.platform != "osx")
+		{
+			$('#mobile_emulator_android').click();
+		}
 		// setup emulator buttons
 		TiUI.GreyButton({id:'android_kill_button'});
 		TiUI.GreyButton({id:'android_launch_button'});

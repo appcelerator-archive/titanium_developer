@@ -1292,7 +1292,9 @@ PackageProject.setupMobileView = function()
 		TiUI.GreyButton({id:'iphone_kill_button'});
 
 		// show emulator tab and configure listeners
-		$('#mobile_emulator_iphone').css('display','block');
+		//$('#mobile_emulator_iphone').css('display','block');
+		// initialize tab
+		//$('#mobile_emulator_iphone').click();
 
 
 		$('#iphone_kill_button').click(function()
@@ -1309,8 +1311,6 @@ PackageProject.setupMobileView = function()
 			}
 		});
 		
-		// initialize tab
-		$('#mobile_emulator_iphone').click();
 		
 	}
 	else

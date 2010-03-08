@@ -532,6 +532,20 @@ PackageProject.setupMobileView = function()
 	$('#mobile_distribution_detail').css('display','none');	
 	$('#packaging .tab.emulator.active').click();
 	
+	$('#mobile_emulator').click(function()
+	{
+		$('#mobile_emulator_container').css('display','block');
+		$('#mobile_device_detail').css('display','none');	
+		$('#mobile_distribution_detail').css('display','none');	
+		$('#packaging .option').removeClass('active');
+		
+		$('#packaging .tab.emulator.active').click();
+		
+		$('#mobile_ads').html(TiDev.mobileEmulatorContent);
+		
+		$(this).addClass('active');
+		
+	});
 
 	// setup tabs for "emulator"
 	$('#tab_iphone_emulator').click(function()
@@ -1198,20 +1212,6 @@ PackageProject.setupMobileView = function()
 				});
 				x.launch();
 			}
-		});
-		$('#mobile_emulator').click(function()
-		{
-			$('#mobile_emulator_container').css('display','block');
-			$('#mobile_device_detail').css('display','none');	
-			$('#mobile_distribution_detail').css('display','none');	
-			$('#packaging .option').removeClass('active');
-			
-			$('#packaging .tab.emulator.active').click();
-			
-			$('#mobile_ads').html(TiDev.mobileEmulatorContent);
-			
-			$(this).addClass('active');
-			
 		});
 
 		// handler iphone emulator start

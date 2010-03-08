@@ -551,12 +551,6 @@ PackageProject.setupMobileView = function()
 		PackageProject.initializeConsoleWidth();
 	});
 	
-	if (Titanium.platform == "win32")
-	{
-		$('#tab_phone_dev').hide();
-		$('#tab_phone_package').hide();
-		
-	}
 	// setup tabs for "device"
 	$('#tab_iphone_dev').click(function()
 	{
@@ -592,6 +586,17 @@ PackageProject.setupMobileView = function()
 		$('#mobile_packaging_content_android').css('display','block');
 		PackageProject.initializeConsoleWidth();
 	});
+
+	if (Titanium.platform == "win32")
+	{
+		$('#tab_iphone_emulator').hide();
+		$('#tab_iphone_dev').hide();
+		$('#tab_iphone_package').hide();
+
+		$('#tab_android_emulator').click();
+		$('#tab_android_dev').click();
+		$('#tab_android_package').click();
+	}
 
 	$("#android_log_filter").change(function()
 	{

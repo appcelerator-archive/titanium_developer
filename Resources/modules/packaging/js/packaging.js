@@ -603,11 +603,11 @@ PackageProject.setupMobileView = function()
 
 	if (Titanium.platform != "osx")
 	{
-		$('#tab_iphone_emulator').hide();
+		$('#mobile_emulator_iphone').hide();
 		$('#tab_iphone_dev').hide();
 		$('#tab_iphone_package').hide();
 
-		$('#tab_android_emulator').click();
+		$('#mobile_emulator_android').click();
 		$('#tab_android_dev').click();
 		$('#tab_android_package').click();
 	}

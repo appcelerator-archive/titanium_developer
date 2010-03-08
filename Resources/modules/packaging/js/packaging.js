@@ -551,6 +551,12 @@ PackageProject.setupMobileView = function()
 		PackageProject.initializeConsoleWidth();
 	});
 	
+	if (Titanium.platform == "win32")
+	{
+		$('#tab_phone_dev').hide();
+		$('#tab_phone_package').hide();
+		
+	}
 	// setup tabs for "device"
 	$('#tab_iphone_dev').click(function()
 	{
@@ -568,7 +574,7 @@ PackageProject.setupMobileView = function()
 		$('#mobile_device_content_android').css('display','block');
 		PackageProject.initializeConsoleWidth();
 	});
-
+	
 	// setup tabs for "packaging"
 	$('#tab_iphone_package').click(function()
 	{

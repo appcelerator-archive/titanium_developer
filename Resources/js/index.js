@@ -39,7 +39,6 @@ TiDev.attributes = {};
 
 // account type
 TiDev.isCommunity = null; 
-
 TiDev.baseAdURL = 'http://www.appcelerator.com/banner/';
 TiDev.mobileEmulatorAd = ['2.html?a=b','16.html?a=b'];
 TiDev.mobileDeviceAd = ['3.html?a=b','17.html?a=b'];

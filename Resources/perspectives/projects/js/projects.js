@@ -628,7 +628,7 @@ Projects.showAuthenticatedView = function(options)
 	TiDev.contentLeftShowButton.hide();
 	TiDev.contentLeftHideButton.show();
 	TiDev.contentLeft.show();
-	TiDev.subtabs.hide();
+//	TiDev.subtabs.hide();
 	
 	// initialize project db stuff
 	if (Projects.dbInitialized==false)
@@ -640,6 +640,7 @@ Projects.showAuthenticatedView = function(options)
 	if (Projects.projectList.length == 0)
 	{
 		TiDev.contentLeft.setContent('<div class="parent">PROJECTS</div><div class="child"><div>No Projects</div></div>');
+		TiDev.subtabChange(0);
 
 	}
 	

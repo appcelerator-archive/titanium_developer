@@ -5,13 +5,13 @@
 <version>1.0</version>
 <publisher>Appcelerator</publisher>
 <url>http://www.appcelerator.com</url>
-<icon>default_app_logo.png</icon>
+<icon>titanium.png</icon>
 <dmg_background>dmg_background.png</dmg_background>
 <copyright>2009 by Appcelerator</copyright>
     <window>
         <id>initial</id>
         <title>Titanium Developer</title>
-		<url>app://index.html</url>
+        <url>app://index.html</url>
         <width>1100</width>
         <max-width>3000</max-width>
         <min-width>0</min-width>

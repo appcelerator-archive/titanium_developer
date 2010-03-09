@@ -628,7 +628,7 @@ Projects.showAuthenticatedView = function(options)
 	TiDev.contentLeftShowButton.hide();
 	TiDev.contentLeftHideButton.show();
 	TiDev.contentLeft.show();
-//	TiDev.subtabs.hide();
+	TiDev.subtabs.show();
 	
 	// initialize project db stuff
 	if (Projects.dbInitialized==false)

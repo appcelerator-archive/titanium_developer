@@ -73,11 +73,20 @@ EditProject.setFormData = function(p)
 	$('#edit_project_version').val(p.version);
 	$('#edit_project_copyright').val(p.copyright);
 	
-	if (p.type == 'mobile')
+	if (p.type == 'mobile' || p.type== 'ipad')
 	{
 		$('#edit_project_type').html('(Mobile Application)');
 		$('#language_modules').css('display','none');
-		$('#mobile_icon').css('display','inline');
+		if (p.type=='ipad')
+		{
+			$('#mobile_icon').css('display','none');
+			$('#ipad_icon').css('display','inline');
+		}
+		else
+		{
+			$('#mobile_icon').css('display','inline');
+			$('#ipad_icon').css('display','none');
+		}
 		$('#desktop_icon').css('display','none');
 		$('#project_edit_lang_modules').css('display','none');
 		$('#project_edit .frame').css('height','320px');
@@ -109,6 +118,7 @@ EditProject.setFormData = function(p)
 		
 		$('#mobile_icon').css('display','none');
 		$('#desktop_icon').css('display','inline');
+		$('#ipad_icon').css('display','none');
 
 		$('#edit_project_type').html('(Desktop Application)');
 
@@ -461,7 +471,6 @@ EditProject.eventHandler = function(event)
 	if (event == 'focus')
 	{
 		EditProject.setupView();
-
 	}
 	else if (event == 'load')
 	{

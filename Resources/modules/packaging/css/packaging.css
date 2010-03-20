@@ -263,12 +263,14 @@
 {
 	color:#B93473;
 }
-
+.log_info
+{
+	color:#2768a9;
+}
 .log_warn
 {
 	color:#770;
 	font-weight:bold;
->>>>>>> c395420... merge:Resources/modules/packaging/css/packaging.css
 }
 #packaging p
 {
@@ -359,6 +361,15 @@
 	font-size:16px;
 	margin-bottom:20px;
 	color:#fff;
+}
+#packaging .tab_spacing
+{
+	height:25px;
+	display:none;
+}
+#packaging .tab_divider
+{
+	border-top:1px solid #414141;border-bottom:1px solid #7e7e7e;margin-left:-20px;margin-right:-20px
 }
 #no_links_view
 {

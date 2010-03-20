@@ -27,7 +27,9 @@ Projects.modulesLoaded = false;
 // track whether mobile SDKs are present
 Projects.hasIPhone = false;
 Projects.hasAndroid = false;
+Projects.hasIPad = false;
 Projects.hasRunMobileCheck = false;
+Projects.hasRunIPadCheck = false;
 
 // URLs
 Projects.ssoLoginURL = "sso-login";
@@ -55,6 +57,8 @@ Projects.setActiveProject = function(newIndex)
 {
 
 	Projects.selectedProjectIdx = newIndex;
+	//$MQ('l:tidev.projects.row_selected',{'project_id':newIndex,'activeTab':TiDev.activeSubtab.name});
+	
 	try
 	{
 		TiDev.db.execute('update PROJECT_VIEW set ACTIVE = ?', newIndex);
@@ -704,7 +708,7 @@ Projects.showAuthenticatedView = function(options)
 		// fire selected message
 		if (Projects.selectedProjectIdx >= 0)
 		{
-			$MQ('l:tidev.projects.row_selected',{'project_id':Projects.selectedProjectIdx});			
+			$MQ('l:tidev.projects.row_selected',{'project_id':Projects.selectedProjectIdx,'activeTab':TiDev.activeSubtab.name});			
 		}
 		
 		// set content
@@ -1093,17 +1097,53 @@ Projects.handleNewProjectClick = function()
 	// project type listener
 	$('#new_project_type').change(function()
 	{
-		if ($(this).val() == 'mobile')
-		{
-			// set library dropdown
-			//$('#new_project_js').html('<option value="jquery">JQuery</option><option value="entourage">Entourage</option><option value="mootools">Mootools</option><option value="prototype">Prototype</option><option value="scriptaculous">Scriptaculous</option><option value="dojo">Dojo</option><option value="yui">Yahoo YUI</option>');
-			
-			var sdkVers = Titanium.Project.getMobileSDKVersions();
-			var sdk = Titanium.Project.getMobileSDKVersions(sdkVers[0]);
+		var sdkVers = Titanium.Project.getMobileSDKVersions();
+		var sdk = Titanium.Project.getMobileSDKVersions(sdkVers[0]);
 
-			// set scripts for current sdk version
-			iPhonePrereqPath = Titanium.Filesystem.getFile(sdk.getPath(),'iphone/prereq.py');
-			androidPrereqPath = Titanium.Filesystem.getFile(sdk.getPath(),'android/prereq.py');
+		// set scripts for current sdk version
+		iPhonePrereqPath = Titanium.Filesystem.getFile(sdk.getPath(),'iphone/prereq.py');
+		androidPrereqPath = Titanium.Filesystem.getFile(sdk.getPath(),'android/prereq.py');
+
+		if ($(this).val()=='ipad')
+		{
+			if (Titanium.platform != 'osx')
+			{
+				alert('iPad development is only supported on Mac');
+				return;
+			}
+			
+			$('#mobile_platforms').css('display','none');
+			$('#desktop_language_modules').css('display','none');
+			if (Projects.hasIPad ==false)
+			{
+				
+				TiDev.setConsoleMessage('Checking for iPad prerequisites...');
+				
+				// run ipad prereq check
+				var iPadCheck = TiDev.launchPython([Titanium.Filesystem.getFile(iPhonePrereqPath).toString(),'project']);
+				iPadCheck.setOnRead(function(event)
+				{
+					var d = event.data.toString();
+					var data = swiss.evalJSON(d);
+					alert(data.ipad)
+					if (data.ipad)
+					{
+						Projects.hasIPad = true;
+					}
+					TiDev.resetConsole();
+					if (!Projects.hasIPad)
+					{
+						alert('The iPad requires version 3.2 of the iPhone SDK.  Please install to continue');
+						$('#new_project_type').val('desktop')
+						return;
+					}
+				});
+				iPadCheck.launch();
+			}
+			
+		}
+		else if ($(this).val() == 'mobile')
+		{
 			
 			$('#mobile_platforms').css('display','block');
 			$('#desktop_language_modules').css('display','none');
@@ -1372,7 +1412,8 @@ Projects.handleNewProjectClick = function()
 	// toggle language modules based on project type
 	$('#new_project_type').bind('change',function()
 	{
-		if ($(this).val() == 'mobile')
+
+		if ($(this).val() == 'mobile' || $(this).val() == 'ipad')
 		{
 			$('#language_modules').addClass('disabled');
 			$('#new_project_ruby').attr('disabled','true');
@@ -1530,24 +1571,73 @@ Projects.importProject = function(f)
 			alert('You are importing a desktop project, but no Desktop SDK versions exist on your system');
 			return;
 		}
+		completeImport();
 	}
-	else
+	else 
 	{
 		var versions = Titanium.Project.getMobileSDKVersions();
 		if (versions.length == 0)
 		{
-			alert('You are importing a mobile project, but no Mobile SDK versions exist on your system');
+			alert('You are importing a '+options.type + ' project, but no Mobile SDK versions exist on your system');
 			return;
 		}
+		// see if ipad is an option
+		if (Projects.hasIPad==false)
+		{
+			var sdkVers = Titanium.Project.getMobileSDKVersions();
+			var sdk = Titanium.Project.getMobileSDKVersions(sdkVers[0]);
+			iPhonePrereqPath = Titanium.Filesystem.getFile(sdk.getPath(),'iphone/prereq.py');
+
+			var iPadCheck = TiDev.launchPython([Titanium.Filesystem.getFile(iPhonePrereqPath).toString(),'project']);
+			iPadCheck.setOnRead(function(event)
+			{
+				var d = event.data.toString();
+				var data = swiss.evalJSON(d);
+				if (data.ipad)
+				{
+					Projects.hasIPad = true;
+					completeImport();
+				}
+				else
+				{
+					completeImport();
+				}
+			});
+			iPadCheck.launch();
+		}
+		else
+		{
+			completeImport();
+		}
+	}
+	//
+	//  complete import process - function is needed because of async call above to check for ipad
+	//
+	function completeImport()
+	{
+		// give user option to import ipad project
+		if (options.type == 'mobile')
+		{
+			if (Projects.hasIPad)
+			{
+				var answer = confirm('You are importing a mobile project.  Click OK to continue or click Cancel to import this as an iPad project.');
+				if (answer==false)
+				{
+					options.type = 'ipad';
+				}
+			}
+		}
+
+		// Preserve the original runtime version if possible. If not, use the first available runtime.
+		if (options.runtime === undefined || versions.indexOf(options.runtime) == -1)
+			options.runtime = versions[0];
+
+		Projects.createProject(options);
+		Titanium.Analytics.featureEvent('project.import',options);
+		TiDev.setConsoleMessage('Your project has been imported', 2000);
+		
 	}
 
-	// Preserve the original runtime version if possible. If not, use the first available runtime.
-	if (options.runtime === undefined || versions.indexOf(options.runtime) == -1)
-		options.runtime = versions[0];
-
-	Projects.createProject(options);
-	Titanium.Analytics.featureEvent('project.import',options);
-	TiDev.setConsoleMessage('Your project has been imported', 2000);
 };
 
 //
@@ -1631,7 +1721,7 @@ Projects.createProject = function(options, createProjectFiles)
 			else
 			{
 				var args = [options.name , options.id, options.dir];
-				if (options.iphone == true)
+				if (options.iphone == true || options.type == 'ipad')
 				{
 					args.push('iphone');
 				}
@@ -1640,8 +1730,7 @@ Projects.createProject = function(options, createProjectFiles)
 					args.push('android');
 					args.push(TiDev.androidSDKDir.trim());
 				}
-
-				TiDev.setConsoleMessage('Creating mobile project: ' + options.name);
+				TiDev.setConsoleMessage('Creating '+options.type+' project: ' + options.name);
 
 				// determine path to project create script
 				var sdk = Titanium.Project.getMobileSDKVersions(options.runtime);

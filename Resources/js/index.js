@@ -434,7 +434,6 @@ TiDev.subtabChange = function(idx, lognav)
 	{
 		fireLoad =true;
 	}
-
 	var file = Titanium.Filesystem.getFile(Titanium.App.appURLToPath('modules/' + TiDev.activeSubtab.name + '/' +TiDev.activeSubtab.html));
 	
 	$('#tiui_content_right').get(0).innerHTML = file.read();

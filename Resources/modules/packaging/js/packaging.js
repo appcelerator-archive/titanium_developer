@@ -401,7 +401,7 @@ PackageProject.logReader = function(process,platform,type,filterFunc)
 				verbose_id = 'verbose_' + (new Date().getTime());
 				var _str = str.substring('[BEGIN_VERBOSE]'.length+1);
 				var show = PackageProject.logFilterVisible('log_info',platform) ? 'block':'none';
-				var html = '<div style="margin-bottom:3px;display:'+show+';" class="verbose_logger" id="'+verbose_id+'">[INFO] '+ _str + '</div>';
+				var html = '<div style="margin-bottom:3px;display:'+show+';cursor:pointer;" class="log_info verbose_logger" id="'+verbose_id+'">[INFO] '+ _str + '</div>';
 				$('#mobile_'+platform+'_emulator_viewer').append(html);
 				var the_id = verbose_id;
 				$("#"+the_id).click(function()
@@ -905,7 +905,8 @@ PackageProject.setupMobileView = function()
 					{
 						if (PackageProject.currentProject.type == 'ipad')
 						{
-							if (json.sdks[i] == '3.2')
+							// ipad started with 3.2
+							if (json.sdks[i].substring(0,3) == '3.2' || parseInt(json.sdks[i][0])>3)
 							{
 								html += '<option value="'+json.sdks[i]+'">'+json.sdks[i] + '</option>';
 							}

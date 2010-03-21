@@ -108,8 +108,30 @@ PackageProject.saveAndroidVersion = function(version, skin)
 };
 PackageProject.compileResources = function(dir, progress_callback, progress_complete)
 {
+	function getRecursiveDirectoryListing(file)
+	{
+		if (file.isDirectory())
+		{
+			var set = [];
+			var children = file.getDirectoryListing();
+			for (var i=0;i<children.length;i++)
+			{
+				var childSet = getRecursiveDirectoryListing(children[i]);
+				for (var j=0;j<childSet.length;j++)
+				{
+					set.push(childSet[j]);
+				}
+			}
+			return set;
+		}
+		else
+		{
+			return [file];
+		}
+	};
+		
 	var resources = Titanium.Filesystem.getFile(dir);
-	var jobs = resources.getDirectoryListing();
+	var jobs = getRecursiveDirectoryListing(resources);
 
 	// reset pending jobs
 	PackageProject.pending_jobs = 0;

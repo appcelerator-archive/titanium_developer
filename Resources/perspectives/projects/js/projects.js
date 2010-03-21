@@ -1125,7 +1125,6 @@ Projects.handleNewProjectClick = function()
 				{
 					var d = event.data.toString();
 					var data = swiss.evalJSON(d);
-					alert(data.ipad)
 					if (data.ipad)
 					{
 						Projects.hasIPad = true;

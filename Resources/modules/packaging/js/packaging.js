@@ -311,6 +311,13 @@ PackageProject.removeReaderProcess = function(platform,type)
 		cur_process=null;
 	}
 }
+PackageProject.safeLogContent = function(msg)
+{
+	var div = document.createElement('div');
+	var text = document.createTextNode(msg);
+	div.appendChild(text);
+	return div.innerHTML;
+}
 PackageProject.logReader = function(process,platform,type,filterFunc)
 {
 	PackageProject.removeReaderProcess(platform,type);
@@ -434,7 +441,7 @@ PackageProject.logReader = function(process,platform,type,filterFunc)
 			if (!skip)
 			{
 				var display = PackageProject.logFilterVisible(cls,platform)==false ? 'display:none': '';
-				var html = '<div style="margin-bottom:3px;'+display+';" class="'+cls+'">'+ str + '</div>';
+				var html = '<div style="margin-bottom:3px;'+display+';" class="'+cls+'">'+ PackageProject.safeLogContent(str) + '</div>';
 				if (verbose_id)
 				{
 					$('#'+verbose_id).append(html);
@@ -473,6 +480,7 @@ PackageProject.logReader = function(process,platform,type,filterFunc)
 //
 PackageProject.logFilterVisible = function(cls,platform)
 {
+	if (cls=='log_verbose') return false;
 	var show = true;
 	var level = $('#'+platform+'_log_filter').val();
 	if (level == 'info')

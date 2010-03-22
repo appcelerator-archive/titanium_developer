@@ -108,8 +108,30 @@ PackageProject.saveAndroidVersion = function(version, skin)
 };
 PackageProject.compileResources = function(dir, progress_callback, progress_complete)
 {
+	function getRecursiveDirectoryListing(file)
+	{
+		if (file.isDirectory())
+		{
+			var set = [];
+			var children = file.getDirectoryListing();
+			for (var i=0;i<children.length;i++)
+			{
+				var childSet = getRecursiveDirectoryListing(children[i]);
+				for (var j=0;j<childSet.length;j++)
+				{
+					set.push(childSet[j]);
+				}
+			}
+			return set;
+		}
+		else
+		{
+			return [file];
+		}
+	};
+		
 	var resources = Titanium.Filesystem.getFile(dir);
-	var jobs = resources.getDirectoryListing();
+	var jobs = getRecursiveDirectoryListing(resources);
 
 	// reset pending jobs
 	PackageProject.pending_jobs = 0;
@@ -311,6 +333,13 @@ PackageProject.removeReaderProcess = function(platform,type)
 		cur_process=null;
 	}
 }
+PackageProject.safeLogContent = function(msg)
+{
+	var div = document.createElement('div');
+	var text = document.createTextNode(msg);
+	div.appendChild(text);
+	return div.innerHTML;
+}
 PackageProject.logReader = function(process,platform,type,filterFunc)
 {
 	PackageProject.removeReaderProcess(platform,type);
@@ -394,7 +423,7 @@ PackageProject.logReader = function(process,platform,type,filterFunc)
 				verbose_id = 'verbose_' + (new Date().getTime());
 				var _str = str.substring('[BEGIN_VERBOSE]'.length+1);
 				var show = PackageProject.logFilterVisible('log_info',platform) ? 'block':'none';
-				var html = '<div style="margin-bottom:3px;display:'+show+';" class="verbose_logger" id="'+verbose_id+'">[INFO] '+ _str + '</div>';
+				var html = '<div style="margin-bottom:3px;display:'+show+';cursor:pointer;" class="log_info verbose_logger" id="'+verbose_id+'">[INFO] '+ _str + '</div>';
 				$('#mobile_'+platform+'_emulator_viewer').append(html);
 				var the_id = verbose_id;
 				$("#"+the_id).click(function()
@@ -434,7 +463,7 @@ PackageProject.logReader = function(process,platform,type,filterFunc)
 			if (!skip)
 			{
 				var display = PackageProject.logFilterVisible(cls,platform)==false ? 'display:none': '';
-				var html = '<div style="margin-bottom:3px;'+display+';" class="'+cls+'">'+ str + '</div>';
+				var html = '<div style="margin-bottom:3px;'+display+';" class="'+cls+'">'+ PackageProject.safeLogContent(str) + '</div>';
 				if (verbose_id)
 				{
 					$('#'+verbose_id).append(html);
@@ -473,6 +502,7 @@ PackageProject.logReader = function(process,platform,type,filterFunc)
 //
 PackageProject.logFilterVisible = function(cls,platform)
 {
+	if (cls=='log_verbose') return false;
 	var show = true;
 	var level = $('#'+platform+'_log_filter').val();
 	if (level == 'info')
@@ -897,7 +927,8 @@ PackageProject.setupMobileView = function()
 					{
 						if (PackageProject.currentProject.type == 'ipad')
 						{
-							if (json.sdks[i] == '3.2')
+							// ipad started with 3.2
+							if (json.sdks[i].substring(0,3) == '3.2' || parseInt(json.sdks[i][0])>3)
 							{
 								html += '<option value="'+json.sdks[i]+'">'+json.sdks[i] + '</option>';
 							}

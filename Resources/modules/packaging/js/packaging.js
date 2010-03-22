@@ -1161,7 +1161,7 @@ PackageProject.setupMobileView = function()
 		{
 			if ($(this).hasClass('disabled')) return true;
 			
-			TiDev.setConsoleMessage('Creating distribution package...',4000);
+			TiDev.setConsoleMessage('Creating distribution package...');
 			
 			var uuid = PackageProject.getIPhoneAttribute('dist_uuid');
 			var certName = PackageProject.getIPhoneAttribute('dist_name');
@@ -1185,6 +1185,8 @@ PackageProject.setupMobileView = function()
 				{
 					alert('Packaging Error\n\n' + buffer);
 				}
+				TiDev.showDefaultSystemMessage()
+
 			});
 			x.launch();
 		});
@@ -1196,7 +1198,7 @@ PackageProject.setupMobileView = function()
 			if ($(this).hasClass('disabled'))return;
 			var uuid = PackageProject.getIPhoneAttribute('dev_uuid');
 			var devName = PackageProject.getIPhoneAttribute('dev_name');
-			TiDev.setConsoleMessage('Installing app onto iTunes...',4000);
+			TiDev.setConsoleMessage('Installing app onto iTunes...');
 			
 			if ($(this).hasClass('disabled')==false)
 			{
@@ -1219,6 +1221,7 @@ PackageProject.setupMobileView = function()
 					{
 						alert('Install Error\n\n' + buffer);
 					}
+					TiDev.showDefaultSystemMessage()
 				});
 				x.launch();
 			}

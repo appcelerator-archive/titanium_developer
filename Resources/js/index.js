@@ -987,42 +987,91 @@ TiDev.invokeCloudService = function(name,data,type,sCallback,fCallback)
 		data.token = Projects.userToken;
 		data.uid = String(Projects.userUID);
 		data.uidt = Projects.userUIDT;
-		$.ajax({
-			url:url,
-			type:type,
-			dataType:'json',
-			timeout:timeout,
-			data:data,
-			success:function(resp)
-			{
-				// toggle cloud status
-				$('#tiui_cloud_on').css('display','inline');
-				$('#tiui_cloud_off').css('display','none');
-				// execute callback
-				if (typeof(sCallback) == 'function')
-				{
-					sCallback(resp);
-				}
-				
-				// do xhr auth for packaging service
-				if (name == 'sso-login')
-				{
-					xhrAuth(data);
-				}
-			},
-			error:function(resp,ex)
-			{
-				// toggle cloud state
-				$('#tiui_cloud_on').css('display','none');
-				$('#tiui_cloud_off').css('display','inline');
 
-				// execute callback
-				if (typeof(fCallback) == 'function')
+		var xhr = Titanium.Network.createHTTPClient();
+		xhr.onreadystatechange = function()
+		{
+			if (this.readyState == 4)
+			{
+				var resp = swiss.evalJSON(this.responseText);
+
+				if (this.status == 200)
 				{
-					fCallback({resp:resp,offline:true});
+					// toggle cloud status
+					$('#tiui_cloud_on').css('display','inline');
+					$('#tiui_cloud_off').css('display','none');
+					// execute callback
+					if (typeof(sCallback) == 'function')
+					{
+						sCallback(resp);
+					}
+
+					// do xhr auth for packaging service
+					if (name == 'sso-login')
+					{
+						xhrAuth(data);
+					}				
+				}
+				else
+				{
+					// toggle cloud state
+					$('#tiui_cloud_on').css('display','none');
+					$('#tiui_cloud_off').css('display','inline');
+			
+					// execute callback
+					if (typeof(fCallback) == 'function')
+					{
+						fCallback({resp:resp,offline:true});
+					}
 				}
 			}
-		});	
+		};
+		xhr.open(type,url);
+		var qs = '';	
+		for (var p in data)
+		{
+			var v = typeof(data[p])=='undefined' ? '' : String(data[p]);
+			qs+=p+'='+encodeURIComponent(v)+'&';
+		}
+		
+		xhr.send(qs);
+		
+		// $.ajax({
+		// 	url:url,
+		// 	type:type,
+		// 	dataType:'json',
+		// 	timeout:timeout,
+		// 	data:data,
+		// 	success:function(resp)
+		// 	{
+		// 		// toggle cloud status
+		// 		$('#tiui_cloud_on').css('display','inline');
+		// 		$('#tiui_cloud_off').css('display','none');
+		// 		// execute callback
+		// 		if (typeof(sCallback) == 'function')
+		// 		{
+		// 			sCallback(resp);
+		// 		}
+		// 		
+		// 		// do xhr auth for packaging service
+		// 		if (name == 'sso-login')
+		// 		{
+		// 			xhrAuth(data);
+		// 		}
+		// 	},
+		// 	error:function(resp,ex)
+		// 	{
+		// 		// toggle cloud state
+		// 		$('#tiui_cloud_on').css('display','none');
+		// 		$('#tiui_cloud_off').css('display','inline');
+		// 
+		// 		// execute callback
+		// 		if (typeof(fCallback) == 'function')
+		// 		{
+		// 			fCallback({resp:resp,offline:true});
+		// 		}
+		// 	}
+		// });	
 	};
 
 	// we are good, run the request
@@ -1055,57 +1104,121 @@ TiDev.invokeCloudService = function(name,data,type,sCallback,fCallback)
 		}
 
 		// try to login
-		$.ajax({
-			url:u,
-			type:'POST',
-			dataType:'json',
-			timeout:10000,
-			data:d,
-			success:function(resp)
+		var xhr = Titanium.Network.createHTTPClient();
+		xhr.onreadystatechange = function()
+		{
+			if (this.readyState == 4)
 			{
-				// we are logged in, so run request
-				if (resp.success == true)
-				{		
-					// record tokens
-					
-					//FIXME - these are only good for 12 hours and during the login -JGH
-					Projects.userSID = resp.sid;
-					Projects.userToken = resp.token;
-					Projects.userUID = resp.uid;
-					Projects.userUIDT = resp.uidt;
-					TiDev.isCommunity = resp.community;
-					TiDev.setAdURLs();
-					TiDev.setPermissions(resp.permissions);
-					TiDev.attributes = resp.attributes;	
-					
-					if (UserProfile)
-						UserProfile.updateUser(d.un,TiDev.attributes);				
-					
-					// toggle login status
-					$('#tiui_shield_off').css('display','none');
-					$('#tiui_shield_on').css('display','inline');
-					
-					// auth for xhr
-					xhrAuth(d);
-		
-					runIt();
-					return;
+				if (this.status == 200)
+				{
+					var resp = swiss.evalJSON(this.responseText);
+					// we are logged in, so run request
+					if (resp.success == true)
+					{		
+						// record tokens
+
+						//FIXME - these are only good for 12 hours and during the login -JGH
+						Projects.userSID = resp.sid;
+						Projects.userToken = resp.token;
+						Projects.userUID = resp.uid;
+						Projects.userUIDT = resp.uidt;
+						TiDev.isCommunity = resp.community;
+						TiDev.setAdURLs();
+						TiDev.setPermissions(resp.permissions);
+						TiDev.attributes = resp.attributes;	
+
+						if (UserProfile)
+							UserProfile.updateUser(d.un,TiDev.attributes);				
+
+						// toggle login status
+						$('#tiui_shield_off').css('display','none');
+						$('#tiui_shield_on').css('display','inline');
+
+						// auth for xhr
+						xhrAuth(d);
+
+						runIt();
+						return;
+					}
+					else
+					{
+						$('#tiui_shield_on').css('display','none');
+						$('#tiui_shield_off').css('display','inline');
+						TiDev.setConsoleMessage(TiDev.cloudRequestRejected,5000);
+					}
+
 				}
 				else
 				{
+					// toggle login status
 					$('#tiui_shield_on').css('display','none');
 					$('#tiui_shield_off').css('display','inline');
 					TiDev.setConsoleMessage(TiDev.cloudRequestRejected,5000);
+
 				}
-			},
-			error:function(resp)
-			{
-				// toggle login status
-				$('#tiui_shield_on').css('display','none');
-				$('#tiui_shield_off').css('display','inline');
-				TiDev.setConsoleMessage(TiDev.cloudRequestRejected,5000);
 			}
-		});
+		};
+		xhr.open('POST',u);
+		var qs = '';	
+		for (var p in data)
+		{
+			var v = typeof(data[p])=='undefined' ? '' : String(data[p]);
+			qs+=p+'='+encodeURIComponent(v)+'&';
+		}
+
+		xhr.send(qs);
+		
+		// $.ajax({
+		// 	url:u,
+		// 	type:'POST',
+		// 	dataType:'json',
+		// 	timeout:10000,
+		// 	data:d,
+		// 	success:function(resp)
+		// 	{
+		// 		// we are logged in, so run request
+		// 		if (resp.success == true)
+		// 		{		
+		// 			// record tokens
+		// 			
+		// 			//FIXME - these are only good for 12 hours and during the login -JGH
+		// 			Projects.userSID = resp.sid;
+		// 			Projects.userToken = resp.token;
+		// 			Projects.userUID = resp.uid;
+		// 			Projects.userUIDT = resp.uidt;
+		// 			TiDev.isCommunity = resp.community;
+		// 			TiDev.setAdURLs();
+		// 			TiDev.setPermissions(resp.permissions);
+		// 			TiDev.attributes = resp.attributes;	
+		// 			
+		// 			if (UserProfile)
+		// 				UserProfile.updateUser(d.un,TiDev.attributes);				
+		// 			
+		// 			// toggle login status
+		// 			$('#tiui_shield_off').css('display','none');
+		// 			$('#tiui_shield_on').css('display','inline');
+		// 			
+		// 			// auth for xhr
+		// 			xhrAuth(d);
+		// 
+		// 			runIt();
+		// 			return;
+		// 		}
+		// 		else
+		// 		{
+		// 			$('#tiui_shield_on').css('display','none');
+		// 			$('#tiui_shield_off').css('display','inline');
+		// 			TiDev.setConsoleMessage(TiDev.cloudRequestRejected,5000);
+		// 		}
+		// 	},
+		// 	error:function(resp)
+		// 	{
+		// 		// toggle login status
+		// 		$('#tiui_shield_on').css('display','none');
+		// 		$('#tiui_shield_off').css('display','inline');
+		// 		TiDev.setConsoleMessage(TiDev.cloudRequestRejected,5000);
+		// 	}
+		// });
 	}
 };
 

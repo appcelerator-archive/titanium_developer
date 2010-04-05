@@ -336,7 +336,7 @@ EditProject.setupView = function()
 				inWindowSection = true;
 			}
 
-			if (line.indexOf('version') != -1)
+			if (line.indexOf('<version') != -1)
 			{
 				newXML += '<version>' + version + '</version>\n';
 				continue;

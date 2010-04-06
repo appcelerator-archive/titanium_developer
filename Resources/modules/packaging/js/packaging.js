@@ -2733,7 +2733,7 @@ PackageProject.publishDesktopApp = function(destDir,project)
 
 PackageProject.pollPackagingRequest = function(ticket,guid)
 {
-	TiDev.invokeCloudService(PackageProject.publishStatusURL,{ticket:ticket},'GET',function(r)
+	TiDev.invokeCloudService(PackageProject.publishStatusURL,{ticket:ticket},'POST',function(r)
 	{
 	   	if (r.status == 'complete')
 	   	{
@@ -2890,8 +2890,9 @@ Links.setPageData = function()
 	}
 
 	// now try to load remote stats
-	TiDev.invokeCloudService(Links.url,{guid:p.guid},'GET',function(data)
+	TiDev.invokeCloudService(Links.url,{guid:p.guid},'POST',function(data)
 	{
+		alert(data.releases)
 		// if we have data, process
 		if (data.releases)
 		{

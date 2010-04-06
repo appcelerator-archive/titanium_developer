@@ -1581,7 +1581,7 @@ Projects.importProject = function(f)
 			return;
 		}
 		// see if ipad is an option
-		if (Projects.hasIPad==false)
+		if (Titanium.platform == 'osx' && Projects.hasIPad==false)
 		{
 			var sdkVers = Titanium.Project.getMobileSDKVersions();
 			var sdk = Titanium.Project.getMobileSDKVersions(sdkVers[0]);

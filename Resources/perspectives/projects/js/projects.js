@@ -1252,7 +1252,7 @@ Projects.handleNewProjectClick = function()
 						else if (e == 2)
 						{
 							TiDev.resetConsole();
-							if (confirm('Android SDK 1.5 was not found.  If it is installed, can you provide the location?'))
+							if (confirm('Android SDK 1.6 was not found.  If it is installed, can you provide the location?'))
 							{
 								var props = {multiple:false,directories:true,files:false};
 								Titanium.UI.currentWindow.openFolderChooserDialog(function(f)

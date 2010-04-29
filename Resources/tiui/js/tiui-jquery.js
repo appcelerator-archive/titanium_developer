@@ -39,7 +39,7 @@ TiUI.validator = function(clazz, callback)
 			{
 				var appid = $(this).val();
 			
-				if (/^[^\._][a-z0-9A-Z-\.]+[^\._]$/.test(appid) == false || $(this).hasClass('hinttext') == true)
+				if (/^([a-zA-Z][a-zA-Z0-9_]*)(\.[a-zA-Z][a-zA-Z0-9_]*)*$/.test(appid) == false || $(this).hasClass('hinttext') == true)
 				{
 					valid = false;
 					$(this).addClass('tiui_invalid_field');

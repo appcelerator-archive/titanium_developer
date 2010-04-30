@@ -1442,7 +1442,7 @@ TiDev.validateAndroidSDK = function(sdkDir, callback)
 	if (!isSDK)
 	{
 		alert("Couldn't find a valid Android SDK at " + sdkDir + ". Make sure you select the top-level directory where the \"add-ons\", \"platforms\", and \"tools\" directories are.");
-		return;
+		return false;
 	}
 	
 	var adb = "adb";
@@ -1459,7 +1459,7 @@ TiDev.validateAndroidSDK = function(sdkDir, callback)
 	if (!toolsExist)
 	{
 		alert("Couldn't find " + adb + " or " + android + " in your SDK's \"tools\" directory. You may need to install a newer version of the SDK tools.");
-		return;
+		return false;
 	}
 	
 	var sdk4 = Titanium.Filesystem.getFile(platforms, 'android-4');
@@ -1469,7 +1469,7 @@ TiDev.validateAndroidSDK = function(sdkDir, callback)
 	if (!haveAPI4)
 	{
 		alert("Couldn't find Android API v4 (or 1.6) in your \"platforms\" directory. Try running the android tool and installing API v4 and Google APIs v4");
-		return;
+		return false;
 	}
 	
 	// if we get this far, we're satisfied
@@ -1478,6 +1478,7 @@ TiDev.validateAndroidSDK = function(sdkDir, callback)
 	{
 		callback();	
 	}
+	return true;
 };
 
 window.onload=TiDev.initialStatusBar;

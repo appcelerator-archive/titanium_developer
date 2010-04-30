@@ -170,6 +170,9 @@ UserProfile.setupView = function()
 	{
 		if ($(this).hasClass('disabled')) return;
 		
+		var androidSDK = $('#user_android_sdk').val();
+		if (androidSDK.length > 0 && !TiDev.validateAndroidSDK(androidSDK)) return;
+		
 		var message = 'Your changes have been saved';
 		var delay = 2000;
 		

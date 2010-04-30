@@ -1305,7 +1305,7 @@ Projects.handleNewProjectClick = function()
 		{
 			if (Projects.hasIPhone == false && Projects.hasAndroid == false)
 			{
-				alert('Mobile SDKs not installed.  Please download and install the iPhone SDK 3.0 and/or the Android SDK 1.5.');
+				alert('Mobile SDKs not installed.  Please download and install the iPhone SDK 3.0 and/or the Android SDK.');
 				return;
 			}
 		}

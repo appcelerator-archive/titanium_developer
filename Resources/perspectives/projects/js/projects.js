@@ -1260,15 +1260,17 @@ Projects.handleNewProjectClick = function()
 									if (f.length)
 									{
 										// set file and revalidate
-										TiDev.androidSDKDir  = f[0];
-										Projects.updateAndroidSDKLoc(TiDev.androidSDKDir);
-										
-										//TODO: validate path
-										
-										Projects.hasAndroid = true;
-										$('#android_sdk_true').css('display','block');
-										$('#android_sdk_false').css('display','none');							
-										
+										var sdkDir = f[0];
+										TiDev.validateAndroidSDK(sdkDir, function()
+										{
+											TiDev.androidSDKDir = sdkDir;
+											
+											Projects.updateAndroidSDKLoc(TiDev.androidSDKDir);
+											
+											Projects.hasAndroid = true;
+											$('#android_sdk_true').css('display','block');
+											$('#android_sdk_false').css('display','none');
+										});
 									}
 								},
 								props);						

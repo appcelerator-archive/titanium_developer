@@ -294,8 +294,11 @@ UserProfile.setupView = function()
 		{
 			if (f.length)
 			{
-				// set file and revalidate
-				$('#user_android_sdk').val(f[0]);
+				var sdkDir = f[0];
+				TiDev.validateAndroidSDK(sdkDir, function()
+				{
+					$('#user_android_sdk').val(sdkDir);
+				});
 			}
 		},
 		props);						

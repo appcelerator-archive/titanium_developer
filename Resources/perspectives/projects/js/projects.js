@@ -1738,12 +1738,17 @@ Projects.createProject = function(options, createProjectFiles)
 				var path = Titanium.Filesystem.getFile(sdk.getPath(),'project.py');
 				args.unshift(Titanium.Filesystem.getFile(path).toString());
 				var	x = TiDev.launchPython(args);
+				var errorMessage = "";
+				x.stderr.addEventListener(Titanium.READ, function(event)
+				{
+					errorMessage += event.data.toString();
+				});
 				x.setOnExit(function(event)
 				{
 					var e = x.getExitCode();
 					if (e!=0)
 					{
-						result.message = 'Error creating project.  Please try again.';
+						result.message = errorMessage;
 						setMessage();
 					}
 					else

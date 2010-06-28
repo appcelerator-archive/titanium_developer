@@ -923,7 +923,7 @@ PackageProject.setupMobileView = function()
 				if (json.sdks)
 				{
 					var html = '';
-					for(var i=0;i<json.sdks.length;i++)
+					for(var i=(json.sdks.length-1);i>=0;i--)
 					{
 						if (PackageProject.currentProject.type == 'ipad')
 						{

@@ -1016,7 +1016,12 @@ Projects.getAndroidSDKLoc = function()
 		var location = TiDev.db.execute('SELECT LOCATION FROM SDKLOCATION');
 		while(location.isValidRow())
 		{
-			TiDev.androidSDKDir = location.fieldByName('LOCATION');
+			var androidSDK = location.fieldByName('LOCATION');
+			if (androidSDK.trim().length == 0) {
+				return null;
+			}
+
+			TiDev.androidSDKDir = androidSDK;
 			return TiDev.androidSDKDir;
 		}
 	}

@@ -245,7 +245,7 @@ PackageProject.mobileCompile = function(dir,platform,callback)
 						continue;
 					}
 					compiler_errors++;
-					if (e.reason.indexOf('Too many errors. (100% scanned)')!=-1)
+					if (e.reason.indexOf('Too many errors.')!=-1)
 					{
 						$('#mobile_'+platform+'_emulator_viewer').append('<div style="margin-bottom:3px;" class="log_error">[ERROR] JavaScript compiler bailed with too errors... Yuck! (we\'ll continue but you should check that out)</div>');
 						$('#mobile_'+platform+'_emulator_viewer').get(0).scrollTop = $('#mobile_'+platform+'_emulator_viewer').get(0).scrollHeight;

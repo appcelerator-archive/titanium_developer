@@ -389,12 +389,12 @@ EditProject.setupView = function()
 				newXML += '<icon>' + imageName + '</icon>\n';
 				continue;
 			}
-			if (line.indexOf('url') != -1 && inWindowSection == false)
+			if (line.indexOf('<url') != -1 && inWindowSection == false)
 			{
 				newXML += '<url>' + url + '</url>\n';
 				continue;
 			}
-			if (line.indexOf('copyright') != -1)
+			if (line.indexOf('<copyright') != -1)
 			{
 				newXML += '<copyright>' + copyright + '</copyright>\n';
 				continue;

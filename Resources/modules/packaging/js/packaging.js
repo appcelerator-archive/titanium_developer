@@ -1241,9 +1241,10 @@ PackageProject.setupMobileView = function()
 				x.setOnRead(function(event)
 				{
 					var row = event.data.toString();
-					if (row.indexOf('[ERROR]') != -1 && row.indexOf('** BUILD FAILED **') == -1)
+					var errorIndex = row.indexOf('[ERROR]')
+					if (errorIndex != -1 && row.indexOf('** BUILD FAILED **') == -1)
 					{
-						buffer+= row.replace('[ERROR]','');
+						buffer += row.substring(errorIndex).replace('[ERROR]','');
 					}
 				});
 				x.setOnExit(function(event)

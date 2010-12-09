@@ -1483,11 +1483,9 @@ Projects.importProject = function(f)
 	options.dir = dir;
 	
 	// read manifest values to create new db record
-	var line = file.readLine(true);
-	while (line != null)
-	{
-		var entry = Titanium.Project.parseEntry(line);
-		var line = file.readLine(false);
+	var stream = file.open();
+	for (var line = stream.readLine(); line != null; line = stream.readLine()) {
+		var entry = Titanium.Project.parseEntry(line.toString());
 		if (entry == null)
 			continue;
 

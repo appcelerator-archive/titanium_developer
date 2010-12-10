@@ -2893,7 +2893,6 @@ Links.setPageData = function()
 	// now try to load remote stats
 	TiDev.invokeCloudService(Links.url,{guid:p.guid},'POST',function(data)
 	{
-		alert(data.releases)
 		// if we have data, process
 		if (data.releases)
 		{

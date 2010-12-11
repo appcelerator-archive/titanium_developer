@@ -1544,6 +1544,7 @@ Projects.importProject = function(f)
 			options.php = 'on';
 		}
 	}
+	stream.close();
 
 	// Settings in tiapp.xml always override the manifest.
 	var xmlDocument = (new DOMParser()).parseFromString(

@@ -1437,6 +1437,7 @@ TiDev.validateAndroidSDK = function(sdkDir, callback)
 	var addons = Titanium.Filesystem.getFile(sdkDir, "add-ons");
 	var platforms = Titanium.Filesystem.getFile(sdkDir, "platforms");
 	var tools = Titanium.Filesystem.getFile(sdkDir, "tools");
+	var platformTools = Titanium.Filesystem.getFile(sdkDir, 'platform-tools');
 	
 	var isSDK = addons.exists() && platforms.exists() && tools.exists();
 	if (!isSDK)
@@ -1454,6 +1455,10 @@ TiDev.validateAndroidSDK = function(sdkDir, callback)
 	
 	var adbFile = Titanium.Filesystem.getFile(tools, adb);
 	var androidFile = Titanium.Filesystem.getFile(tools, android);
+	if (!adbFile.exists())
+	{
+		adbFile = Titanium.Filesystem.getFile(platformTools, adb);
+	}
 	
 	var toolsExist = adbFile.exists() && androidFile.exists();
 	if (!toolsExist)

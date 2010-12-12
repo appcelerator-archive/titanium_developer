@@ -1471,7 +1471,7 @@ $('#new_project_button').click(function()
 Projects.importProject = function(f)
 {
 	var dir = f;
-	var file = TFS.getFile(dir,'manifest');
+	var file = TFS.getFile(dir, 'manifest');
 	if (file.exists() == false)
 	{
 		alert('This directory does not contain valid Titanium project.  Please try again.');
@@ -1483,11 +1483,11 @@ Projects.importProject = function(f)
 	options.dir = dir;
 	
 	// read manifest values to create new db record
-	var line = file.readLine(true);
-	while (line != null)
+	var stream = TFS.getFileStream(dir, 'manifest');
+	stream.open();
+	for (var line = stream.readLine(); line != null; line = stream.readLine())
 	{
-	 	var entry = Titanium.Project.parseEntry(line);
-	 	var line = file.readLine(false);
+		var entry = Titanium.Project.parseEntry(line.toString());
 		if (entry == null)
 			continue;
 
@@ -1544,7 +1544,7 @@ Projects.importProject = function(f)
 			options.php = 'on';
 		}
 	}
-	//stream.close();
+	stream.close();
 
 	// Settings in tiapp.xml always override the manifest.
 	var xmlDocument = (new DOMParser()).parseFromString(

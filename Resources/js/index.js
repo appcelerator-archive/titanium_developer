@@ -781,8 +781,7 @@ $(document).ready(function()
 {
 	// initialize UI
 	TiDev.init();
-	
-	
+
 	// hide/show top-level controls based on window size
 	Titanium.UI.currentWindow.addEventListener(function(event)
 	{
@@ -855,6 +854,14 @@ $(document).ready(function()
 	});
 	// set title
 	document.title = "Titanium Developer (" + Titanium.App.getVersion() + ")";
+	Titanium.API.addEventListener(Titanium.APP_EXIT, function(e) {
+		// Workaround for endless update loop
+		var appData = Titanium.Filesystem.getApplicationDataDirectory();
+		var updateFile = Titanium.Filesystem.getFile(appData, '.update');
+		if (updateFile.exists()) {
+			updateFile.deleteFile();
+		}
+	});
 });
 
 

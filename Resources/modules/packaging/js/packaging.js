@@ -204,7 +204,9 @@ $MQL('l:tidev.projects.row_selected',function(msg)
 		var file = Titanium.Filesystem.getFile(Titanium.App.appURLToPath('modules/packaging/packaging.html'));
 		$('#tiui_content_right').get(0).innerHTML = file.read();
 
-		if (PackageProject.currentProject.type == 'mobile' || PackageProject.currentProject.type == 'ipad')
+		if (PackageProject.currentProject.type == 'mobile' || 
+			PackageProject.currentProject.type == 'ipad' ||
+			PackageProject.currentProject.type == 'universal')
 		{
 			PackageProject.setupMobileView();
 		}
@@ -288,7 +290,9 @@ PackageProject.setupView = function()
 	// get current project
 	PackageProject.currentProject = Projects.getProject();
 
-	if (PackageProject.currentProject.type == 'mobile' || PackageProject.currentProject.type == 'ipad')
+	if (PackageProject.currentProject.type == 'mobile' || 
+		PackageProject.currentProject.type == 'ipad' ||
+		PackageProject.currentProject.type == 'universal')
 	{
 		PackageProject.setupMobileView();
 	}
@@ -666,11 +670,7 @@ PackageProject.setupMobileView = function()
 	// check project for iphone
 	if (Titanium.Filesystem.getFile(PackageProject.currentProject.dir, 'build','iphone').exists() == true)
 	{		
-		var deviceFamily = 'iphone'
-		if (PackageProject.currentProject.type == 'ipad')
-		{
-			deviceFamily = 'ipad';
-		}
+		var deviceFamily = (PackageProject.currentProject.type=='mobile') ? 'iphone' : PackageProject.currentProject.type;
 		
 		// setup distribution validation
 		PackageProject.iPhoneDistValidator = TiUI.validator('iphone_dist',function(valid)
@@ -925,7 +925,7 @@ PackageProject.setupMobileView = function()
 					var html = '';
 					for(var i=0;i<json.sdks.length;i++)
 					{
-						if (PackageProject.currentProject.type == 'ipad')
+						if (PackageProject.currentProject.type == 'ipad' || PackageProject.currentProject.type == 'universal')
 						{
 							// ipad started with 3.2
 							if (json.sdks[i].substring(0,3) == '3.2' || parseInt(json.sdks[i][0])>3)
@@ -1198,7 +1198,7 @@ PackageProject.setupMobileView = function()
 			var certName = PackageProject.getIPhoneAttribute('dist_name');
 			var location = $('#iphone_dist_location').val();
 			var sdk = $('#iphone_distribution_sdk').val();
-			var type = (PackageProject.currentProject.type=='mobile')?'iphone':'ipad';
+			var type = (PackageProject.currentProject.type=='mobile') ? 'iphone' : PackageProject.currentProject.type;
 			Titanium.Analytics.featureEvent(type +'.distribute',{sdk:sdk,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name,guid:PackageProject.currentProject.guid,certName:certName});
 			var x = TiDev.launchPython([Titanium.Filesystem.getFile(PackageProject.iPhoneEmulatorPath).toString(),'distribute','"'+sdk+'"', '"'+ PackageProject.currentProject.dir+ '"',PackageProject.currentProject.appid, '"' + PackageProject.currentProject.name+ '"', uuid,'"'+certName+'"','"'+location+'"', deviceFamily]);
 			var buffer = '';
@@ -1234,7 +1234,7 @@ PackageProject.setupMobileView = function()
 			if ($(this).hasClass('disabled')==false)
 			{
 				var sdk = $('#iphone_device_sdk').val();
-				var type = (PackageProject.currentProject.type=='mobile')?'iphone':'ipad';
+				var type = (PackageProject.currentProject.type=='mobile') ? 'iphone' : PackageProject.currentProject.type;				
 				Titanium.Analytics.featureEvent(type+'.install',{sdk:sdk,guid:PackageProject.currentProject.guid,devName:devName,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name});
 				var x = TiDev.launchPython([Titanium.Filesystem.getFile(PackageProject.iPhoneEmulatorPath).toString(),'install','"'+sdk+'"', '"'+ PackageProject.currentProject.dir+ '"',PackageProject.currentProject.appid, '"' + PackageProject.currentProject.name+ '"','"'+uuid+'"', '"'+devName + '"', deviceFamily]);
 				var buffer = '';
@@ -1303,7 +1303,7 @@ PackageProject.setupMobileView = function()
 			PackageProject.inConsoleMode = true;
 			
 			var sdk = $('#iphone_emulator_sdk').val();
-			var type = (PackageProject.currentProject.type=='mobile')?'iphone':'ipad';
+			var type = (PackageProject.currentProject.type=='mobile') ? 'iphone' : PackageProject.currentProject.type;							
 			Titanium.Analytics.featureEvent(type+'.simulator',{sdk:sdk,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name,guid:PackageProject.currentProject.guid});
 			
 			// kill if still running
@@ -1876,7 +1876,8 @@ PackageProject.setupMobileView = function()
 	});
 	
 	// setup ipad UI
-	if (PackageProject.currentProject.type == 'ipad')
+	if (PackageProject.currentProject.type == 'ipad' || 
+		PackageProject.currentProject.type == 'universal')
 	{
 		$('#tab_iphone_dev').css('display','none');
 		$('#tab_android_dev').css('display','none');
@@ -1888,10 +1889,7 @@ PackageProject.setupMobileView = function()
 		$('#mobile_emulator_iphone').click();
 		$('#tab_iphone_dev').click();
 		$('#tab_iphone_package').click();
-
 	}
-	
-	
 };
 
 
@@ -2434,7 +2432,9 @@ PackageProject.initializeConsoleWidth = function()
 	
 	if (PackageProject.currentProject==null)return;
 	// set container height
-	if (PackageProject.currentProject.type == 'mobile' || PackageProject.currentProject.type == 'ipad' )
+	if (PackageProject.currentProject.type == 'mobile' || 
+		PackageProject.currentProject.type == 'ipad' ||
+		PackageProject.currentProject.type == 'universal')
 	{
 		$(".detail").css('height',(height+94)+'px');
 		$('.debug_console').css('width',(rightWidth-320) + 'px').css('height',(height - 26) + 'px');

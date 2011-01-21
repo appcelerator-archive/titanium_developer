@@ -73,19 +73,28 @@ EditProject.setFormData = function(p)
 	$('#edit_project_version').val(p.version);
 	$('#edit_project_copyright').val(p.copyright);
 	
-	if (p.type == 'mobile' || p.type== 'ipad')
+	if (p.type == 'mobile' || p.type== 'ipad' || p.type == 'universal')
 	{
 		$('#edit_project_type').html('(Mobile Application)');
 		$('#language_modules').css('display','none');
-		if (p.type=='ipad')
+
+		if (p.type=='universal')
+		{
+			$('#mobile_icon').css('display','none');
+			$('#ipad_icon').css('display','none');
+			$('#ios_icon').css('display','inline');
+		}
+		else if (p.type=='ipad')
 		{
 			$('#mobile_icon').css('display','none');
 			$('#ipad_icon').css('display','inline');
+			$('#ios_icon').css('display','none');
 		}
 		else
 		{
 			$('#mobile_icon').css('display','inline');
 			$('#ipad_icon').css('display','none');
+			$('#ios_icon').css('display','none');
 		}
 		$('#desktop_icon').css('display','none');
 		$('#project_edit_lang_modules').css('display','none');

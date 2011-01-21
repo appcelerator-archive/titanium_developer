@@ -1108,8 +1108,8 @@ Projects.handleNewProjectClick = function()
 		// set scripts for current sdk version
 		iPhonePrereqPath = Titanium.Filesystem.getFile(sdk.getPath(),'iphone/prereq.py');
 		androidPrereqPath = Titanium.Filesystem.getFile(sdk.getPath(),'android/prereq.py');
-
-		if ($(this).val()=='ipad')
+		
+		if ($(this).val()=='ipad' || $(this).val()=='universal')
 		{
 			if (Titanium.platform != 'osx')
 			{
@@ -1121,7 +1121,6 @@ Projects.handleNewProjectClick = function()
 			$('#desktop_language_modules').css('display','none');
 			if (Projects.hasIPad ==false)
 			{
-				
 				TiDev.setConsoleMessage('Checking for iPad prerequisites...');
 				
 				// run ipad prereq check
@@ -1139,16 +1138,13 @@ Projects.handleNewProjectClick = function()
 					{
 						alert('The iPad requires version 3.2 of the iPhone SDK.  Please install to continue');
 						$('#new_project_type').val('desktop')
-						return;
 					}
 				});
 				iPadCheck.launch();
 			}
-			
 		}
 		else if ($(this).val() == 'mobile')
 		{
-			
 			$('#mobile_platforms').css('display','block');
 			$('#desktop_language_modules').css('display','none');
 
@@ -1179,8 +1175,8 @@ Projects.handleNewProjectClick = function()
 								$('#iphone_sdk_true').css('display','block');
 								$('#iphone_sdk_false').css('display','none');
 								
-								TiDev.setConsoleMessage('Success!  Now checking for Android...');
 								Projects.hasIPhone = true;
+								TiDev.setConsoleMessage('Success!  Now checking for Android...');
 								checkAndroid();
 							},1000);
 
@@ -1191,9 +1187,9 @@ Projects.handleNewProjectClick = function()
 							alert('XCode is not installed.  It is required for iPhone.');
 							TiDev.setConsoleMessage('Checking for Android prerequisites...');
 							checkAndroid();
-							
 						}
 						// no 3.0 SDK
+						// Handled for Universal by iPad iOS version check
 						else if (e == 2)
 						{
 							alert('You must have iPhone SDK installed.  We cannot find it.');
@@ -1284,11 +1280,9 @@ Projects.handleNewProjectClick = function()
 					});
 					androidCheck.launch();
 				};
-				
-
 			}
 		}
-		else
+		else 
 		{
 			$('#mobile_platforms').css('display','none');
 			$('#desktop_language_modules').css('display','block');
@@ -1419,7 +1413,7 @@ Projects.handleNewProjectClick = function()
 	$('#new_project_type').bind('change',function()
 	{
 
-		if ($(this).val() == 'mobile' || $(this).val() == 'ipad')
+		if ($(this).val() == 'mobile' || $(this).val() == 'ipad' || $(this).val() == 'universal')
 		{
 			$('#language_modules').addClass('disabled');
 			$('#new_project_ruby').attr('disabled','true');
@@ -1588,6 +1582,7 @@ Projects.importProject = function(f)
 			alert('You are importing a '+options.type + ' project, but no Mobile SDK versions exist on your system');
 			return;
 		}
+		// TODO: Allow import support as a universal
 		// see if ipad is an option
 		if (Titanium.platform == 'osx' && Projects.hasIPad==false)
 		{
@@ -1728,7 +1723,7 @@ Projects.createProject = function(options, createProjectFiles)
 			else
 			{
 				var args = [options.name , options.id, options.dir];
-				if (options.iphone == true || options.type == 'ipad')
+				if (options.iphone == true || options.type == 'ipad' || options.type == 'universal')
 				{
 					args.push('iphone');
 				}

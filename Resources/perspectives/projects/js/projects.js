@@ -1322,6 +1322,18 @@ Projects.handleNewProjectClick = function()
 		options.python = ($('#language_python_checked').css('display') != 'none')?'on':'';
 		options.php = ($('#language_php_checked').css('display') != 'none')?'on':'';
 
+		if (options.type=='universal')
+		{
+			// Perform a Titanium SDK check - we require at minimum 1.6.0
+			var versions = options.runtime.split('.');
+			if (parseInt(versions[0]) < 1 || 
+				(parseInt(versions[0]) == 1 && parseInt(versions[1]) < 6))
+			{
+				alert('iOS universal development is only supported in Titanium SDK 1.6.0 and later');
+				return;
+			}
+		}
+
 		Projects.createProject(options,true);
 	});
 

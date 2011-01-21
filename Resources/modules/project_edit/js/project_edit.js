@@ -318,6 +318,18 @@ EditProject.setupView = function()
 		var version = EditProject.currentProject.version = $('#edit_project_version').val();
 		var copyright = EditProject.currentProject.copyright = $('#edit_project_copyright').val();
 
+		if (EditProject.currentProject.type=='universal')
+		{
+			// Perform a Titanium SDK check - we require at minimum 1.6.0
+			var versions = EditProject.currentProject.runtime.split('.');
+			if (parseInt(versions[0]) < 1 || 
+				(parseInt(versions[0]) == 1 && parseInt(versions[1]) < 6))
+			{
+				alert('iOS universal development is only supported in Titanium SDK 1.6.0 and later');
+				return;
+			}
+		}
+
 		var rubyOn = ($('#language_ruby_checked').css('display') != 'none')?'on':'';
 		var pythonOn = ($('#language_python_checked').css('display') != 'none')?'on':'';
 		var phpOn = ($('#language_php_checked').css('display') != 'none')?'on':'';

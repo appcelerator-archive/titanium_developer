@@ -544,7 +544,7 @@ PackageProject.setupMobileView = function()
 {
 	var runtime = PackageProject.currentProject.runtime;
 	var sdk = Titanium.Project.getMobileSDKVersions(runtime);
-	
+
 	// set scripts for current sdk version
 	PackageProject.iPhoneEmulatorPath = Titanium.Filesystem.getFile(sdk.getPath(),'/iphone/builder.py');
 	PackageProject.AndroidEmulatorPath = Titanium.Filesystem.getFile(sdk.getPath(),'/android/builder.py');
@@ -1303,7 +1303,14 @@ PackageProject.setupMobileView = function()
 			PackageProject.inConsoleMode = true;
 			
 			var sdk = $('#iphone_emulator_sdk').val();
-			var type = (PackageProject.currentProject.type=='mobile') ? 'iphone' : PackageProject.currentProject.type;							
+			var type = (PackageProject.currentProject.type=='mobile') ? 'iphone' : PackageProject.currentProject.type;
+			var simDevice = $('#iphone_simulator_device').val();
+			if (type == 'ipad')
+			{
+				// Coerce simDevice to ipad for ipad projects
+				simDevice = 'ipad';
+			}
+			
 			Titanium.Analytics.featureEvent(type+'.simulator',{sdk:sdk,appid:PackageProject.currentProject.appid,name:PackageProject.currentProject.name,guid:PackageProject.currentProject.guid});
 			
 			// kill if still running
@@ -1316,7 +1323,7 @@ PackageProject.setupMobileView = function()
 			
 			PackageProject.mobileCompile(Titanium.Filesystem.getFile(PackageProject.currentProject.dir,"Resources").nativePath(),'iphone',function()
 			{
-				PackageProject.currentIPhonePID = TiDev.launchPython([Titanium.Filesystem.getFile(PackageProject.iPhoneEmulatorPath).toString(),'simulator', '"'+sdk+'"','"'+ PackageProject.currentProject.dir+ '"',PackageProject.currentProject.appid, '"' + PackageProject.currentProject.name+ '"', deviceFamily]);
+				PackageProject.currentIPhonePID = TiDev.launchPython([Titanium.Filesystem.getFile(PackageProject.iPhoneEmulatorPath).toString(),'simulator', '"'+sdk+'"','"'+ PackageProject.currentProject.dir+ '"',PackageProject.currentProject.appid, '"' + PackageProject.currentProject.name+ '"', deviceFamily, simDevice]);
 				PackageProject.logReader(PackageProject.currentIPhonePID,'iphone','simulator');
 				PackageProject.iphoneEmulatorStartDate = new Date();
 				PackageProject.currentIPhonePID.setOnExit(function(event)
@@ -1358,8 +1365,6 @@ PackageProject.setupMobileView = function()
 				
 			}
 		});
-		
-		
 	}
 	else
 	{
@@ -1885,6 +1890,11 @@ PackageProject.setupMobileView = function()
 		$('#tab_android_package').css('display','none');
 		$('#mobile_emulator_iphone').css('display','none');
 		$('#mobile_emulator_android').css('display','none');
+		// Don't display device selection if iPad; it's always iPad
+		if (PackageProject.currentProject.type == 'ipad')
+		{
+			$('#iphone_simulator_device_container').css('display','none');
+		}
 		$('.tab_spacing').css('display', 'block');
 		$('#mobile_emulator_iphone').click();
 		$('#tab_iphone_dev').click();

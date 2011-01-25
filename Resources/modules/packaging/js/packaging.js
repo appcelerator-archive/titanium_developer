@@ -925,10 +925,12 @@ PackageProject.setupMobileView = function()
 					var html = '';
 					for(var i=0;i<json.sdks.length;i++)
 					{
-						if (PackageProject.currentProject.type == 'ipad' || PackageProject.currentProject.type == 'universal')
+						if (PackageProject.currentProject.type == 'ipad')
 						{
-							// ipad started with 3.2
-							if (json.sdks[i].substring(0,3) == '3.2' || parseInt(json.sdks[i][0])>3)
+							// ipad-only is supported with 3.2 and 4.2+
+							if (json.sdks[i].substring(0,3) == '3.2' || 
+								(parseInt(json.sdks[i][0]) == 4 && parseInt(json.sdks[i][2]) >= 2) ||
+								(parseInt(json.sdks[i][0]) > 4))
 							{
 								html += '<option value="'+json.sdks[i]+'">'+json.sdks[i] + '</option>';
 							}
@@ -1285,6 +1287,48 @@ PackageProject.setupMobileView = function()
 
 
 			PackageProject.initializeConsoleWidth();
+		});
+		
+		//
+		// Change simulator device
+		//
+		$('#iphone_simulator_device').change(function()
+		{
+			var x = TiDev.launchPython([Titanium.Filesystem.getFile(PackageProject.iPhonePrereqPath).toString(), 'project']);
+			x.setOnRead(function(event)
+			{
+				try
+				{
+					var d = event.data.toString();
+					var json = swiss.evalJSON(d);
+					if (json.sdks)
+					{
+						var html = '';
+						for(var i=0;i<json.sdks.length;i++)
+						{
+							if ($('#iphone_simulator_device').val() == 'ipad')
+							{
+								// ipad-only is supported with 3.2 and 4.2+
+								if (json.sdks[i].substring(0,3) == '3.2' || 
+									(parseInt(json.sdks[i][0]) == 4 && parseInt(json.sdks[i][2]) >= 2) ||
+									(parseInt(json.sdks[i][0]) > 4))
+								{
+									html += '<option value="'+json.sdks[i]+'">'+json.sdks[i] + '</option>';
+								}
+							}
+							else
+							{
+								html += '<option value="'+json.sdks[i]+'">'+json.sdks[i] + '</option>';
+							}
+						}
+						$('#iphone_emulator_sdk').html(html);
+					}
+				}
+				catch (e)
+				{
+				}
+			});
+			x.launch();
 		});
 
 		// 

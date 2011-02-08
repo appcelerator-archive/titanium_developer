@@ -1136,7 +1136,7 @@ Projects.handleNewProjectClick = function()
 					TiDev.resetConsole();
 					if (!Projects.hasIPad)
 					{
-						alert('The iPad requires version 3.2 of the iPhone SDK.  Please install to continue');
+						alert('The iPad requires version 3.2 of the iOS SDK.  Please install to continue');
 						$('#new_project_type').val('desktop')
 					}
 				});
@@ -1159,7 +1159,7 @@ Projects.handleNewProjectClick = function()
 				}
 				else
 				{
-					TiDev.setConsoleMessage('Checking for iPhone prerequisites...');
+					TiDev.setConsoleMessage('Checking for iOS prerequisites...');
 					
 					// run iphone prereq check
 					var iPhoneCheck = TiDev.launchPython([Titanium.Filesystem.getFile(iPhonePrereqPath).toString(),'project']);
@@ -1184,7 +1184,7 @@ Projects.handleNewProjectClick = function()
 						// no XCode
 						else if (e == 1)
 						{
-							alert('XCode is not installed.  It is required for iPhone.');
+							alert('XCode is not installed.  It is required for iOS.');
 							TiDev.setConsoleMessage('Checking for Android prerequisites...');
 							checkAndroid();
 						}
@@ -1192,7 +1192,7 @@ Projects.handleNewProjectClick = function()
 						// Handled for Universal by iPad iOS version check
 						else if (e == 2)
 						{
-							alert('You must have iPhone SDK installed.  We cannot find it.');
+							alert('You must have iOS SDK installed.  We cannot find it.');
 							TiDev.setConsoleMessage('Checking for Android prerequisites...');
 							checkAndroid();
 							
@@ -1304,7 +1304,7 @@ Projects.handleNewProjectClick = function()
 		{
 			if (Projects.hasIPhone == false && Projects.hasAndroid == false)
 			{
-				alert('Mobile SDKs not installed.  Please download and install the iPhone SDK 3.0 and/or the Android SDK.');
+				alert('Mobile SDKs not installed.  Please download and install the iOS SDK 3.0 and/or the Android SDK.');
 				return;
 			}
 		}

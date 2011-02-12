@@ -72,7 +72,7 @@ EditProject.setFormData = function(p)
 	$('#edit_project_appid').val(p.appid);
 	$('#edit_project_version').val(p.version);
 	$('#edit_project_copyright').val(p.copyright);
-	
+
 	if (p.type == 'mobile' || p.type== 'ipad' || p.type == 'universal')
 	{
 		$('#edit_project_type').html('(Mobile Application)');
@@ -389,22 +389,34 @@ EditProject.setupView = function()
 				// look for image in two places - either full path or in resources dir
 				var image = TFS.getFile(imageName);
 				var resources = TFS.getFile(EditProject.currentProject.dir,'Resources');
-				
-				if (!image.exists())
+				var iconFound = image.exists();
+				if (!iconFound)
 				{
 					image = TFS.getFile(resources,imageName);
+					iconFound = image.exists();
+				}
+				// if it's a mobile type of project, could be that icon file is in platform-specific Resources
+				// folder.
+				if (!iconFound)
+				{
+					var platforms = ['android', 'iphone'];
+					for (var index in platforms) {
+						image = TFS.getFile(resources, platforms[index], imageName);
+						if (image.exists()) {
+							iconFound = true;
+							break;
+						}
+					}
 				}
 				// use default if not exists
-				if (!image.exists())
+				if (!iconFound)
 				{
 					var path = Titanium.App.appURLToPath('app://images');
 					image = TFS.getFile(path,'default_app_logo.png')
-				}
-
-				var image_dest = TFS.getFile(resources,image.name());
-				if (image.toString() != image_dest.toString())
-				{
-					image.copy(image_dest);
+					var image_dest = TFS.getFile(resources,image.name());
+					if (!image_dest.exists()) {
+						image.copy(image_dest);
+					}
 				}
 				imageName = image.name();			
 				newXML += '<icon>' + imageName + '</icon>\n';

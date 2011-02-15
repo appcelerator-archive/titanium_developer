@@ -922,27 +922,55 @@ PackageProject.setupMobileView = function()
 				PackageProject.iphoneSDKs  = json.sdks;
 				if (json.sdks)
 				{
-					var html = '';
+					var simHtml = '';
+					var deviceHtml = '';
 					for(var i=0;i<json.sdks.length;i++)
 					{
-						if (PackageProject.currentProject.type == 'ipad')
+						var line = '<option value="'+json.sdks[i]+'">'+json.sdks[i] + '</option>';
+						var isPadOnly = (json.sdks[i].substring(0,3) == '3.2');
+						var isPadOS = false;
+						if (PackageProject.currentProject.type == 'ipad' || 
+							$('#iphone_simulator_device') == 'ipad')
 						{
 							// ipad-only is supported with 3.2 and 4.2+
-							if (json.sdks[i].substring(0,3) == '3.2' || 
+							if (isPadOnly || 
 								(parseInt(json.sdks[i][0]) == 4 && parseInt(json.sdks[i][2]) >= 2) ||
 								(parseInt(json.sdks[i][0]) > 4))
 							{
-								html += '<option value="'+json.sdks[i]+'">'+json.sdks[i] + '</option>';
+								simHtml += line;
+								isPadOS = true;
 							}
 						}
 						else
 						{
-							html += '<option value="'+json.sdks[i]+'">'+json.sdks[i] + '</option>';
+							if ($('#iphone_simulator_device').val() == 'iphone' &&
+								!isPadOnly) 
+							{
+								simHtml += line;
+							}
 						}
+						
+						// deviceHtml needs to match project type, NOT selected
+						// simulator:
+						switch (PackageProject.currentProject.type) {
+							case 'mobile':
+								if (!isPadOnly) {
+									deviceHtml += line;
+								}
+								break;
+							case 'ipad':
+								if (isPadOS) {
+									deviceHtml += line;
+								}
+								break;
+							default:
+								deviceHtml += line;
+						}
+						
 					}
-					$('#iphone_emulator_sdk').html(html);
-					$('#iphone_device_sdk').html(html);
-					$('#iphone_distribution_sdk').html(html);
+					$('#iphone_emulator_sdk').html(simHtml);
+					$('#iphone_device_sdk').html(deviceHtml);
+					$('#iphone_distribution_sdk').html(deviceHtml);
 					
 				}
 				// correct version of iTunes
@@ -1318,7 +1346,9 @@ PackageProject.setupMobileView = function()
 							}
 							else
 							{
-								html += '<option value="'+json.sdks[i]+'">'+json.sdks[i] + '</option>';
+								if (json.sdks[i].substring(0,3) != '3.2') {
+									html += '<option value="'+json.sdks[i]+'">'+json.sdks[i] + '</option>';
+								}
 							}
 						}
 						$('#iphone_emulator_sdk').html(html);

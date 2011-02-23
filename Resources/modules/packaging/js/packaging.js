@@ -668,8 +668,14 @@ PackageProject.setupMobileView = function()
 	});
 	
 	// check project for iphone
-	if (Titanium.Filesystem.getFile(PackageProject.currentProject.dir, 'build','iphone').exists() == true)
+	
+	if (PackageProject.currentProject.platforms.ios == true)
 	{		
+		var buildpath = Titanium.Filesystem.getFile(PackageProject.currentProject.dir,'build','iphone');
+		if (buildpath.exists() != true)
+		{
+			buildpath.createDirectory();
+		}
 		var deviceFamily = (PackageProject.currentProject.type=='mobile') ? 'iphone' : PackageProject.currentProject.type;
 		
 		// setup distribution validation
@@ -1451,8 +1457,13 @@ PackageProject.setupMobileView = function()
 
 	}
 	// check project for android
-	if (Titanium.Filesystem.getFile(PackageProject.currentProject.dir, 'build','android').exists() == true)
+	if (PackageProject.currentProject.platforms.android == true)
 	{
+		var buildpath = Titanium.Filesystem.getFile(PackageProject.currentProject.dir,'build','android');
+		if (buildpath.exists() != true)
+		{
+			buildpath.createDirectory();
+		}
 		// if we don't have the android sdk dir, get it
 		if (TiDev.androidSDKDir == null)
 		{

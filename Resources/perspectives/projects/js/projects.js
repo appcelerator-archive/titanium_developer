@@ -757,7 +757,7 @@ Projects.initDB = function()
 	var runMigration = true;
 	var createMigrationTbl = false;
 	var createProjectTbl = false;
-
+	
 	try
 	{
 		// iphone attributes
@@ -799,6 +799,16 @@ Projects.initDB = function()
 			TiDev.db.execute('CREATE TABLE PROJECTMODULES (guid TEXT, name TEXT, version TEXT)');
 		}
 		
+		// see if project platforms exists
+		try
+		{
+			TiDev.db.execute('SELECT * FROM PROJECTPLATFORMS');
+		}
+		catch(e)
+		{
+			TiDev.db.execute('CREATE TABLE PROJECTPLATFORMS (guid TEXT, platform TEXT)');
+		}
+		
 		// if no migration table, create
 		if (createMigrationTbl)
 		{
@@ -834,8 +844,7 @@ Projects.initDB = function()
 			Projects.projectList = [];
 			while (projects.isValidRow())
 			{
-
-				// delete project if it's directory is not valid
+				// delete project if its directory is not valid
 				var dir = Titanium.Filesystem.getFile(projects.fieldByName('directory'));
 				if (!dir.exists())
 				{
@@ -864,6 +873,30 @@ Projects.initDB = function()
 
 						moduleRows.next();
 					}
+					moduleRows.close();
+					
+					// get platforms
+					var platformRows = TiDev.db.execute('SELECT * FROM PROJECTPLATFORMS WHERE guid = ?',projects.fieldByName('guid'));
+					var platforms = {};
+					var requiresPlatformUpdate = true;
+					while (platformRows.isValidRow()) 
+					{
+						requiresPlatformUpdate = false;
+						platforms[platformRows.fieldByName('platform')] = true;
+						platformRows.next();
+					}
+					platformRows.close();
+					
+					// We're working with a TiDev project that predates 1.3.0... and need
+					// to both get and update the platform information.  In this case
+					// SDK detection is costly so we hack it and look for the old-school
+					// build dirs.
+					if (requiresPlatformUpdate)
+					{
+						var dir = projects.fieldByName('directory');
+						platforms['ios'] = Titanium.Filesystem.getFile(dir,'build','iphone').exists();
+						platforms['android'] = Titanium.Filesystem.getFile(dir,'build','android').exists();
+					}
 					
 					// format date 
 					var date = new Date();
@@ -885,9 +918,21 @@ Projects.initDB = function()
 						image:projects.fieldByName('image'),
 						copyright:projects.fieldByName('copyright'),
 						version:projects.fieldByName('version'),
-						'languageModules':languageModules
+						'languageModules':languageModules,
+						platforms:platforms
 					});
 
+					// Perform platform update if necessary
+					if (requiresPlatformUpdate)
+					{
+						for (var platform in platforms)
+						{
+							if (platforms[platform]) 
+							{
+								TiDev.db.execute("INSERT INTO PROJECTPLATFORMS (guid, platform) VALUES (?,?)", projects.fieldByName('guid'), platform);
+							}
+						}
+					}
 					
 					// record highest id - used when creating new records
 					if (projects.fieldByName('id') > Projects.highestId)
@@ -1700,7 +1745,8 @@ Projects.createProject = function(options, createProjectFiles)
 		type:(options.type)?options.type:'desktop',
 		version:options.version,
 		copyright:options.copyright,
-		'languageModules':{'ruby':options.ruby,'python':options.python, 'php':options.php}
+		'languageModules':{'ruby':options.ruby,'python':options.python, 'php':options.php},
+		platforms:{'ios':options.iphone, 'android':options.android}
 	};
 
 	// only record event if we are creating project files
@@ -1836,6 +1882,14 @@ Projects.createProject = function(options, createProjectFiles)
 			if (record['languageModules'].php == 'on')
 			{
 			    TiDev.db.execute("INSERT INTO PROJECTMODULES (guid, name, version) VALUES (?, ?, ?)", record.guid, 'php',Projects.currentRuntimeVersion);	
+			}
+			
+			for (var platform in record.platforms)
+			{
+				if (record.platforms.platform) 
+				{
+					TiDev.db.execute("INSERT INTO PROJECTPLATFORMS (guid, platform) VALUES (?,?)", record.guid, platform);
+				}
 			}
 
 			result =  {success:true};

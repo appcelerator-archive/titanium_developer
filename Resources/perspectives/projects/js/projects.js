@@ -1138,11 +1138,19 @@ Projects.handleNewProjectClick = function()
 		}
 	});
 	
-	// reset dropdown
-	$('#new_project_type').val('desktop');
-	
 	// set library dropdown
 	//$('#new_project_js').html('<option value="jquery">JQuery</option><option value="entourage">Entourage</option><option value="mootools">Mootools</option><option value="prototype">Prototype</option><option value="scriptaculous">Scriptaculous</option><option value="dojo">Dojo</option><option value="yui">Yahoo YUI</option><option value="swf">SWF Object</option>');
+
+	// Determine available project types
+	var projectTypes = '<option value="desktop" selected>Desktop</option><option value="mobile">Mobile</option>';
+	if (Titanium.platform == 'osx')
+	{
+		projectTypes += '<option value="ipad">iPad</option><option value="universal">Universal iOS</option>';
+	}
+	$('#new_project_type').html(projectTypes);
+
+	// reset dropdown
+	$('#new_project_type').val('desktop');
 
 	// project type listener
 	$('#new_project_type').change(function()
@@ -1155,13 +1163,7 @@ Projects.handleNewProjectClick = function()
 		androidPrereqPath = Titanium.Filesystem.getFile(sdk.getPath(),'android/prereq.py');
 		
 		if ($(this).val()=='ipad' || $(this).val()=='universal')
-		{
-			if (Titanium.platform != 'osx')
-			{
-				alert('iPad development is only supported on Mac');
-				return;
-			}
-			
+		{	
 			$('#mobile_platforms').css('display','none');
 			$('#desktop_language_modules').css('display','none');
 			if (Projects.hasIPad ==false)

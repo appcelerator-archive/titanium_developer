@@ -128,6 +128,7 @@ EditProject.setFormData = function(p)
 		$('#mobile_icon').css('display','none');
 		$('#desktop_icon').css('display','inline');
 		$('#ipad_icon').css('display','none');
+		$('#ios_icon').css('display','none');
 
 		$('#edit_project_type').html('(Desktop Application)');
 
